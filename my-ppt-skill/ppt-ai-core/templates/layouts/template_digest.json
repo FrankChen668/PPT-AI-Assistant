@@ -1,0 +1,698 @@
+{
+  "count": 21,
+  "governance_metrics": {
+    "avg_failure_rate_30d": 0.0533,
+    "avg_quality_score": 0.8133,
+    "lifecycle_counts": {
+      "active": 21
+    },
+    "metadata_coverage_ratio": 1.0
+  },
+  "governance_schema_version": "wp5-v1",
+  "source": "<repo-root>/my-ppt-skill/ppt-ai-core/templates/layouts/layouts_index.json",
+  "templates": [
+    {
+      "assets": [],
+      "governance": {
+        "adoption_rate_30d": 0.06,
+        "canvas_profiles": [
+          "ppt169"
+        ],
+        "density_profile": "low",
+        "failure_rate_30d": 0.05,
+        "last_reviewed": "2026-05-06",
+        "lifecycle": "active",
+        "quality_score": 0.78,
+        "retire_signal": "keep",
+        "scenario_tags": [
+          "academic"
+        ]
+      },
+      "id": "academic_defense",
+      "keywords": [
+        "Academic",
+        "Defense",
+        "Research",
+        "Standard"
+      ],
+      "label": "Academic Defense Template",
+      "search": "academic defense template a standard template for academic defenses, research presentations, and project proposals professional, rigorous, research-oriented, clear hierarchy light theme (white background + dark blue title bar) academic defense research standard",
+      "summary": "A standard template for academic defenses, research presentations, and project proposals",
+      "themeMode": "Light theme (white background + dark blue title bar)",
+      "tone": "Professional, rigorous, research-oriented, clear hierarchy"
+    },
+    {
+      "assets": [
+        "reference_style.svg"
+      ],
+      "governance": {
+        "adoption_rate_30d": 0.1,
+        "canvas_profiles": [
+          "ppt169"
+        ],
+        "density_profile": "high",
+        "failure_rate_30d": 0.05,
+        "last_reviewed": "2026-05-06",
+        "lifecycle": "active",
+        "quality_score": 0.83,
+        "retire_signal": "keep",
+        "scenario_tags": [
+          "government",
+          "technology"
+        ]
+      },
+      "id": "ai_ops",
+      "keywords": [
+        "Telecom",
+        "AI operations",
+        "Digital intelligence",
+        "High density",
+        "Architecture view"
+      ],
+      "label": "Enterprise Digital Intelligence Template",
+      "search": "enterprise digital intelligence template for high-density scenarios such as telecom ai operations architecture, it system overview, and digital transformation plans information-dense, structured, modular layout, telecom/government-enterprise style light theme (white background + red/blue accents + warm gray panels) telecom ai operations digital intelligence high density architecture view",
+      "summary": "For high-density scenarios such as telecom AI operations architecture, IT system overview, and digital transformation plans",
+      "themeMode": "Light theme (white background + red/blue accents + warm gray panels)",
+      "tone": "Information-dense, structured, modular layout, telecom/government-enterprise style"
+    },
+    {
+      "assets": [],
+      "governance": {
+        "adoption_rate_30d": 0.1,
+        "canvas_profiles": [
+          "ppt169"
+        ],
+        "density_profile": "medium",
+        "failure_rate_30d": 0.05,
+        "last_reviewed": "2026-05-06",
+        "lifecycle": "active",
+        "quality_score": 0.88,
+        "retire_signal": "keep",
+        "scenario_tags": [
+          "technology"
+        ]
+      },
+      "id": "anthropic",
+      "keywords": [
+        "AI",
+        "LLM",
+        "Developer",
+        "Technology"
+      ],
+      "label": "Anthropic Style Template",
+      "search": "anthropic style template a tech-oriented template for ai/llm knowledge sharing and product launches tech-forward, professional, modern, conclusion-first hybrid theme (dark cover/chapter + light content pages) ai llm developer technology",
+      "summary": "A tech-oriented template for AI/LLM knowledge sharing and product launches",
+      "themeMode": "Hybrid theme (dark cover/chapter + light content pages)",
+      "tone": "Tech-forward, professional, modern, conclusion-first"
+    },
+    {
+      "assets": [],
+      "governance": {
+        "adoption_rate_30d": 0.16,
+        "canvas_profiles": [
+          "ppt169"
+        ],
+        "density_profile": "medium",
+        "failure_rate_30d": 0.05,
+        "last_reviewed": "2026-05-06",
+        "lifecycle": "active",
+        "quality_score": 0.88,
+        "retire_signal": "keep",
+        "scenario_tags": [
+          "board",
+          "finance",
+          "general_business",
+          "strategy"
+        ]
+      },
+      "id": "exhibit",
+      "keywords": [
+        "Exhibit",
+        "Board",
+        "Executive",
+        "Strategy",
+        "Conclusion-first",
+        "????",
+        "???",
+        "管理汇报",
+        "董事会",
+        "经营复盘"
+      ],
+      "label": "Exhibit Style Template",
+      "search": "exhibit style template conclusion-first layout with exhibit takeaway bars for data-driven strategic reports and executive presentations premium, refined, authoritative, data-driven, conclusion-first dark theme (dark background + gradient accent + gold highlights) exhibit board executive strategy conclusion-first ???? ??? 管理汇报 董事会 经营复盘",
+      "summary": "Conclusion-first layout with Exhibit takeaway bars for data-driven strategic reports and executive presentations",
+      "themeMode": "Dark theme (dark background + gradient accent + gold highlights)",
+      "tone": "Premium, refined, authoritative, data-driven, conclusion-first"
+    },
+    {
+      "assets": [],
+      "governance": {
+        "adoption_rate_30d": 0.1,
+        "canvas_profiles": [
+          "ppt169"
+        ],
+        "density_profile": "medium",
+        "failure_rate_30d": 0.05,
+        "last_reviewed": "2026-05-06",
+        "lifecycle": "active",
+        "quality_score": 0.88,
+        "retire_signal": "keep",
+        "scenario_tags": [
+          "technology"
+        ]
+      },
+      "id": "google_style",
+      "keywords": [
+        "Google",
+        "Brand style",
+        "Technical sharing",
+        "Annual report"
+      ],
+      "label": "Google Style Template",
+      "search": "google style template a google-branded template for annual reports and technical sharing professional, modern, clean and restrained, data-driven, ample whitespace light theme (white/light gray background + google brand color accents) google brand style technical sharing annual report",
+      "summary": "A Google-branded template for annual reports and technical sharing",
+      "themeMode": "Light theme (white/light gray background + Google brand color accents)",
+      "tone": "Professional, modern, clean and restrained, data-driven, ample whitespace"
+    },
+    {
+      "assets": [],
+      "governance": {
+        "adoption_rate_30d": 0.1,
+        "canvas_profiles": [
+          "ppt169"
+        ],
+        "density_profile": "medium",
+        "failure_rate_30d": 0.05,
+        "last_reviewed": "2026-05-06",
+        "lifecycle": "active",
+        "quality_score": 0.83,
+        "retire_signal": "keep",
+        "scenario_tags": [
+          "government"
+        ]
+      },
+      "id": "government_blue",
+      "keywords": [
+        "Government affairs",
+        "Government blue",
+        "Smart city",
+        "Digitalization"
+      ],
+      "label": "Government Blue Template",
+      "search": "government blue template a blue government-themed template for smart governance and digital transformation reports grand, tech-forward, modernized, professional government style light theme (white background + blue gradient decorations) government affairs government blue smart city digitalization",
+      "summary": "A blue government-themed template for smart governance and digital transformation reports",
+      "themeMode": "Light theme (white background + blue gradient decorations)",
+      "tone": "Grand, tech-forward, modernized, professional government style"
+    },
+    {
+      "assets": [],
+      "governance": {
+        "adoption_rate_30d": 0.1,
+        "canvas_profiles": [
+          "ppt169"
+        ],
+        "density_profile": "medium",
+        "failure_rate_30d": 0.05,
+        "last_reviewed": "2026-05-06",
+        "lifecycle": "active",
+        "quality_score": 0.83,
+        "retire_signal": "keep",
+        "scenario_tags": [
+          "government"
+        ]
+      },
+      "id": "government_red",
+      "keywords": [
+        "Government affairs",
+        "Party building",
+        "Government red",
+        "Authoritative"
+      ],
+      "label": "Government Red Template",
+      "search": "government red template a red government-themed template for government reports and party-building scenarios authoritative, solemn, professional, modernized government style light theme (white background + government red/blue accents) government affairs party building government red authoritative",
+      "summary": "A red government-themed template for government reports and party-building scenarios",
+      "themeMode": "Light theme (white background + government red/blue accents)",
+      "tone": "Authoritative, solemn, professional, modernized government style"
+    },
+    {
+      "assets": [],
+      "governance": {
+        "adoption_rate_30d": 0.16,
+        "canvas_profiles": [
+          "ppt169"
+        ],
+        "density_profile": "medium",
+        "failure_rate_30d": 0.05,
+        "last_reviewed": "2026-05-06",
+        "lifecycle": "active",
+        "quality_score": 0.88,
+        "retire_signal": "keep",
+        "scenario_tags": [
+          "board",
+          "finance",
+          "strategy"
+        ]
+      },
+      "id": "mckinsey",
+      "keywords": [
+        "McKinsey",
+        "Consulting",
+        "Structured",
+        "Executive presentation",
+        "??",
+        "????",
+        "???",
+        "咨询",
+        "战略",
+        "管理汇报",
+        "董事会"
+      ],
+      "label": "McKinsey Style Template",
+      "search": "mckinsey style template a mckinsey-style template for strategic consulting and investment analysis data-driven, structured thinking, professional whitespace, minimalist premium light theme (white background + mckinsey blue accent) mckinsey consulting structured executive presentation ?? ???? ??? 咨询 战略 管理汇报 董事会",
+      "summary": "A McKinsey-style template for strategic consulting and investment analysis",
+      "themeMode": "Light theme (white background + McKinsey Blue accent)",
+      "tone": "Data-driven, structured thinking, professional whitespace, minimalist premium"
+    },
+    {
+      "assets": [],
+      "governance": {
+        "adoption_rate_30d": 0.06,
+        "canvas_profiles": [
+          "ppt169"
+        ],
+        "density_profile": "low",
+        "failure_rate_30d": 0.05,
+        "last_reviewed": "2026-05-06",
+        "lifecycle": "active",
+        "quality_score": 0.78,
+        "retire_signal": "keep",
+        "scenario_tags": [
+          "medical"
+        ]
+      },
+      "id": "medical_university",
+      "keywords": [
+        "Medical",
+        "Hospital",
+        "Case study",
+        "Research"
+      ],
+      "label": "Hospital/Medical University Template",
+      "search": "hospital/medical university template a professional template for medical reports, case discussions, and research presentations professional, rigorous, life-affirming, tech-forward, trustworthy light theme (white background + medical blue title bar + life green accents) medical hospital case study research",
+      "summary": "A professional template for medical reports, case discussions, and research presentations",
+      "themeMode": "Light theme (white background + medical blue title bar + life green accents)",
+      "tone": "Professional, rigorous, life-affirming, tech-forward, trustworthy"
+    },
+    {
+      "assets": [],
+      "governance": {
+        "adoption_rate_30d": 0.06,
+        "canvas_profiles": [
+          "ppt169"
+        ],
+        "density_profile": "medium",
+        "failure_rate_30d": 0.12,
+        "last_reviewed": "2026-05-06",
+        "lifecycle": "active",
+        "quality_score": 0.78,
+        "retire_signal": "watch",
+        "scenario_tags": [
+          "creative"
+        ]
+      },
+      "id": "pixel_retro",
+      "keywords": [
+        "Pixel art",
+        "Retro gaming",
+        "Cyberpunk",
+        "Technology"
+      ],
+      "label": "Pixel Retro Template",
+      "search": "pixel retro template a pixel-art template for tech sharing and gaming-themed content retro gaming, neon cyber, geek tech, 8-bit style dark theme (deep space black background + neon accents) pixel art retro gaming cyberpunk technology",
+      "summary": "A pixel-art template for tech sharing and gaming-themed content",
+      "themeMode": "Dark theme (deep space black background + neon accents)",
+      "tone": "Retro gaming, neon cyber, geek tech, 8-bit style"
+    },
+    {
+      "assets": [],
+      "governance": {
+        "adoption_rate_30d": 0.06,
+        "canvas_profiles": [
+          "ppt169"
+        ],
+        "density_profile": "low",
+        "failure_rate_30d": 0.05,
+        "last_reviewed": "2026-05-06",
+        "lifecycle": "active",
+        "quality_score": 0.78,
+        "retire_signal": "keep",
+        "scenario_tags": [
+          "psychology"
+        ]
+      },
+      "id": "psychology_attachment",
+      "keywords": [
+        "Psychology",
+        "Healing",
+        "Counseling",
+        "Warm"
+      ],
+      "label": "Psychology Healing Template",
+      "search": "psychology healing template a warm and professional template for psychotherapy training and counseling lectures professional, warm, healing, trustworthy light theme (cloud white background + blue-green gradient accent + colorful semantic colors) psychology healing counseling warm",
+      "summary": "A warm and professional template for psychotherapy training and counseling lectures",
+      "themeMode": "Light theme (cloud white background + blue-green gradient accent + colorful semantic colors)",
+      "tone": "Professional, warm, healing, trustworthy"
+    },
+    {
+      "assets": [],
+      "governance": {
+        "adoption_rate_30d": 0.06,
+        "canvas_profiles": [
+          "ppt169"
+        ],
+        "density_profile": "medium",
+        "failure_rate_30d": 0.05,
+        "last_reviewed": "2026-05-06",
+        "lifecycle": "active",
+        "quality_score": 0.88,
+        "retire_signal": "keep",
+        "scenario_tags": [
+          "general_business",
+          "strategy"
+        ]
+      },
+      "id": "consulting_classic",
+      "keywords": [
+        "SIE",
+        "Consulting",
+        "Table-first",
+        "Blue-gray structure",
+        "Wine red accent",
+        "咨询风格",
+        "咨询",
+        "软件咨询",
+        "[CLIENT_NAME]",
+        "顾问方案",
+        "述标"
+      ],
+      "label": "Consulting Classic Template",
+      "search": "consulting classic template a consulting style template with wine-red accents, blue-gray structure lines, and table-first information delivery professional, restrained, data-driven, trustworthy hybrid theme (dark cover/chapter + light content pages) consulting classic table-first blue-gray structure wine red accent 咨询风格 咨询 软件咨询 [CLIENT_NAME] 顾问方案 述标",
+      "summary": "A consulting style template with wine-red accents, blue-gray structure lines, and table-first information delivery",
+      "themeMode": "Hybrid theme (dark cover/chapter + light content pages)",
+      "tone": "Professional, restrained, data-driven, trustworthy"
+    },
+    {
+      "assets": [],
+      "governance": {
+        "adoption_rate_30d": 0.16,
+        "canvas_profiles": [
+          "ppt169"
+        ],
+        "density_profile": "medium",
+        "failure_rate_30d": 0.05,
+        "last_reviewed": "2026-05-06",
+        "lifecycle": "active",
+        "quality_score": 0.83,
+        "retire_signal": "keep",
+        "scenario_tags": [
+          "creative",
+          "general_business",
+          "technology"
+        ]
+      },
+      "id": "smart_red",
+      "keywords": [
+        "Red-orange business",
+        "Tech enterprise",
+        "Education",
+        "Vibrant",
+        "????",
+        "商务汇报",
+        "通用商务"
+      ],
+      "label": "Smart Red-Orange Business Template",
+      "search": "smart red-orange business template a vibrant business template for tech company introductions and education solutions modern, vibrant, professional, geometric hybrid theme (dark/colorful cover + light content pages) red-orange business tech enterprise education vibrant ???? 商务汇报 通用商务",
+      "summary": "A vibrant business template for tech company introductions and education solutions",
+      "themeMode": "Hybrid theme (dark/colorful cover + light content pages)",
+      "tone": "Modern, vibrant, professional, geometric"
+    },
+    {
+      "assets": [
+        "{{LOGO_HEADER}}"
+      ],
+      "governance": {
+        "adoption_rate_30d": 0.06,
+        "canvas_profiles": [
+          "ppt169"
+        ],
+        "density_profile": "medium",
+        "failure_rate_30d": 0.05,
+        "last_reviewed": "2026-05-06",
+        "lifecycle": "active",
+        "quality_score": 0.78,
+        "retire_signal": "keep",
+        "scenario_tags": [
+          "energy"
+        ]
+      },
+      "id": "中国电建_常规",
+      "keywords": [
+        "PowerChina",
+        "State-owned enterprise",
+        "Engineering",
+        "Energy"
+      ],
+      "label": "PowerChina Standard Template",
+      "search": "powerchina standard template a solid brand template for engineering construction and state-owned enterprise reports professional, steady, international, state-owned enterprise style light theme (white background + powerchina blue accent) powerchina state-owned enterprise engineering energy",
+      "summary": "A solid brand template for engineering construction and state-owned enterprise reports",
+      "themeMode": "Light theme (white background + PowerChina blue accent)",
+      "tone": "Professional, steady, international, state-owned enterprise style"
+    },
+    {
+      "assets": [
+        "{{LOGO_HEADER}}"
+      ],
+      "governance": {
+        "adoption_rate_30d": 0.06,
+        "canvas_profiles": [
+          "ppt169"
+        ],
+        "density_profile": "medium",
+        "failure_rate_30d": 0.05,
+        "last_reviewed": "2026-05-06",
+        "lifecycle": "active",
+        "quality_score": 0.78,
+        "retire_signal": "keep",
+        "scenario_tags": [
+          "energy"
+        ]
+      },
+      "id": "中国电建_现代",
+      "keywords": [
+        "PowerChina",
+        "International engineering",
+        "Modern engineering",
+        "Technology"
+      ],
+      "label": "PowerChina Modern Template",
+      "search": "powerchina modern template a modern engineering template for major projects and international business presentations grand narrative, modern precision, digital technology, international vision deep blue tech gradient + precision grid texture powerchina international engineering modern engineering technology",
+      "summary": "A modern engineering template for major projects and international business presentations",
+      "themeMode": "Deep blue tech gradient + precision grid texture",
+      "tone": "Grand narrative, modern precision, digital technology, international vision"
+    },
+    {
+      "assets": [
+        "{{LOGO_HEADER}}",
+        "{{LOGO_LARGE}}"
+      ],
+      "governance": {
+        "adoption_rate_30d": 0.06,
+        "canvas_profiles": [
+          "ppt169"
+        ],
+        "density_profile": "medium",
+        "failure_rate_30d": 0.05,
+        "last_reviewed": "2026-05-06",
+        "lifecycle": "active",
+        "quality_score": 0.78,
+        "retire_signal": "keep",
+        "scenario_tags": [
+          "certification"
+        ]
+      },
+      "id": "中汽研_商务",
+      "keywords": [
+        "CATARC",
+        "Certification",
+        "Business",
+        "Technology"
+      ],
+      "label": "CATARC Business Template",
+      "search": "catarc business template a catarc brand template for certification showcase and high-end business presentations modern tech, authoritative professional, composed and grand deep blue tech gradient + clean white content pages catarc certification business technology",
+      "summary": "A CATARC brand template for certification showcase and high-end business presentations",
+      "themeMode": "Deep blue tech gradient + clean white content pages",
+      "tone": "Modern tech, authoritative professional, composed and grand"
+    },
+    {
+      "assets": [
+        "{{LOGO_HEADER}}",
+        "{{LOGO_LARGE}}"
+      ],
+      "governance": {
+        "adoption_rate_30d": 0.06,
+        "canvas_profiles": [
+          "ppt169"
+        ],
+        "density_profile": "medium",
+        "failure_rate_30d": 0.05,
+        "last_reviewed": "2026-05-06",
+        "lifecycle": "active",
+        "quality_score": 0.78,
+        "retire_signal": "keep",
+        "scenario_tags": [
+          "certification"
+        ]
+      },
+      "id": "中汽研_常规",
+      "keywords": [
+        "CATARC",
+        "Certification",
+        "Testing",
+        "Authoritative"
+      ],
+      "label": "CATARC Standard Template",
+      "search": "catarc standard template a standard catarc template for certification and testing scenarios professional, authoritative, trustworthy, consulting style light theme (white background + dark blue accent) catarc certification testing authoritative",
+      "summary": "A standard CATARC template for certification and testing scenarios",
+      "themeMode": "Light theme (white background + dark blue accent)",
+      "tone": "Professional, authoritative, trustworthy, consulting style"
+    },
+    {
+      "assets": [
+        "{{LOGO_HEADER}}",
+        "{{LOGO_LARGE}}"
+      ],
+      "governance": {
+        "adoption_rate_30d": 0.06,
+        "canvas_profiles": [
+          "ppt169"
+        ],
+        "density_profile": "medium",
+        "failure_rate_30d": 0.05,
+        "last_reviewed": "2026-05-06",
+        "lifecycle": "active",
+        "quality_score": 0.78,
+        "retire_signal": "keep",
+        "scenario_tags": [
+          "certification"
+        ]
+      },
+      "id": "中汽研_现代",
+      "keywords": [
+        "CATARC",
+        "Future tech",
+        "Cutting-edge technology",
+        "Launch event"
+      ],
+      "label": "CATARC Modern Template",
+      "search": "catarc modern template a futuristic tech template for cutting-edge technology showcase and premium launches futuristic, tech-forward, deep, refined immersive dark cover/transition pages + clean light gray content pages catarc future tech cutting-edge technology launch event",
+      "summary": "A futuristic tech template for cutting-edge technology showcase and premium launches",
+      "themeMode": "Immersive dark cover/transition pages + clean light gray content pages",
+      "tone": "Futuristic, tech-forward, deep, refined"
+    },
+    {
+      "assets": [
+        "{{LOGO}}"
+      ],
+      "governance": {
+        "adoption_rate_30d": 0.06,
+        "canvas_profiles": [
+          "ppt169"
+        ],
+        "density_profile": "medium",
+        "failure_rate_30d": 0.05,
+        "last_reviewed": "2026-05-06",
+        "lifecycle": "active",
+        "quality_score": 0.78,
+        "retire_signal": "keep",
+        "scenario_tags": [
+          "board",
+          "finance"
+        ]
+      },
+      "id": "招商银行",
+      "keywords": [
+        "China Merchants Bank",
+        "Finance",
+        "Premium report",
+        "Annual report"
+      ],
+      "label": "China Merchants Bank Template",
+      "search": "china merchants bank template a brand template for premium financial institution reports and annual presentations minimalist luxury, refined, multi-layered, modern finance light theme (textured background + cmb red/gold fine decorations) china merchants bank finance premium report annual report",
+      "summary": "A brand template for premium financial institution reports and annual presentations",
+      "themeMode": "Light theme (textured background + CMB red/gold fine decorations)",
+      "tone": "Minimalist luxury, refined, multi-layered, modern finance"
+    },
+    {
+      "assets": [],
+      "governance": {
+        "adoption_rate_30d": 0.06,
+        "canvas_profiles": [
+          "ppt169"
+        ],
+        "density_profile": "medium",
+        "failure_rate_30d": 0.05,
+        "last_reviewed": "2026-05-06",
+        "lifecycle": "active",
+        "quality_score": 0.78,
+        "retire_signal": "keep",
+        "scenario_tags": [
+          "general_business"
+        ]
+      },
+      "id": "科技蓝商务",
+      "keywords": [
+        "Tech blue",
+        "Business",
+        "Solution proposal",
+        "Corporate report"
+      ],
+      "label": "Tech Blue Business Template",
+      "search": "tech blue business template a tech-business template for corporate reports and solution proposals tech-forward, business, professional, clean hybrid theme (dark blue/tech blue cover + light content pages) tech blue business solution proposal corporate report",
+      "summary": "A tech-business template for corporate reports and solution proposals",
+      "themeMode": "Hybrid theme (dark blue/tech blue cover + light content pages)",
+      "tone": "Tech-forward, business, professional, clean"
+    },
+    {
+      "assets": [
+        "{{LOGO}}"
+      ],
+      "governance": {
+        "adoption_rate_30d": 0.06,
+        "canvas_profiles": [
+          "ppt169"
+        ],
+        "density_profile": "medium",
+        "failure_rate_30d": 0.05,
+        "last_reviewed": "2026-05-06",
+        "lifecycle": "active",
+        "quality_score": 0.78,
+        "retire_signal": "keep",
+        "scenario_tags": [
+          "academic"
+        ]
+      },
+      "id": "重庆大学",
+      "keywords": [
+        "Chongqing University",
+        "Academic",
+        "Defense",
+        "University"
+      ],
+      "label": "Chongqing University Template",
+      "search": "chongqing university template a university-exclusive template for academic defenses and research presentations academically composed, mountain-city essence, modern minimalist academic blue primary + mountain-city layered imagery chongqing university academic defense university",
+      "summary": "A university-exclusive template for academic defenses and research presentations",
+      "themeMode": "Academic blue primary + mountain-city layered imagery",
+      "tone": "Academically composed, mountain-city essence, modern minimalist"
+    }
+  ]
+}

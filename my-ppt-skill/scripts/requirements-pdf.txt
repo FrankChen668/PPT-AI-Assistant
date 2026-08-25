@@ -1,0 +1,4 @@
+# Optional PDF source conversion and PDF-backed SVG raster fallback.
+# Install from the my-ppt-skill directory when PDF input is needed:
+#   pip install -r scripts/requirements-pdf.txt -c scripts/constraints.txt
+PyMuPDF>=1.23.0

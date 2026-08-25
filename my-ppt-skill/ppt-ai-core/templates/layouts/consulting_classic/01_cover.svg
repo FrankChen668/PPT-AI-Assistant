@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <!-- SIE consulting cover placeholder -->
+  <rect x="0" y="0" width="1280" height="720" fill="#2C3E50"/>
+  <rect x="120" y="168" width="8" height="280" fill="#AD053D"/>
+  <text x="160" y="280" fill="#FFFFFF" font-family="Microsoft YaHei, Arial, sans-serif" font-size="56" font-weight="700">SIE 咨询风格封面</text>
+  <text x="160" y="338" fill="#B4C6CA" font-family="Microsoft YaHei, Arial, sans-serif" font-size="24">深色封面 + 酒红强调 + 蓝灰副标题</text>
+  <text x="160" y="620" fill="#B4C6CA" font-family="Microsoft YaHei, Arial, sans-serif" font-size="18">Date / Placeholder</text>
+</svg>

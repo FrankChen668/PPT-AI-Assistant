@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <!-- SIE consulting chapter placeholder -->
+  <rect x="0" y="0" width="1280" height="720" fill="#4A5558"/>
+  <text x="120" y="190" fill="#B4C6CA" font-family="Microsoft YaHei, Arial, sans-serif" font-size="24">Chapter 01</text>
+  <text x="120" y="300" fill="#FFFFFF" font-family="Microsoft YaHei, Arial, sans-serif" font-size="64" font-weight="700">章节标题占位</text>
+  <text x="120" y="360" fill="#B4C6CA" font-family="Microsoft YaHei, Arial, sans-serif" font-size="24">深色章节页，保持结构克制</text>
+  <line x1="120" y1="420" x2="420" y2="420" stroke="#AD053D" stroke-width="6"/>
+</svg>

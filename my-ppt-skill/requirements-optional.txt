@@ -1,0 +1,14 @@
+# 可选依赖（pyproject.toml 未声明，但部分功能/测试需要）
+# 安装：pip install -r requirements-optional.txt
+#
+# SVG -> PDF -> PNG 渲染的第三条 fallback 路径（前两条为系统浏览器、cairosvg）。
+# 缺失时 tests/test_export_raster.py::test_svglib_pdf_renderer_creates_png 会失败。
+reportlab
+svglib
+
+# PDF 输入转换与 PDF-backed SVG raster fallback：按需安装
+# pip install -r scripts/requirements-pdf.txt -c scripts/constraints.txt
+
+# 注：cairosvg 已在主依赖中，但在 Windows 上还需系统级原生库 libcairo-2.dll
+# 才能实际渲染（仅装 pip 包会在运行时报 "no library called cairo-2"）。
+# 由于已有“系统浏览器”作为首选渲染路径，通常无需安装该原生库。

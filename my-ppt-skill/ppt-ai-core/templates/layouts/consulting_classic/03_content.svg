@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <!-- SIE consulting content placeholder -->
+  <rect x="0" y="0" width="1280" height="720" fill="#F2F6F6"/>
+  <text x="80" y="96" fill="#2C3E50" font-family="Microsoft YaHei, Arial, sans-serif" font-size="34" font-weight="700">内容页骨架（表格优先）</text>
+  <line x1="80" y1="122" x2="1200" y2="122" stroke="#7C969D" stroke-width="2"/>
+  <rect x="80" y="160" width="1120" height="80" fill="#4A5558" rx="4"/>
+  <text x="110" y="212" fill="#FFFFFF" font-family="Microsoft YaHei, Arial, sans-serif" font-size="26" font-weight="700">指标</text>
+  <text x="430" y="212" fill="#FFFFFF" font-family="Microsoft YaHei, Arial, sans-serif" font-size="26" font-weight="700">现状</text>
+  <text x="760" y="212" fill="#FFFFFF" font-family="Microsoft YaHei, Arial, sans-serif" font-size="26" font-weight="700">建议</text>
+  <rect x="80" y="240" width="1120" height="74" fill="#F2F6F6"/>
+  <rect x="80" y="314" width="1120" height="74" fill="#FFFFFF"/>
+  <rect x="80" y="388" width="1120" height="74" fill="#F2F6F6"/>
+  <rect x="80" y="462" width="1120" height="74" fill="#EFDDE2"/>
+  <rect x="80" y="240" width="1120" height="296" fill="none" stroke="#B4C6CA" stroke-width="2"/>
+</svg>

@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "case_id": "gold-ai-work-upgrade-p02-p13",
+  "status": "gold",
+  "source_note": "竞品 12 页正文样本，覆盖 AI 工作方式升级 P02-P13。用于学习设计动作，不做像素级复刻。",
+  "usage": "Reference the design actions and visual_grammar_ids in reference_pack.reference_case_ids or slide_visual_plan.reference_case_ids.",
+  "slides": [
+    {
+      "slide_id": 1,
+      "source_page": "P02",
+      "visual_grammar_ids": ["problem-labels"],
+      "design_actions": ["三栏预期校准中突出重点讲什么", "用勾叉符号区分排除项与重点项", "底部结论强调不是AI有多强而是改变工作方式"]
+    },
+    {
+      "slide_id": 2,
+      "source_page": "P03",
+      "visual_grammar_ids": ["phase-transition"],
+      "design_actions": ["把分享主线变成分段路线图", "场景层用灰底承载多实践页", "行动层独立成右侧收束节点"]
+    },
+    {
+      "slide_id": 3,
+      "source_page": "P04",
+      "visual_grammar_ids": ["cognitive-reframe"],
+      "design_actions": ["用英文小标签强化三阶段认知变化", "新范式卡片视觉最强", "红色底纹只强调新判断"]
+    },
+    {
+      "slide_id": 4,
+      "source_page": "P05",
+      "visual_grammar_ids": ["problem-labels"],
+      "design_actions": ["把不好用改写成空泛、胡说、缺上下文、难交付、返工多", "左右对比中让真实阻力更强", "底部 quote 形成记忆点"]
+    },
+    {
+      "slide_id": 5,
+      "source_page": "P06",
+      "visual_grammar_ids": ["workflow-chain"],
+      "design_actions": ["把链路拆成阶段一/阶段二跃迁", "输出侧加入交付物集合", "底部强化人脑始终掌握主导权"]
+    },
+    {
+      "slide_id": 6,
+      "source_page": "P07",
+      "visual_grammar_ids": ["myth-vs-reality"],
+      "design_actions": ["左侧误区灰化", "右侧真实方式加红色边框与勾选", "中间箭头命名为认知纠偏"]
+    },
+    {
+      "slide_id": 7,
+      "source_page": "P08",
+      "visual_grammar_ids": ["capability-amplifier"],
+      "design_actions": ["点型人才到井型人才用三段转化图表达", "AI能力放大器置于中心", "纵横能力用图形结构而非文字解释"]
+    },
+    {
+      "slide_id": 8,
+      "source_page": "P09",
+      "visual_grammar_ids": ["anxiety-to-action"],
+      "design_actions": ["焦虑来源弱化成灰卡", "真实感受用 quote 卡片承载", "更实际的选择作为红色强卡"]
+    },
+    {
+      "slide_id": 9,
+      "source_page": "P10",
+      "visual_grammar_ids": ["phase-transition"],
+      "design_actions": ["三阶段时间轴置顶", "阶段三工作流协同视觉最强", "每阶段底部用特点标签总结"]
+    },
+    {
+      "slide_id": 10,
+      "source_page": "P11",
+      "visual_grammar_ids": ["human-ai-division"],
+      "design_actions": ["上方流程展示人-AI-人闭环", "下方左右分工卡明确人负责和AI参与", "底部深红条强化核心结论"]
+    },
+    {
+      "slide_id": 11,
+      "source_page": "P12",
+      "visual_grammar_ids": ["problem-labels"],
+      "design_actions": ["五类适合任务用错落卡片而非等距矩阵", "第三类卡在空白页加星角强调", "底部思考转变作为行动提示"]
+    },
+    {
+      "slide_id": 12,
+      "source_page": "P13",
+      "visual_grammar_ids": ["quadrant-case-map"],
+      "design_actions": ["四类实践用2x2案例地图", "售前场景作为当前高亮", "每格输出代表成果而非长段解释"]
+    }
+  ]
+}

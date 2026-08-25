@@ -1,0 +1,11 @@
+/*
+  Compatibility layer only.
+  Workbench styles were migrated into:
+  - styles-base.css
+  - styles-create-workspace.css
+  - styles-task-center.css
+  - styles-preview.css
+  - styles-delivery.css
+
+  Keep this file for backward compatibility and gradual cleanup.
+*/

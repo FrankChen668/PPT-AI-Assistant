@@ -1,0 +1,429 @@
+/* Workbench Design System v1 implementation */
+body {
+  background: var(--surface-page);
+  color: var(--text-primary);
+}
+
+button,
+select,
+textarea,
+input {
+  transition:
+    border-color 140ms ease,
+    background-color 140ms ease,
+    color 140ms ease,
+    box-shadow 140ms ease,
+    transform 140ms ease;
+}
+
+button:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+input:focus-visible,
+.task-card:focus-visible,
+.slide-main:focus-visible {
+  outline: 3px solid rgb(29 99 216 / 24%);
+  outline-offset: 2px;
+  border-color: var(--border-strong);
+}
+
+button:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+.primary-action,
+.primary-next-action {
+  border-color: var(--brand-primary);
+  background: var(--brand-primary);
+  color: #ffffff;
+}
+
+.primary-action:not(:disabled):hover,
+.primary-next-action:not(:disabled):hover {
+  border-color: var(--brand-primary-hover);
+  background: var(--brand-primary-hover);
+  box-shadow: 0 12px 26px rgb(18 59 122 / 18%);
+}
+
+.ghost-action {
+  border-color: var(--border-subtle);
+  background: #ffffff;
+  color: var(--brand-primary);
+}
+
+.ghost-action:not(:disabled):hover {
+  border-color: var(--border-strong);
+  background: #f7faff;
+}
+
+button:disabled,
+select:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.68;
+}
+
+.app-shell,
+.app-shell.mode-select-view,
+.app-shell.new-task-view,
+.app-shell.task-center-view,
+.app-shell.task-detail-view {
+  background: var(--surface-page);
+}
+
+.setup-panel,
+.app-shell.mode-select-view .left-rail,
+.app-shell.new-task-view .left-rail,
+.app-shell.task-center-view .left-rail,
+.app-shell.task-detail-view .setup-panel {
+  background: var(--surface-rail);
+  border-right: 1px solid var(--border-subtle);
+}
+
+.title-block h1 {
+  letter-spacing: 0;
+}
+
+.rail-nav {
+  gap: var(--space-2);
+}
+
+.rail-new-task,
+.rail-nav-action {
+  min-height: 44px;
+  border-color: transparent;
+  background: transparent;
+  color: #31415a;
+  font-weight: 850;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.rail-new-task {
+  border-color: #bed0ea;
+  background: #ffffff;
+  color: var(--brand-primary);
+  box-shadow: 0 8px 20px rgb(16 33 59 / 6%);
+}
+
+.rail-new-task.active,
+.rail-nav-action.active,
+.rail-new-task[aria-current="page"],
+.rail-nav-action[aria-current="page"] {
+  border-color: #b5c9e8;
+  background: #ffffff;
+  color: var(--brand-primary);
+  box-shadow: inset 3px 0 0 var(--brand-primary), 0 8px 20px rgb(16 33 59 / 6%);
+}
+
+.rail-nav-action:not(:disabled):hover,
+.rail-new-task:not(:disabled):hover {
+  border-color: #c9d8ee;
+  background: #ffffff;
+}
+
+.recent-tasks-panel {
+  border-top-color: var(--border-subtle);
+}
+
+.task-card {
+  border: 1px solid transparent;
+  background: transparent;
+  text-align: left;
+}
+
+.recent-task-list .task-card {
+  min-height: auto;
+  padding: 8px 6px 8px 10px;
+  gap: 4px;
+}
+
+.recent-task-list .task-card-main {
+  gap: 4px;
+}
+
+.task-card strong {
+  color: var(--text-primary);
+  line-height: 1.35;
+}
+
+.task-card-status {
+  width: fit-content;
+  margin-top: 7px;
+  border-radius: var(--radius-pill);
+  background: #edf4ff;
+  color: var(--brand-primary);
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.recent-task-list .task-card-status {
+  margin-top: 2px;
+}
+
+.task-card small {
+  margin-top: 7px;
+}
+
+.recent-task-list .task-card small {
+  margin-top: 2px;
+  font-size: 11px;
+}
+
+.task-card:hover,
+.task-card.active {
+  border-color: #c9d8ee;
+  background: #ffffff;
+  box-shadow: 0 10px 22px rgb(16 33 59 / 6%);
+}
+
+.create-workspace {
+  background:
+    radial-gradient(circle at 22% 14%, rgb(255 255 255 / 95%) 0 0, transparent 360px),
+    linear-gradient(180deg, #f8fbff 0%, #f2f6fb 100%);
+}
+
+.composer-shell {
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+  border-color: #d8e2ef;
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-canvas);
+}
+
+.composer-mode-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: var(--space-4);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.composer-mode-summary h2 {
+  font-size: 30px;
+  letter-spacing: 0;
+}
+
+.prompt-field textarea {
+  min-height: 320px;
+  border-radius: var(--radius-panel);
+  background: #fbfdff;
+  box-shadow: inset 0 0 0 1px #d7e1ee;
+}
+
+.prompt-field textarea:hover {
+  box-shadow: inset 0 0 0 1px #bdcde4;
+}
+
+.composer-control-bar {
+  padding-top: var(--space-1);
+}
+
+.composer-control-bar label,
+.zoom-control,
+.page-prompt-panel label {
+  color: #53647c;
+}
+
+.composer-control-bar select,
+.page-prompt-panel select,
+.zoom-control select {
+  min-height: 38px;
+  border-color: #cfd9e8;
+}
+
+.task-center-panel {
+  background: #f7f9fc;
+}
+
+.task-center-panel > .section-heading {
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.app-shell.task-center-view #taskList {
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.app-shell.task-center-view .task-card {
+  border-color: var(--border-subtle);
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgb(16 33 59 / 5%);
+}
+
+.app-shell.task-detail-view #taskDetailShell.workspace-panel {
+  background:
+    linear-gradient(180deg, #ffffff 0, #ffffff 76px, #f3f6fa 76px, #f3f6fa 100%);
+}
+
+.app-shell.task-detail-view .workspace-header {
+  border-bottom-color: var(--border-subtle);
+}
+
+.app-shell.task-detail-view .next-action-panel {
+  border-radius: var(--radius-panel);
+  border-color: #d7e2ef;
+}
+
+.app-shell.task-detail-view .status-strip .result-item {
+  border-color: var(--border-subtle);
+  border-radius: var(--radius-control);
+}
+
+.app-shell.task-detail-view .page-prompt-panel,
+.app-shell.task-detail-view .slide-list-panel,
+.app-shell.task-detail-view .preview-panel {
+  border-color: var(--border-subtle);
+  border-radius: var(--radius-panel);
+}
+
+.app-shell.task-detail-view .page-prompt-panel,
+.app-shell.task-detail-view .slide-list-panel {
+  box-shadow: var(--shadow-panel);
+}
+
+.app-shell.task-detail-view .preview-panel {
+  box-shadow: var(--shadow-canvas);
+}
+
+.app-shell.task-detail-view .preview-controls {
+  border-color: var(--border-subtle);
+}
+
+.app-shell.task-detail-view .preview-zone {
+  background:
+    linear-gradient(135deg, rgb(255 255 255 / 30%) 0 25%, transparent 25% 50%, rgb(255 255 255 / 30%) 50% 75%, transparent 75%) 0 0 / 28px 28px,
+    var(--surface-canvas);
+}
+
+.app-shell.task-detail-view .preview-hint {
+  border-color: #c7d5e8;
+  background: rgb(255 255 255 / 92%);
+}
+
+.slide-row:hover {
+  border-color: #c4d4ea;
+}
+
+.slide-row.active,
+.slide-main.active {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 2px rgb(18 59 122 / 12%);
+}
+
+.state-pill,
+.page-stream-select strong,
+.page-stream-select em {
+  border-radius: var(--radius-pill);
+}
+
+.state-pill.ready,
+.state-pill.done,
+.slide-main .done {
+  color: var(--state-success);
+  background: #e8f7ee;
+}
+
+.state-pill.running,
+.slide-main .ready {
+  color: var(--state-warning);
+  background: #fff8e8;
+}
+
+.state-pill.error,
+.slide-main .failed {
+  color: var(--state-danger);
+  background: #fdecec;
+}
+
+.advanced-panel,
+.log-panel,
+.qa-panel,
+.revision-panel {
+  border-color: var(--border-subtle);
+}
+
+.slideshow-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 14px;
+  background: #05070b;
+  padding: 24px;
+}
+
+.slideshow-overlay.hidden {
+  display: none;
+}
+
+.slideshow-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 0;
+}
+
+#slideshowFrame {
+  width: min(100%, calc((100vh - 112px) * 16 / 9));
+  aspect-ratio: 16 / 9;
+  border: 0;
+  background: #ffffff;
+  box-shadow: 0 24px 70px rgb(0 0 0 / 44%);
+}
+
+#slideshowFrame.hidden {
+  display: none;
+}
+
+.slideshow-empty {
+  display: grid;
+  place-items: center;
+  width: min(100%, calc((100vh - 112px) * 16 / 9));
+  aspect-ratio: 16 / 9;
+  border: 1px dashed rgb(255 255 255 / 28%);
+  color: #dbe5f4;
+  background: #111722;
+  font-weight: 800;
+}
+
+.slideshow-empty.hidden {
+  display: none;
+}
+
+.slideshow-toolbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: #ffffff;
+}
+
+.slideshow-toolbar .ghost-action {
+  background: #ffffff;
+}
+
+#slideshowCounter {
+  min-width: 68px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 850;
+  color: #dbe5f4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

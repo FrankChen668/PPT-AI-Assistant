@@ -1,0 +1,102 @@
+{
+  "version": "1.0",
+  "source": "Critically distilled from external consulting-style prompt library",
+  "patterns": [
+    {
+      "pattern_id": "cover_statement",
+      "applies_to_tags": ["Cover-Center", "Statement-Bold"],
+      "conclusion_formula": "One management judgment sentence, not a noun phrase.",
+      "block_structure": "Headline -> Subline -> Context metadata",
+      "composition_cues": "Left-heavy hero with controlled negative space.",
+      "anti_patterns": ["project-name-only-title", "poster-like-decoration", "marketing-slogan-tone"]
+    },
+    {
+      "pattern_id": "chapter_navigation",
+      "applies_to_tags": ["Section-Divider", "End-Page"],
+      "conclusion_formula": "State what this section resolves and why order matters.",
+      "block_structure": "Storyline sentence -> 3-6 chapter cues -> transition takeaway",
+      "composition_cues": "Strong alignment rails and restrained chapter index anchors.",
+      "anti_patterns": ["raw-page-index-list", "dense-body-copy", "word-document-outline-look"]
+    },
+    {
+      "pattern_id": "external_trend_case",
+      "applies_to_tags": ["Trend-Radar", "Policy-Change", "Market-Shift", "Risk-Matrix"],
+      "conclusion_formula": "External shift + business implication + urgency.",
+      "block_structure": "Trend judgment -> 3 drivers -> business impact -> action necessity",
+      "composition_cues": "Top judgment band + modular trend cards + bottom implication strip.",
+      "anti_patterns": ["policy-text-dump", "slogan-without-impact", "unverified-claims"]
+    },
+    {
+      "pattern_id": "problem_insight",
+      "applies_to_tags": ["Problem-Insight", "Issue-Diagnosis", "AsIs-ToBe"],
+      "conclusion_formula": "Gap diagnosis sentence that names root constraint.",
+      "block_structure": "Observed symptoms -> root cause -> business consequence -> design direction",
+      "composition_cues": "Cause-effect flow with one dominant tension axis.",
+      "anti_patterns": ["complaint-list-only", "solution-before-diagnosis", "generic-buzzwords"]
+    },
+    {
+      "pattern_id": "strategy_map",
+      "applies_to_tags": ["Strategy-Map", "Capability-Mapping", "Roadmap-MultiPhase"],
+      "conclusion_formula": "Recommendation sentence linking strategic intent to delivery route.",
+      "block_structure": "North-star -> 3 strategic pillars -> execution implications",
+      "composition_cues": "Asymmetric core map with one highlighted dominant lane.",
+      "anti_patterns": ["equal-card-matrix", "pillar-list-without-logic", "timeline-without-priority"]
+    },
+    {
+      "pattern_id": "architecture_system",
+      "applies_to_tags": ["Architecture-Layer", "Architecture-Flow", "System-Map"],
+      "conclusion_formula": "System architecture judgment: why this structure is controllable.",
+      "block_structure": "Layer responsibilities -> key interfaces -> governance controls",
+      "composition_cues": "Layered modules with directional connectors and bounded annotation zones.",
+      "anti_patterns": ["floating-modules", "ambiguous-interface-direction", "menu-like-ui-screenshot-look"]
+    },
+    {
+      "pattern_id": "data_integration",
+      "applies_to_tags": ["Data-Integration", "Data-Lineage", "Data-Governance"],
+      "conclusion_formula": "Data trust and traceability judgment sentence.",
+      "block_structure": "Data sources -> join keys -> evidence linkage -> output/reporting",
+      "composition_cues": "Pipeline narrative with explicit checkpoint markers.",
+      "anti_patterns": ["table-dump-no-insight", "no-source-linkage", "fake-roi-claims"]
+    },
+    {
+      "pattern_id": "roadmap_execution",
+      "applies_to_tags": ["Timeline-Horizontal", "Timeline-Vertical", "Flow-Steps"],
+      "conclusion_formula": "Execution sequence judgment with phase-level outcomes.",
+      "block_structure": "Phase objective -> milestones -> ownership -> risk controls",
+      "composition_cues": "Forward-motion chronology with cadence contrast between phases.",
+      "anti_patterns": ["date-list-only", "ownerless-plan", "all-phases-same-weight"]
+    },
+    {
+      "pattern_id": "value_case",
+      "applies_to_tags": ["Data-Single-KPI", "Data-Three-KPIs", "Value-Case"],
+      "conclusion_formula": "Value statement tied to measurable operating outcomes.",
+      "block_structure": "Value claim -> metric evidence -> confidence conditions",
+      "composition_cues": "One dominant metric stage + supporting evidence satellites.",
+      "anti_patterns": ["benefit-list-without-metric", "overpromising-language", "no-baseline"]
+    },
+    {
+      "pattern_id": "comparison_decision",
+      "applies_to_tags": ["Two-Columns-Split", "Before-After", "Pros-Cons"],
+      "conclusion_formula": "Decision sentence naming winner criteria and trade-offs.",
+      "block_structure": "Decision criteria -> option comparison -> recommendation",
+      "composition_cues": "Controlled contrast with explicit decision rail.",
+      "anti_patterns": ["mirror-columns-without-judgment", "criteria-missing", "neutral-ending"]
+    },
+    {
+      "pattern_id": "risk_governance",
+      "applies_to_tags": ["Risk-Register", "Control-Framework", "Governance-Model"],
+      "conclusion_formula": "Risk posture sentence linking threat, control, and owner.",
+      "block_structure": "Risk signal -> control action -> owner/accountability -> escalation",
+      "composition_cues": "Risk-to-control mapping board with responsibility visibility.",
+      "anti_patterns": ["risk-list-no-control", "control-list-no-owner", "alarmist-tone"]
+    },
+    {
+      "pattern_id": "default_consulting",
+      "applies_to_tags": [],
+      "conclusion_formula": "Conclusion-first sentence with explicit management implication.",
+      "block_structure": "Judgment -> 2-4 evidence blocks -> actionable takeaway",
+      "composition_cues": "Avoid repetitive symmetry and preserve hierarchy contrast.",
+      "anti_patterns": ["noun-only-titles", "decorative-noise", "uniform-rhythm-across-deck"]
+    }
+  ]
+}

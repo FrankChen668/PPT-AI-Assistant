@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="220" viewBox="0 0 360 220">
+  <rect x="0" y="0" width="360" height="220" rx="8" fill="{{card_bg}}"/>
+  <text x="28" y="58" font-family="PingFang SC, Microsoft YaHei, Arial, sans-serif" font-size="16" fill="{{text_muted}}">{{label}}</text>
+  <text x="28" y="128" font-family="PingFang SC, Microsoft YaHei, Arial, sans-serif" font-size="56" font-weight="700" fill="{{primary}}">{{value}}</text>
+  <text x="28" y="174" font-family="PingFang SC, Microsoft YaHei, Arial, sans-serif" font-size="18" fill="{{text_body}}">{{note}}</text>
+</svg>

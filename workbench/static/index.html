@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PPT AI 工作台</title>
+    <link rel="stylesheet" href="/static/styles.css?v=20260514-doc-upload-v1" />
+    <link rel="stylesheet" href="/static/styles-base.css?v=20260730-uat-round2-v1" />
+    <link rel="stylesheet" href="/static/styles-create-workspace.css?v=20260730-uat-round2-v1" />
+    <link rel="stylesheet" href="/static/styles-task-center.css?v=20260514-governance-split" />
+    <link rel="stylesheet" href="/static/styles-preview.css?v=20260730-uat-round2-v1" />
+    <link rel="stylesheet" href="/static/styles-delivery.css?v=20260731-c09-detail-v21" />
+    <link rel="stylesheet" href="/static/styles-template-gallery.css?v=20260810-c13b-template-gallery" />
+    <link rel="stylesheet" href="/static/styles-outline-editor.css?v=20260810-c13a-outline-confirm" />
+  </head>
+  <body>
+    <svg class="icon-sprite" aria-hidden="true" focusable="false">
+      <symbol id="icon-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></symbol>
+      <symbol id="icon-list" viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01" /></symbol>
+      <symbol id="icon-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14" /></symbol>
+      <symbol id="icon-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15.5-6.36L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.5 6.36L3 16M3 21v-5h5" /></symbol>
+      <symbol id="icon-fit" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" /></symbol>
+      <symbol id="icon-zoom" viewBox="0 0 24 24"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14M20 20l-3.5-3.5" /></symbol>
+      <symbol id="icon-fullscreen" viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5" /></symbol>
+      <symbol id="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></symbol>
+      <symbol id="icon-reset" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5" /></symbol>
+      <symbol id="icon-history" viewBox="0 0 24 24"><path d="M12 8v5l3 2M21 12a9 9 0 1 1-3-6.7M21 4v5h-5" /></symbol>
+      <symbol id="icon-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.8 4.7L18.5 9l-4.7 1.8L12 15.5l-1.8-4.7L5.5 9l4.7-1.3zM19 14l.8 2.2L22 17l-2.2.8L19 20l-.8-2.2L16 17l2.2-.8zM5 14l.6 1.6L7.2 16l-1.6.6L5 18.2l-.6-1.6L2.8 16l1.6-.4z" /></symbol>
+      <symbol id="icon-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></symbol>
+      <symbol id="icon-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 0 0 5.4-5.4L14 13l-3-3z" /></symbol>
+      <symbol id="icon-file-down" viewBox="0 0 24 24"><path d="M14 3H6v18h12V9zM14 3v6h6M12 12v6M9.5 15.5 12 18l2.5-2.5" /></symbol>
+      <symbol id="icon-copy" viewBox="0 0 24 24"><path d="M9 9V4h11v11h-5M4 9h11v11H4z" /></symbol>
+      <symbol id="icon-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6" /></symbol>
+      <symbol id="icon-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></symbol>
+      <symbol id="icon-panel" viewBox="0 0 24 24"><path d="M3 4h18v16H3zM15 4v16" /></symbol>
+      <symbol id="icon-search" viewBox="0 0 24 24"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14M20 20l-3.5-3.5" /></symbol>
+      <symbol id="icon-filter" viewBox="0 0 24 24"><path d="M3 5h18M6 12h12M10 19h4" /></symbol>
+    </svg>
+    <div id="toastHost" class="toast-host" aria-live="polite" aria-atomic="false"></div>
+    <main class="app-shell">
+      <section id="leftRail" class="left-rail setup-panel" aria-labelledby="appTitle">
+        <div class="title-block setup-head">
+          <div>
+            <h1 id="appTitle">PPT AI 工作台</h1>
+          </div>
+          <div class="setup-actions">
+            <button id="toggleSetupPanel" class="ghost-action panel-toggle" aria-expanded="true">收起</button>
+          </div>
+        </div>
+
+        <nav class="rail-nav" aria-label="工作台导航">
+          <button id="newTaskButton" class="rail-new-task" type="button"><svg class="btn-icon" aria-hidden="true"><use href="#icon-plus"></use></svg><span>新任务</span></button>
+          <button id="showTaskCenter" class="rail-nav-action" type="button"><svg class="btn-icon" aria-hidden="true"><use href="#icon-list"></use></svg><span>全部任务</span></button>
+          <button id="openPreferencePopoverRail" class="rail-nav-action config-rail-action" type="button" data-action="open-preferences"><svg class="btn-icon" aria-hidden="true"><use href="#icon-panel"></use></svg><span>模型配置</span></button>
+        </nav>
+
+        <section class="recent-tasks-panel" aria-labelledby="recentTaskTitle">
+          <div class="section-heading compact">
+            <h3 id="recentTaskTitle">最近任务</h3>
+          </div>
+          <div id="recentTaskList" class="task-list recent-task-list">
+            <div class="empty-note">暂无任务</div>
+          </div>
+        </section>
+
+        <div id="setupCollapsedSummary" class="setup-collapsed-summary hidden" aria-hidden="true">
+          <p id="collapsedProjectName" class="collapsed-project-name">未创建项目</p>
+          <button id="collapsedCreateTask" class="ghost-action" disabled>创建任务</button>
+        </div>
+      </section>
+
+      <section id="modelConfigView" class="workspace-panel model-config-panel hidden" aria-labelledby="preferenceTitle">
+        <div class="model-wrap">
+          <div class="section-heading model-config-head">
+            <div>
+              <p class="eyebrow">配置</p>
+              <h2 id="preferenceTitle">模型配置</h2>
+              <p class="model-config-subtitle">全局通用。连接只维护一次，角色按需选择连接和模型。</p>
+            </div>
+            <button id="closePreferencePopover" class="ghost-action" type="button">返回</button>
+          </div>
+          <div class="subtabs" role="tablist" aria-label="模型配置分区">
+            <button class="subtab active" type="button" data-model-tab="connections" role="tab" aria-selected="true">API连接</button>
+            <button class="subtab" type="button" data-model-tab="routing" role="tab" aria-selected="false">角色路由</button>
+          </div>
+
+          <section id="connectionsSection" class="model-section active">
+            <div class="generation-settings global-default-settings" aria-label="全局选项">
+              <div class="section-heading compact">
+                <h3>全局选项</h3>
+              </div>
+              <label class="checkbox-row">
+                <input id="generationProgressiveSetting" type="checkbox" />
+                渐进可视化生成（按内容块逐步渲染，变更后自动保存）
+              </label>
+            </div>
+
+            <div class="connection-layout">
+              <aside class="connection-list-pane">
+                <div class="connection-list-head"><strong>连接</strong><button id="addConnection" class="ghost-action" type="button">＋ 新增</button></div>
+                <div id="connectionList" class="connection-list">
+                  <div class="empty-note">暂无连接</div>
+                </div>
+              </aside>
+              <div id="connectionForm" class="connection-editor">
+                <input id="connectionEditingId" type="hidden" value="" />
+                <div class="editor-head">
+                  <div>
+                    <h2 id="connectionTitle">新增连接</h2>
+                    <p id="connectionDescription">从左侧选择连接，或填写后保存新建。</p>
+                  </div>
+                  <div class="editor-head-actions">
+                    <button id="toggleConnectionEnabledButton" class="ghost-action hidden" type="button">停用</button>
+                    <button id="deleteConnection" class="ghost-action danger-action hidden" type="button">删除</button>
+                  </div>
+                </div>
+                <div class="form-grid">
+                  <label class="field">
+                    <span>连接名称</span>
+                    <input id="connectionName" type="text" autocomplete="off" placeholder="例如：DeepSeek 主连接" />
+                  </label>
+                  <label class="field">
+                    <span>模型通道</span>
+                    <select id="connectionProvider">
+                      <option value="google">Gemini</option>
+                      <option value="xiaomi">小米 MiMo</option>
+                      <option value="siliconflow">SiliconFlow</option>
+                      <option value="deepseek">DeepSeek</option>
+                      <option value="openai_compatible">OpenAI 兼容</option>
+                    </select>
+                  </label>
+                  <label class="field full">
+                    <span>Base URL</span>
+                    <input id="connectionBaseUrl" type="url" autocomplete="off" placeholder="https://api.example.com/v1" />
+                  </label>
+                  <div class="field full">
+                    <span>API Key</span>
+                    <div class="key-box">
+                      <div class="key-display"><span id="keyMasked">未配置</span><span>浏览器不读取明文</span></div>
+                      <button id="replaceKey" class="ghost-action" type="button">替换密钥</button>
+                    </div>
+                    <input id="connectionApiKey" type="password" class="hidden" autocomplete="new-password" placeholder="仅提交到本机服务端，保存后不回显" />
+                  </div>
+                </div>
+                <div id="protocolNote" class="protocol-note hidden"></div>
+                <div class="connection-test">
+                  <div class="connection-test-copy"><strong id="testStatusTitle">尚未测试</strong><span id="testStatusDetail">保存连接后可测试并读取模型列表。</span></div>
+                  <button id="refreshModels" class="ghost-action" type="button">测试并读取模型</button>
+                </div>
+                <div class="connection-actions">
+                  <span id="connectionFormStatus" class="settings-status"></span>
+                  <button id="duplicateConnection" class="ghost-action hidden" type="button">复制连接</button>
+                  <button id="cancelConnectionForm" class="ghost-action" type="button">取消</button>
+                  <button id="saveConnection" class="secondary-action" type="button">保存连接</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="routingSection" class="model-section">
+            <p class="role-routing-hint">未配置的角色默认使用第一个已启用的连接；页面重新生成未配置时继承 SVG 页面生成。</p>
+            <div id="routingGrid" class="routing-grid">
+              <div class="role-card">
+                <div class="role-card-head">
+                  <div><h3>内容规划</h3><p>拆解需求、规划页面结构与内容要点。</p></div>
+                </div>
+                <div class="role-form">
+                  <label class="field"><span>连接</span><select data-role-connection="content_planning"><option value="">使用默认</option></select></label>
+                  <label class="field"><span>模型 ID</span><input data-role-model="content_planning" type="text" autocomplete="off" placeholder="留空用连接默认" /></label>
+                </div>
+              </div>
+              <div class="role-card">
+                <div class="role-card-head">
+                  <div><h3>SVG 页面生成</h3><p>生成每一页的 SVG 版面与视觉内容。</p></div>
+                </div>
+                <div class="role-form">
+                  <label class="field"><span>连接</span><select data-role-connection="svg_generation"><option value="">使用默认</option></select></label>
+                  <label class="field"><span>模型 ID</span><input data-role-model="svg_generation" type="text" autocomplete="off" placeholder="留空用连接默认" /></label>
+                </div>
+              </div>
+              <div class="role-card">
+                <div class="role-card-head">
+                  <div><h3>页面重新生成</h3><p>针对单页的迭代与重新生成。</p></div>
+                </div>
+                <div class="role-form">
+                  <label class="field"><span>连接</span><select data-role-connection="page_regeneration"><option value="">继承 SVG 页面生成</option></select></label>
+                  <label class="field"><span>模型 ID</span><input data-role-model="page_regeneration" type="text" autocomplete="off" placeholder="留空用连接默认" /></label>
+                </div>
+              </div>
+            </div>
+            <div class="generation-settings-actions route-actions">
+              <span id="roleRoutingStatus" class="settings-status"></span>
+              <button id="saveRoleRouting" class="secondary-action" type="button">保存角色路由</button>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="createWorkspace" class="create-workspace workspace-panel hidden" aria-label="创建 PPT 任务">
+        <div id="setupContent" class="hidden">
+          <input id="workflowMode" type="hidden" value="prompt_deck" />
+
+          <section id="modeSelectPanel" class="mode-select-panel create-mode-panel" aria-label="创建入口">
+            <div class="mode-tabs" role="tablist" aria-label="逐页生成入口">
+              <button class="mode-option active mode-card" type="button" data-workflow-mode="prompt_deck" role="tab" aria-selected="true">
+                <span class="mode-option-title">逐页生成</span>
+                <span class="mode-option-copy">从第 1 页开始，一页一页生成 PPT。</span>
+                <span class="mode-option-cta">选择</span>
+              </button>
+              <button class="mode-option mode-card" type="button" data-workflow-mode="document_deck" role="tab" aria-selected="false">
+                <span class="mode-option-title">文档输入</span>
+                <span class="mode-option-copy">上传或粘贴材料，整理成完整 PPT。</span>
+                <span class="mode-option-cta">选择</span>
+              </button>
+              <button class="mode-option mode-card" type="button" data-workflow-mode="optimize_existing" role="tab" aria-selected="false">
+                <span class="mode-option-title">继续优化</span>
+                <span class="mode-option-copy">打开已有任务，继续调整页面。</span>
+                <span class="mode-option-cta">选择</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="composer-shell" aria-labelledby="composerModeTitle">
+            <div id="composerModeSummary" class="composer-mode-summary">
+              <div>
+                <p class="eyebrow">新建任务</p>
+                <h2 id="composerModeTitle">逐页生成 PPT</h2>
+                <p id="composerModeDetail">先生成第 1 页，确认后继续新增页面。</p>
+              </div>
+              <button id="changeWorkflowMode" class="ghost-action subtle-action" type="button">重新开始</button>
+            </div>
+
+            <label class="prompt-field">
+              <span>请描述第 1 页要表达的内容</span>
+              <textarea id="promptInput" rows="7" placeholder="写下第 1 页要表达的主题、结论和关键点。"></textarea>
+            </label>
+            <label id="documentSourceField" class="prompt-field hidden">
+              <span>文档来源（每行一个路径或 URL）</span>
+              <textarea id="documentSourceInput" rows="4" placeholder="粘贴文档内容，或每行填写一个文档路径 / URL。"></textarea>
+              <div class="document-upload-row">
+                <input id="documentFileInput" type="file" multiple />
+                <button id="clearDocumentUploads" class="ghost-action" type="button">清空已上传</button>
+              </div>
+              <div id="documentDropZone" class="document-drop-zone" role="button" tabindex="0">
+                拖拽文档到这里，或使用上方文件选择（支持 PDF/DOCX/MD/TXT）
+              </div>
+              <div id="documentUploadHint" class="document-upload-hint">尚未上传文件。</div>
+              <div id="documentSourceList" class="document-source-list"></div>
+            </label>
+
+            <div class="composer-control-bar" aria-label="创建参数">
+              <input id="deckType" type="hidden" value="single" />
+              <input id="pageCount" type="hidden" value="1" />
+
+              <label>
+                用途
+                <select id="sceneSelect">
+                  <option value="report">项目汇报</option>
+                  <option value="proposal" selected>方案汇报</option>
+                  <option value="product">产品介绍</option>
+                </select>
+              </label>
+
+              <label>
+                页数
+                <select id="targetPageCount">
+                  <option value="auto" selected>自动</option>
+                  <option value="1">1 页</option>
+                  <option value="3">3 页</option>
+                  <option value="5">5 页</option>
+                  <option value="6">6 页</option>
+                  <option value="8">8 页</option>
+                  <option value="10">10 页</option>
+                </select>
+              </label>
+
+              <label>
+                风格
+                <select id="styleProfile">
+                  <option value="consulting_blue" selected>咨询蓝</option>
+                  <option value="consulting_classic">咨询风格</option>
+                  <option value="tech_dark">科技深色</option>
+                  <option value="minimal_white">极简白底</option>
+                </select>
+              </label>
+
+              <label>
+                模板
+                <select id="templateMode">
+                  <option value="free" selected>自由设计</option>
+                  <option value="reference">参考模板</option>
+                  <option value="reuse">沿用上次</option>
+                  <option value="strict_template">严格模板</option>
+                </select>
+              </label>
+
+              <button id="browseTemplates" class="ghost-action preference-action" type="button">浏览模板</button>
+              <span id="selectedTemplateBadge" class="selected-template-badge hidden">已选模板：<strong id="selectedTemplateBadgeName"></strong></span>
+
+              <button id="openPreferencePopover" class="ghost-action preference-action" type="button" data-action="open-preferences">模型配置</button>
+              <button id="createTask" class="primary-action">开始逐页生成</button>
+              <label class="composer-skip-label" title="勾选后不展示大纲预览，直接创建任务并开始生成">
+                <input id="outlineSkipConfirm" type="checkbox" />
+                <span>跳过确认，直接生成</span>
+              </label>
+            </div>
+
+            <section id="outlineEditorPanel" class="outline-editor-panel hidden" aria-labelledby="outlineEditorTitle">
+              <div class="outline-editor-head">
+                <div>
+                  <p class="eyebrow">大纲预览</p>
+                  <h3 id="outlineEditorTitle">确认或修改大纲后开始生成</h3>
+                </div>
+                <button id="outlineCancelEdit" class="ghost-action subtle-action" type="button">返回修改提示词</button>
+              </div>
+              <label class="outline-thesis-field">
+                <span>核心观点</span>
+                <textarea id="outlineDeckThesis" rows="2" placeholder="一句话核心观点，可直接修改。"></textarea>
+              </label>
+              <div id="outlineSlideList" class="outline-slide-list" aria-label="页面大纲"></div>
+              <button id="outlineAddSlide" class="ghost-action outline-add-slide" type="button">+ 添加页面</button>
+              <div class="outline-editor-actions">
+                <button id="outlineDirectGenerate" class="secondary-action" type="button">跳过确认，直接生成</button>
+                <button id="outlineConfirmButton" class="primary-action" type="button" disabled>确认大纲并开始生成</button>
+              </div>
+            </section>
+          </section>
+        </div>
+      </section>
+
+      <section id="taskCenterPanel" class="workspace-panel task-center-panel hidden" aria-label="全部任务">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">任务</p>
+            <h2>全部任务</h2>
+          </div>
+          <button id="showNewTaskComposer" class="primary-action compact-action" type="button"><svg class="btn-icon" aria-hidden="true"><use href="#icon-plus"></use></svg><span>新建任务</span></button>
+        </div>
+        <div class="task-center-controls">
+          <label class="search-field" for="taskCenterSearch">
+            <svg class="btn-icon" aria-hidden="true"><use href="#icon-search"></use></svg>
+            <input id="taskCenterSearch" type="search" placeholder="搜索任务/项目名" />
+          </label>
+          <label class="filter-field" for="taskCenterFilter">
+            <svg class="btn-icon" aria-hidden="true"><use href="#icon-filter"></use></svg>
+            <select id="taskCenterFilter">
+              <option value="all">全部状态</option>
+              <option value="active">进行中</option>
+              <option value="ready">可生成</option>
+              <option value="blocked">需处理</option>
+              <option value="completed">已完成</option>
+            </select>
+          </label>
+          <button id="taskBatchDelete" class="ghost-action danger-action task-batch-delete hidden" type="button">删除所选（0）</button>
+        </div>
+        <div id="taskList" class="task-list">
+          <div class="empty-note">正在读取任务...</div>
+        </div>
+      </section>
+
+      <section id="taskDetailShell" class="workspace-panel hidden" aria-label="PPT 生成进度和页面预览">
+        <header class="workspace-header">
+          <div>
+            <p class="eyebrow">当前任务</p>
+            <h2 id="projectName">尚未创建任务</h2>
+          </div>
+          <div class="task-detail-header-actions">
+            <div id="projectState" class="state-pill idle">等待开始</div>
+            <button id="exportDeck" class="ghost-action hidden" type="button" disabled>生成 PPT</button>
+          </div>
+        </header>
+
+        <section id="nextActionPanel" class="next-action-panel primary-status-card compact-next-action" aria-labelledby="nextActionTitle">
+          <div>
+            <h3 id="nextActionTitle">创建任务</h3>
+          </div>
+          <button id="nextActionButton" class="primary-next-action"><svg class="btn-icon" aria-hidden="true"><use href="#icon-chevron-right"></use></svg><span>创建任务</span></button>
+        </section>
+
+        <section id="userBlockerPanel" class="user-blocker-panel status-context-panel hidden" aria-live="polite">
+          <div class="blocker-icon" aria-hidden="true">!</div>
+          <div>
+            <strong id="userBlockerTitle">暂时不能导出</strong>
+            <p id="userBlockerDetail">请先完成未生成页面。</p>
+          </div>
+          <button id="userBlockerAction" class="ghost-action hidden" type="button">继续处理</button>
+        </section>
+
+        <section id="resumeChooser" class="resume-chooser hidden" aria-live="polite">
+          <div class="resume-chooser-header">
+            <div>
+              <p class="eyebrow">可继续任务</p>
+              <h3>选择要继续的任务</h3>
+            </div>
+            <button id="hideResumeChooser" class="ghost-action" type="button">先不恢复</button>
+          </div>
+          <div id="resumeProjectList" class="resume-project-list"></div>
+        </section>
+
+        <section class="workflow-map" aria-label="生成流程">
+          <div class="workflow-step active" data-step="create"><span>1 创建任务</span><small>输入需求</small></div>
+          <div class="workflow-step" data-step="page"><span>2 生成页面</span><small>逐页生成</small></div>
+          <div class="workflow-step" data-step="download"><span>3 下载文件</span><small>生成后可下</small></div>
+        </section>
+
+        <div id="taskDetailWorkbench" class="task-detail-workbench">
+          <aside id="detailSlideRail" class="detail-slide-rail" aria-label="页面列表">
+            <div class="slide-list-panel">
+              <div class="section-heading compact">
+                <div class="slide-rail-title">
+                  <h3>页面</h3>
+                  <span id="slideCountLabel" class="slide-count-label">共 0 页</span>
+                </div>
+                <span class="slide-rail-head-actions">
+                  <button id="refreshStatus" class="ghost-action icon-btn" type="button" disabled title="刷新" aria-label="刷新"><svg class="btn-icon" aria-hidden="true"><use href="#icon-refresh"></use></svg></button>
+                  <button id="collapseSlideRail" class="ghost-action icon-btn" type="button" title="收起页面列表" aria-label="收起页面列表" aria-expanded="true"><svg class="btn-icon" aria-hidden="true"><use href="#icon-panel"></use></svg></button>
+                </span>
+              </div>
+              <button id="appendSlideFromList" class="ghost-action slide-rail-add" type="button" disabled>+ 新增页面</button>
+              <div id="slideList" class="slide-list">
+                <div class="empty-note">创建任务后会显示页面。</div>
+              </div>
+              <div class="slide-rail-actions">
+                <button id="insertSlideAfterCurrent" class="ghost-action" type="button" disabled title="在当前页后插入页面">+ 在当前页后新增</button>
+                <button id="autoGenerateMissingPages" class="ghost-action hidden" type="button" disabled>按顺序生成未完成页</button>
+              </div>
+            </div>
+            <section class="page-stream-panel" aria-labelledby="pageStreamTitle">
+              <div class="section-heading compact">
+                <h2 id="pageStreamTitle">页面</h2>
+              </div>
+              <div id="pageStream" class="page-stream">
+                <div class="page-stream-card"><span class="empty-note">创建任务后会显示页面流。</span></div>
+              </div>
+            </section>
+          </aside>
+
+          <main class="detail-main-stage">
+            <section class="preview-panel">
+              <div class="preview-toolbar stage-bar">
+                <div class="stage-bar-copy">
+                  <h3 id="selectedSlideTitle">还没有页面</h3>
+                  <p id="currentPageActionHint" class="current-page-action-hint">选择页面后，这里会显示本页状态。</p>
+                </div>
+                <div class="preview-controls" aria-label="预览控制">
+                  <button id="downloadCurrentPage" class="ghost-action icon-btn current-page-download hidden" type="button" disabled title="下载本页" aria-label="下载本页"><svg class="btn-icon" aria-hidden="true"><use href="#icon-download"></use></svg></button>
+                  <button id="refreshPreview" class="ghost-action icon-btn" type="button" disabled title="刷新当前预览" aria-label="刷新当前预览"><svg class="btn-icon" aria-hidden="true"><use href="#icon-refresh"></use></svg></button>
+                  <button id="fitPreview" class="ghost-action icon-btn" type="button" disabled title="适应预览窗口" aria-label="适应预览窗口"><svg class="btn-icon" aria-hidden="true"><use href="#icon-fit"></use></svg></button>
+                  <label class="zoom-control" title="预览缩放">
+                    <svg class="btn-icon" aria-hidden="true"><use href="#icon-zoom"></use></svg>
+                    <span class="sr-only">缩放</span>
+                    <select id="previewZoom" disabled aria-label="预览缩放">
+                      <option value="0.75">75%</option>
+                      <option value="1">100%</option>
+                      <option value="1.25">125%</option>
+                      <option value="1.5">150%</option>
+                      <option value="2">200%</option>
+                    </select>
+                  </label>
+                  <button id="startSlideshow" class="ghost-action icon-btn" type="button" disabled title="全屏放映" aria-label="全屏放映"><svg class="btn-icon" aria-hidden="true"><use href="#icon-play"></use></svg></button>
+                  <button id="fullscreenPreview" class="ghost-action icon-btn" type="button" disabled title="切换全屏预览" aria-label="切换全屏预览"><svg class="btn-icon" aria-hidden="true"><use href="#icon-fullscreen"></use></svg></button>
+                  <button id="resetPreview" class="ghost-action icon-btn" type="button" disabled title="重置预览缩放" aria-label="重置预览缩放"><svg class="btn-icon" aria-hidden="true"><use href="#icon-reset"></use></svg></button>
+                  <span class="more-actions-wrap">
+                    <button id="morePageActions" class="ghost-action icon-btn" type="button" title="更多操作" aria-label="更多操作" aria-haspopup="true" aria-expanded="false">⋯</button>
+                    <div id="morePageActionsMenu" class="more-actions-menu hidden" role="menu" aria-label="更多页面操作">
+                      <button id="deleteCurrentPage" class="menu-item danger-menu-item" type="button" disabled role="menuitem">删除本页…</button>
+                    </div>
+                  </span>
+                </div>
+              </div>
+              <div class="preview-zone">
+                <div id="previewHint" class="preview-hint">还没有页面，请先创建任务。</div>
+                <div id="previewLoading" class="preview-loading hidden">正在加载预览...</div>
+                <div id="previewRetryBox" class="preview-retry hidden" role="status" aria-live="polite">
+                  <p id="previewRetryMessage">生成失败，请重新生成本页。</p>
+                  <div class="preview-retry-actions">
+                    <button id="previewShowVersions" class="ghost-action" type="button">查看上一版</button>
+                    <button id="previewRetryButton" class="secondary-action" type="button">重新生成本页</button>
+                  </div>
+                </div>
+                <div id="previewStageShell" class="preview-stage-shell">
+                  <div id="previewStageSizer" class="preview-stage-sizer">
+                    <div id="previewStage" class="preview-stage">
+                      <iframe id="svgPreview" title="当前页面预览" scrolling="no"></iframe>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section id="pagePromptPanel" class="page-prompt-panel page-workflow-panel page-command-dock" aria-labelledby="pagePromptTitle">
+              <h2 id="pagePromptTitle" class="sr-only">第 1 页</h2>
+              <div class="page-command-composer">
+                <div class="composer-box">
+                  <label class="page-command-input">
+                    <span class="sr-only">追加修改要求</span>
+                    <textarea id="currentPageIterationNote" rows="1" placeholder="描述这次要怎么调整本页，Ctrl+Enter 重新生成。例如：文字少一点，右侧图表改成流程图。"></textarea>
+                  </label>
+                  <span class="composer-opt-wrap">
+                    <button id="pageOptionsToggle" class="ghost-action icon-btn composer-opt-btn" type="button" title="内容处理与页面风格" aria-label="内容处理与页面风格" aria-haspopup="true" aria-expanded="false">⚙<span id="pageOptionsBadge" class="opt-dot hidden" aria-hidden="true"></span></button>
+                    <div id="pageOptionsPopover" class="page-options-popover hidden" aria-label="内容处理与页面风格">
+                      <label>
+                        内容处理
+                        <select id="currentContentHandling">
+                          <option value="preserve">保持原文</option>
+                          <option value="polish" selected>适度润色</option>
+                          <option value="expand">AI 扩写</option>
+                        </select>
+                      </label>
+                      <label>
+                        页面风格
+                        <select id="currentPageStyle">
+                          <option value="business_simple" selected>商务简洁</option>
+                          <option value="software_consulting">软件咨询</option>
+                        </select>
+                      </label>
+                    </div>
+                  </span>
+                  <button id="repairCurrentPage" class="ghost-action hidden" type="button" disabled title="修复本页" aria-label="修复本页"><svg class="btn-icon" aria-hidden="true"><use href="#icon-wrench"></use></svg><span>修复本页</span></button>
+                  <button id="autoGeneratePage" class="primary-action current-page-primary" type="button" title="重新生成本页" aria-label="重新生成本页"><svg class="btn-icon" aria-hidden="true"><use href="#icon-sparkles"></use></svg><span>重新生成本页</span></button>
+                </div>
+              </div>
+            </section>
+
+            <div id="promptEditor" class="prompt-editor hidden" role="dialog" aria-label="本页提示词编辑">
+              <div class="prompt-editor-head">
+                <strong id="promptEditorTitle">本页提示词</strong>
+                <span id="promptEditorCount" class="prompt-editor-count"></span>
+                <span class="prompt-editor-head-grow"></span>
+                <button id="promptEditorCancel" class="ghost-action" type="button">取消</button>
+                <button id="promptEditorDone" class="primary-action" type="button">完成</button>
+              </div>
+              <label class="prompt-editor-body">
+                <span class="sr-only">本页提示词</span>
+                <textarea id="currentPagePrompt" placeholder="写下这一页要表达的内容。" spellcheck="false"></textarea>
+              </label>
+              <p class="prompt-editor-tip">提示词是本页的固定设定，修改会随下次重新生成提交生效，不会立即触发生成。</p>
+            </div>
+          </main>
+
+          <aside id="detailInspector" class="detail-inspector" aria-label="页面设置">
+            <div class="inspector-header">
+              <div class="inspector-tabs" role="tablist" aria-label="页面设置">
+                <button id="inspectorContentTab" class="inspector-tab active" type="button" role="tab" data-inspector-tab="content" aria-selected="true" tabindex="0" aria-controls="inspectorContentPanel">内容</button>
+                <button id="inspectorVersionsTab" class="inspector-tab" type="button" role="tab" data-inspector-tab="versions" aria-selected="false" tabindex="-1" aria-controls="inspectorVersionsPanel">版本</button>
+              </div>
+              <button id="collapseInspector" class="ghost-action icon-btn" type="button" aria-controls="detailInspector" title="收起右栏" aria-label="收起右栏" aria-expanded="true"><svg class="btn-icon" aria-hidden="true"><use href="#icon-chevron-right"></use></svg></button>
+            </div>
+            <section id="inspectorContentPanel" class="inspector-panel active" role="tabpanel" aria-labelledby="inspectorContentTab">
+              <label>
+                页面类型
+                <select id="currentPageType">
+                  <option value="content">内容页</option>
+                  <option value="cover">首页</option>
+                  <option value="toc">目录页</option>
+                  <option value="section">章节页</option>
+                </select>
+              </label>
+              <div class="inspector-prompt-field">
+                <span class="inspector-prompt-label">本页提示词</span>
+                <button id="promptSummaryCard" class="prompt-summary-card" type="button" title="点击展开编辑本页提示词">
+                  <span id="promptSummaryPreview" class="prompt-summary-preview">选择页面后显示本页提示词。</span>
+                  <span class="prompt-summary-meta"><span id="promptSummaryCount"></span><span class="prompt-summary-edit">展开编辑 ↗</span></span>
+                </button>
+                <p class="field-note">点击卡片全屏编辑；临时调整写在画布下方输入条，随下次重新生成一起提交。</p>
+              </div>
+            </section>
+            <section id="inspectorVersionsPanel" class="inspector-panel hidden" role="tabpanel" aria-labelledby="inspectorVersionsTab">
+              <div class="section-heading compact">
+                <h3>页面版本</h3>
+                <button id="refreshRevisions" class="ghost-action icon-btn" type="button" title="刷新版本" aria-label="刷新版本"><svg class="btn-icon" aria-hidden="true"><use href="#icon-refresh"></use></svg></button>
+              </div>
+              <div id="revisionList" class="revision-list">
+                <div class="empty-note">选择页面后会显示历史版本。</div>
+              </div>
+              <div class="page-action-group secondary-group">
+                <button id="restorePreviousRevision" class="ghost-action" type="button" disabled title="恢复上一版" aria-label="恢复上一版"><svg class="btn-icon" aria-hidden="true"><use href="#icon-history"></use></svg><span>恢复上一版</span></button>
+              </div>
+            </section>
+          </aside>
+          <button id="expandInspector" class="ghost-action inspector-expand hidden" type="button" aria-controls="detailInspector" title="展开右栏" aria-label="展开右栏" aria-expanded="false"><svg class="btn-icon" aria-hidden="true"><use href="#icon-panel"></use></svg></button>
+        </div>
+      </section>
+    </main>
+
+    <div id="templateGalleryModal" class="template-gallery-modal hidden" role="dialog" aria-modal="true" aria-label="模板画廊">
+      <div class="template-gallery-backdrop" data-gallery-close></div>
+      <div class="template-gallery-dialog">
+        <header class="template-gallery-header">
+          <h2>模板画廊</h2>
+          <button id="templateGalleryClose" class="ghost-action icon-btn" type="button" aria-label="关闭" title="关闭"><svg class="btn-icon" aria-hidden="true"><use href="#icon-chevron-right"></use></svg></button>
+        </header>
+        <div class="template-gallery-body">
+          <aside class="template-gallery-sidebar" aria-label="分类导航">
+            <div id="templateGalleryCategories" class="template-gallery-categories"></div>
+            <div class="template-gallery-quick-title">推荐场景</div>
+            <div id="templateGalleryQuickLookup" class="template-gallery-quick-lookup"></div>
+          </aside>
+          <div class="template-gallery-main">
+            <div id="templateGalleryGrid" class="template-gallery-grid"></div>
+            <div id="templateGalleryDetail" class="template-gallery-detail hidden"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="slideshowOverlay" class="slideshow-overlay hidden" role="dialog" aria-modal="true" aria-label="PPT 放映">
+      <div class="slideshow-stage">
+        <iframe id="slideshowFrame" title="PPT 放映画面" scrolling="no"></iframe>
+        <div id="slideshowEmpty" class="slideshow-empty hidden">这一页还没有生成</div>
+      </div>
+      <div class="slideshow-toolbar">
+        <button id="slideshowPrev" class="ghost-action" type="button">上一页</button>
+        <span id="slideshowCounter">1 / 1</span>
+        <button id="slideshowNext" class="ghost-action" type="button">下一页</button>
+        <button id="closeSlideshow" class="ghost-action" type="button">退出</button>
+      </div>
+    </div>
+
+    <script src="/static/state.js?v=20260514-doc-upload-v1"></script>
+    <script src="/static/workbench_config.js?v=20260514-doc-upload-v1"></script>
+    <script src="/static/task_render.js?v=20260730-uat-round2-v1"></script>
+    <script src="/static/preview_state.js?v=20260514-doc-upload-v1"></script>
+    <script src="/static/state_manager.js?v=20260809-c130-js-split"></script>
+    <script src="/static/app_state_orchestration.js?v=20260514-governance-split"></script>
+    <script src="/static/app_action_dispatch.js?v=20260729-task-purge-v1"></script>
+    <script src="/static/app_view_wiring.js?v=20260514-governance-split"></script>
+    <script src="/static/api_client.js?v=20260809-c130-js-split"></script>
+    <script src="/static/router.js?v=20260809-c130-js-split"></script>
+    <script src="/static/template_gallery.js?v=20260810-c13b-template-gallery"></script>
+    <script src="/static/model_config.js?v=20260809-c130-js-split"></script>
+    <script src="/static/task_center.js?v=20260809-c130-js-split"></script>
+    <script src="/static/task_session.js?v=20260809-c130-js-split"></script>
+    <script src="/static/task_detail.js?v=20260809-c130-js-split"></script>
+    <script src="/static/page_flow.js?v=20260809-c130-js-split"></script>
+    <script src="/static/next_action.js?v=20260809-c130-js-split"></script>
+    <script src="/static/preview.js?v=20260809-c130-js-split"></script>
+    <script src="/static/generation.js?v=20260809-c130-js-split"></script>
+    <script src="/static/outline_editor.js?v=20260822-r11-document-outline"></script>
+    <script src="/static/batch_generation.js?v=20260809-c130-js-split"></script>
+    <script src="/static/app.js?v=20260731-c09-detail-v21"></script>
+  </body>
+</html>

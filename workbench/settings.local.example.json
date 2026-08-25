@@ -1,0 +1,11 @@
+{
+  "generation_provider": "siliconflow",
+  "siliconflow_api_key_env": "WORKBENCH_SILICONFLOW_API_KEY",
+  "siliconflow_model": "deepseek-ai/DeepSeek-V4-Flash",
+  "siliconflow_base_url": "https://api.siliconflow.cn/v1",
+  "google_api_keys_env": "WORKBENCH_GOOGLE_API_KEYS",
+  "google_model": "gemini-3-flash-preview",
+  "deepseek_api_key_env": "WORKBENCH_DEEPSEEK_API_KEY",
+  "deepseek_model": "deepseek-v4-flash",
+  "deepseek_base_url": "https://api.deepseek.com/v1"
+}

@@ -1,0 +1,443 @@
+{
+    "element-plus:warning":  {
+                                 "source":  "element-plus-compatible",
+                                 "file":  "element-plus/warning.svg",
+                                 "tags":  [
+                                              "risk",
+                                              "alert",
+                                              "issue"
+                                          ],
+                                 "semantic_role":  "warning",
+                                 "default_size":  24
+                             },
+    "element-plus:info":  {
+                              "source":  "element-plus-compatible",
+                              "file":  "element-plus/info.svg",
+                              "tags":  [
+                                           "info",
+                                           "notice",
+                                           "hint"
+                                       ],
+                              "semantic_role":  "info",
+                              "default_size":  24
+                          },
+    "element-plus:success":  {
+                                 "source":  "element-plus-compatible",
+                                 "file":  "element-plus/success.svg",
+                                 "tags":  [
+                                              "success",
+                                              "done",
+                                              "ok"
+                                          ],
+                                 "semantic_role":  "success",
+                                 "default_size":  24
+                             },
+    "element-plus:error":  {
+                               "source":  "element-plus-compatible",
+                               "file":  "element-plus/error.svg",
+                               "tags":  [
+                                            "error",
+                                            "stop",
+                                            "failure"
+                                        ],
+                               "semantic_role":  "error",
+                               "default_size":  24
+                           },
+    "element-plus:trend-up":  {
+                                  "source":  "element-plus-compatible",
+                                  "file":  "element-plus/trend-up.svg",
+                                  "tags":  [
+                                               "trend",
+                                               "growth",
+                                               "increase"
+                                           ],
+                                  "semantic_role":  "trend",
+                                  "default_size":  24
+                              },
+    "element-plus:trend-down":  {
+                                    "source":  "element-plus-compatible",
+                                    "file":  "element-plus/trend-down.svg",
+                                    "tags":  [
+                                                 "trend",
+                                                 "decline",
+                                                 "decrease"
+                                             ],
+                                    "semantic_role":  "trend",
+                                    "default_size":  24
+                                },
+    "element-plus:chart-bar":  {
+                                   "source":  "element-plus-compatible",
+                                   "file":  "element-plus/chart-bar.svg",
+                                   "tags":  [
+                                                "chart",
+                                                "bar",
+                                                "data"
+                                            ],
+                                   "semantic_role":  "chart",
+                                   "default_size":  24
+                               },
+    "element-plus:chart-line":  {
+                                    "source":  "element-plus-compatible",
+                                    "file":  "element-plus/chart-line.svg",
+                                    "tags":  [
+                                                 "chart",
+                                                 "line",
+                                                 "data"
+                                             ],
+                                    "semantic_role":  "chart",
+                                    "default_size":  24
+                                },
+    "element-plus:chart":  {
+                               "source":  "element-plus-compatible",
+                               "file":  "element-plus/chart.svg",
+                               "tags":  [
+                                            "chart",
+                                            "analytics",
+                                            "data"
+                                        ],
+                               "semantic_role":  "chart",
+                               "default_size":  24
+                           },
+    "element-plus:data":  {
+                              "source":  "element-plus-compatible",
+                              "file":  "element-plus/data.svg",
+                              "tags":  [
+                                           "data",
+                                           "database",
+                                           "metric"
+                                       ],
+                              "semantic_role":  "data",
+                              "default_size":  24
+                          },
+    "element-plus:document":  {
+                                  "source":  "element-plus-compatible",
+                                  "file":  "element-plus/document.svg",
+                                  "tags":  [
+                                               "document",
+                                               "report",
+                                               "file"
+                                           ],
+                                  "semantic_role":  "document",
+                                  "default_size":  24
+                              },
+    "element-plus:file":  {
+                              "source":  "element-plus-compatible",
+                              "file":  "element-plus/file.svg",
+                              "tags":  [
+                                           "file",
+                                           "attachment",
+                                           "asset"
+                                       ],
+                              "semantic_role":  "file",
+                              "default_size":  24
+                          },
+    "element-plus:search":  {
+                                "source":  "element-plus-compatible",
+                                "file":  "element-plus/search.svg",
+                                "tags":  [
+                                             "search",
+                                             "find",
+                                             "lookup"
+                                         ],
+                                "semantic_role":  "search",
+                                "default_size":  24
+                            },
+    "element-plus:setting":  {
+                                 "source":  "element-plus-compatible",
+                                 "file":  "element-plus/setting.svg",
+                                 "tags":  [
+                                              "setting",
+                                              "config",
+                                              "preferences"
+                                          ],
+                                 "semantic_role":  "setting",
+                                 "default_size":  24
+                             },
+    "element-plus:lock":  {
+                              "source":  "element-plus-compatible",
+                              "file":  "element-plus/lock.svg",
+                              "tags":  [
+                                           "lock",
+                                           "security",
+                                           "permission"
+                                       ],
+                              "semantic_role":  "lock",
+                              "default_size":  24
+                          },
+    "element-plus:user":  {
+                              "source":  "element-plus-compatible",
+                              "file":  "element-plus/user.svg",
+                              "tags":  [
+                                           "user",
+                                           "person",
+                                           "owner"
+                                       ],
+                              "semantic_role":  "user",
+                              "default_size":  24
+                          },
+    "element-plus:users":  {
+                               "source":  "element-plus-compatible",
+                               "file":  "element-plus/users.svg",
+                               "tags":  [
+                                            "users",
+                                            "team",
+                                            "group"
+                                        ],
+                               "semantic_role":  "user",
+                               "default_size":  24
+                           },
+    "element-plus:calendar":  {
+                                  "source":  "element-plus-compatible",
+                                  "file":  "element-plus/calendar.svg",
+                                  "tags":  [
+                                               "calendar",
+                                               "date",
+                                               "schedule"
+                                           ],
+                                  "semantic_role":  "calendar",
+                                  "default_size":  24
+                              },
+    "element-plus:upload":  {
+                                "source":  "element-plus-compatible",
+                                "file":  "element-plus/upload.svg",
+                                "tags":  [
+                                             "upload",
+                                             "import",
+                                             "inbound"
+                                         ],
+                                "semantic_role":  "upload",
+                                "default_size":  24
+                            },
+    "element-plus:download":  {
+                                  "source":  "element-plus-compatible",
+                                  "file":  "element-plus/download.svg",
+                                  "tags":  [
+                                               "download",
+                                               "export",
+                                               "outbound"
+                                           ],
+                                  "semantic_role":  "download",
+                                  "default_size":  24
+                              },
+    "element-plus:link":  {
+                              "source":  "element-plus-compatible",
+                              "file":  "element-plus/link.svg",
+                              "tags":  [
+                                           "link",
+                                           "url",
+                                           "relation"
+                                       ],
+                              "semantic_role":  "link",
+                              "default_size":  24
+                          },
+    "element-plus:location":  {
+                                  "source":  "element-plus-compatible",
+                                  "file":  "element-plus/location.svg",
+                                  "tags":  [
+                                               "location",
+                                               "map",
+                                               "place"
+                                           ],
+                                  "semantic_role":  "location",
+                                  "default_size":  24
+                              },
+    "element-plus:arrow-right":  {
+                                     "source":  "element-plus-compatible",
+                                     "file":  "element-plus/arrow-right.svg",
+                                     "tags":  [
+                                                  "arrow",
+                                                  "next",
+                                                  "forward"
+                                              ],
+                                     "semantic_role":  "arrow",
+                                     "default_size":  24
+                                 },
+    "element-plus:arrow-left":  {
+                                    "source":  "element-plus-compatible",
+                                    "file":  "element-plus/arrow-left.svg",
+                                    "tags":  [
+                                                 "arrow",
+                                                 "back",
+                                                 "previous"
+                                             ],
+                                    "semantic_role":  "arrow",
+                                    "default_size":  24
+                                },
+    "element-plus:arrow-up":  {
+                                  "source":  "element-plus-compatible",
+                                  "file":  "element-plus/arrow-up.svg",
+                                  "tags":  [
+                                               "arrow",
+                                               "up",
+                                               "increase"
+                                           ],
+                                  "semantic_role":  "arrow",
+                                  "default_size":  24
+                              },
+    "element-plus:arrow-down":  {
+                                    "source":  "element-plus-compatible",
+                                    "file":  "element-plus/arrow-down.svg",
+                                    "tags":  [
+                                                 "arrow",
+                                                 "down",
+                                                 "decrease"
+                                             ],
+                                    "semantic_role":  "arrow",
+                                    "default_size":  24
+                                },
+    "element-plus:check":  {
+                               "source":  "element-plus-compatible",
+                               "file":  "element-plus/check.svg",
+                               "tags":  [
+                                            "check",
+                                            "approve",
+                                            "tick"
+                                        ],
+                               "semantic_role":  "check",
+                               "default_size":  24
+                           },
+    "element-plus:close":  {
+                               "source":  "element-plus-compatible",
+                               "file":  "element-plus/close.svg",
+                               "tags":  [
+                                            "close",
+                                            "cancel",
+                                            "dismiss"
+                                        ],
+                               "semantic_role":  "close",
+                               "default_size":  24
+                           },
+    "element-plus:grid":  {
+                              "source":  "element-plus-compatible",
+                              "file":  "element-plus/grid.svg",
+                              "tags":  [
+                                           "grid",
+                                           "matrix",
+                                           "layout"
+                                       ],
+                              "semantic_role":  "grid",
+                              "default_size":  24
+                          },
+    "element-plus:folder":  {
+                                "source":  "element-plus-compatible",
+                                "file":  "element-plus/folder.svg",
+                                "tags":  [
+                                             "folder",
+                                             "directory",
+                                             "package"
+                                         ],
+                                "semantic_role":  "folder",
+                                "default_size":  24
+                            },
+    "element-plus:edit":  {
+                              "source":  "element-plus-compatible",
+                              "file":  "element-plus/edit.svg",
+                              "tags":  [
+                                           "edit",
+                                           "modify",
+                                           "write"
+                                       ],
+                              "semantic_role":  "edit",
+                              "default_size":  24
+                          },
+    "element-plus:view":  {
+                              "source":  "element-plus-compatible",
+                              "file":  "element-plus/view.svg",
+                              "tags":  [
+                                           "view",
+                                           "preview",
+                                           "visibility"
+                                       ],
+                              "semantic_role":  "view",
+                              "default_size":  24
+                          },
+    "element-plus:table":  {
+                               "source":  "element-plus-compatible",
+                               "file":  "element-plus/table.svg",
+                               "tags":  [
+                                            "table",
+                                            "rows",
+                                            "columns"
+                                        ],
+                               "semantic_role":  "table",
+                               "default_size":  24
+                           },
+    "element-plus:desktop":  {
+                                 "source":  "element-plus-compatible",
+                                 "file":  "element-plus/desktop.svg",
+                                 "tags":  [
+                                              "desktop",
+                                              "screen",
+                                              "device"
+                                          ],
+                                 "semantic_role":  "device",
+                                 "default_size":  24
+                             },
+    "element-plus:presentation":  {
+                                      "source":  "element-plus-compatible",
+                                      "file":  "element-plus/presentation.svg",
+                                      "tags":  [
+                                                   "presentation",
+                                                   "slides",
+                                                   "deck"
+                                               ],
+                                      "semantic_role":  "presentation",
+                                      "default_size":  24
+                                  },
+    "element-plus:clipboard":  {
+                                   "source":  "element-plus-compatible",
+                                   "file":  "element-plus/clipboard.svg",
+                                   "tags":  [
+                                                "clipboard",
+                                                "task",
+                                                "list"
+                                            ],
+                                   "semantic_role":  "task",
+                                   "default_size":  24
+                               },
+    "element-plus:bell":  {
+                              "source":  "element-plus-compatible",
+                              "file":  "element-plus/bell.svg",
+                              "tags":  [
+                                           "bell",
+                                           "notification",
+                                           "alert"
+                                       ],
+                              "semantic_role":  "notification",
+                              "default_size":  24
+                          },
+    "element-plus:target":  {
+                                "source":  "element-plus-compatible",
+                                "file":  "element-plus/target.svg",
+                                "tags":  [
+                                             "target",
+                                             "goal",
+                                             "focus"
+                                         ],
+                                "semantic_role":  "target",
+                                "default_size":  24
+                            },
+    "element-plus:briefcase":  {
+                                   "source":  "element-plus-compatible",
+                                   "file":  "element-plus/briefcase.svg",
+                                   "tags":  [
+                                                "briefcase",
+                                                "business",
+                                                "work"
+                                            ],
+                                   "semantic_role":  "business",
+                                   "default_size":  24
+                               },
+    "element-plus:sparkle":  {
+                                 "source":  "element-plus-compatible",
+                                 "file":  "element-plus/sparkle.svg",
+                                 "tags":  [
+                                              "sparkle",
+                                              "highlight",
+                                              "magic"
+                                          ],
+                                 "semantic_role":  "accent",
+                                 "default_size":  24
+                             }
+}
+

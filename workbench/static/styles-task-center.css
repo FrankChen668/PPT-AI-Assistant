@@ -1,0 +1,602 @@
+/* Focused single-page studio */
+.app-shell.task-detail-view #taskDetailShell.workspace-panel {
+  padding: 18px 24px 28px;
+  background: #fbfcff;
+}
+
+.app-shell.task-detail-view .workspace-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px 18px;
+  align-items: center;
+  padding-bottom: 12px;
+  margin-bottom: 0;
+  border-bottom: 1px solid #dfe7f2;
+}
+
+.app-shell.task-detail-view .workspace-header .eyebrow {
+  margin-bottom: 3px;
+}
+
+.app-shell.task-detail-view .workspace-header h2 {
+  max-width: 100%;
+  font-size: 24px;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.app-shell.task-detail-view .next-action-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  border-color: #d7e3f4;
+  background: #ffffff;
+  padding: 14px 16px;
+  box-shadow: 0 10px 26px rgb(16 33 59 / 7%);
+}
+
+.app-shell.task-detail-view .next-action-panel h3 {
+  font-size: 19px;
+  line-height: 1.2;
+}
+
+.app-shell.task-detail-view .next-action-panel p {
+  max-width: 720px;
+  margin-top: 4px;
+}
+
+.app-shell.task-detail-view .primary-next-action {
+  min-width: 176px;
+  min-height: 48px;
+  font-size: 15px;
+}
+
+.app-shell.task-detail-view .status-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.app-shell.task-detail-view .status-strip .result-item {
+  min-height: 54px;
+  padding: 9px 11px;
+}
+
+.app-shell.task-detail-view .status-strip .result-item strong {
+  font-size: 14px;
+}
+
+.app-shell.task-detail-view .plain-status-hint,
+.app-shell.task-detail-view .workflow-map,
+.app-shell.task-detail-view .page-stream-panel,
+.app-shell.task-detail-view .task-events-card {
+  display: none;
+}
+
+.app-shell.task-detail-view .content-grid {
+  grid-template-columns: minmax(360px, 420px) minmax(0, 1fr);
+  gap: 18px;
+  margin-top: 16px;
+  align-items: start;
+}
+
+.app-shell.task-detail-view .task-interaction-pane,
+.app-shell.task-detail-view .production-pane {
+  gap: 14px;
+}
+
+.app-shell.task-detail-view .page-prompt-panel,
+.app-shell.task-detail-view .slide-list-panel,
+.app-shell.task-detail-view .preview-panel {
+  border-color: #d9e4f2;
+  background: #ffffff;
+  box-shadow: 0 12px 28px rgb(16 33 59 / 6%);
+}
+
+.app-shell.task-detail-view .page-prompt-panel {
+  padding: 14px;
+}
+
+.app-shell.task-detail-view .page-prompt-panel textarea {
+  min-height: 190px;
+}
+
+.app-shell.task-detail-view .slide-list-panel {
+  padding: 14px;
+}
+
+.app-shell.task-detail-view .slide-row {
+  min-height: 48px;
+}
+
+.app-shell.task-detail-view .preview-panel {
+  width: 100%;
+  min-width: 0;
+  padding: 16px;
+}
+
+.app-shell.task-detail-view .preview-toolbar {
+  align-items: flex-start;
+}
+
+.app-shell.task-detail-view .toolbar-actions,
+.app-shell.task-detail-view .preview-controls {
+  gap: 7px;
+}
+
+.app-shell.task-detail-view .preview-zone {
+  min-width: 0;
+  height: clamp(560px, calc(100vh - 305px), 900px);
+  padding: 14px;
+  background: #e4ebf5;
+}
+
+.app-shell.task-detail-view .preview-stage-shell {
+  min-width: 0;
+}
+
+.app-shell.task-detail-view .advanced-panel,
+.app-shell.task-detail-view .log-panel,
+.app-shell.task-detail-view .qa-panel,
+.app-shell.task-detail-view .revision-panel {
+  margin-top: 12px;
+  background: #ffffff;
+}
+
+.app-shell.task-detail-view .utility-dock .advanced-panel,
+.app-shell.task-detail-view .utility-dock .log-panel,
+.app-shell.task-detail-view .utility-dock .qa-panel,
+.app-shell.task-detail-view .utility-dock .revision-panel {
+  margin-top: 10px;
+  border-top: 1px solid #edf2f8;
+  background: transparent;
+}
+
+/* Product-grade task studio */
+.app-shell.task-detail-view {
+  background: #eef3f8;
+}
+
+.app-shell.task-detail-view .setup-panel {
+  background: #eef3f8;
+}
+
+.app-shell.task-detail-view .recent-task-list .task-card strong {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.app-shell.task-detail-view .recent-task-list .task-card small {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app-shell.task-detail-view #taskDetailShell.workspace-panel {
+  padding: 0;
+  background:
+    linear-gradient(180deg, #ffffff 0, #ffffff 76px, #f6f8fb 76px, #f6f8fb 100%);
+}
+
+.app-shell.task-detail-view #taskDetailShell.workspace-panel > * {
+  margin-left: 24px;
+  margin-right: 24px;
+}
+
+.app-shell.task-detail-view #taskDetailShell.workspace-panel > .workspace-header {
+  margin: 0;
+  padding: 18px 24px 14px;
+  background: #ffffff;
+  border-bottom: 1px solid #dfe7f2;
+}
+
+.app-shell.task-detail-view .workspace-header h2 {
+  font-size: 22px;
+  letter-spacing: 0;
+}
+
+.app-shell.task-detail-view .state-pill {
+  min-width: 96px;
+  padding: 7px 13px;
+  background: #eef3f8;
+}
+
+.app-shell.task-detail-view .next-action-panel {
+  position: relative;
+  overflow: hidden;
+  margin-top: 16px;
+  border: 1px solid #d8e3f1;
+  background: linear-gradient(90deg, #ffffff 0%, #f9fbff 100%);
+  box-shadow: 0 18px 48px rgb(16 33 59 / 8%);
+}
+
+.app-shell.task-detail-view .next-action-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: #123b7a;
+}
+
+.app-shell.task-detail-view .next-action-panel h3 {
+  font-size: 20px;
+}
+
+.app-shell.task-detail-view .next-action-helper {
+  color: #5a6b84 !important;
+  font-weight: 700;
+}
+
+.app-shell.task-detail-view .primary-next-action {
+  box-shadow: 0 14px 28px rgb(18 59 122 / 20%);
+}
+
+.app-shell.task-detail-view .user-blocker-panel {
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  padding: 10px 14px;
+  border-color: #f2c9c4;
+  background: #fff8f7;
+}
+
+.app-shell.task-detail-view .user-blocker-panel strong {
+  font-size: 15px;
+}
+
+.app-shell.task-detail-view .user-blocker-panel p {
+  margin-top: 2px;
+}
+
+.app-shell.task-detail-view .blocker-icon {
+  width: 28px;
+  height: 28px;
+  font-size: 16px;
+}
+
+.app-shell.task-detail-view .status-strip {
+  gap: 8px;
+}
+
+.app-shell.task-detail-view .status-strip .result-item {
+  border-color: #dfe7f2;
+  background: #ffffff;
+  box-shadow: none;
+}
+
+.app-shell.task-detail-view .status-strip .result-item span {
+  color: #748097;
+  font-size: 11px;
+  text-transform: none;
+}
+
+.app-shell.task-detail-view .content-grid {
+  grid-template-columns: minmax(340px, 400px) minmax(0, 1fr);
+  gap: 20px;
+  min-height: calc(100vh - 300px);
+  padding-bottom: 24px;
+}
+
+.app-shell.task-detail-view .task-interaction-pane {
+  align-content: start;
+}
+
+.app-shell.task-detail-view .production-pane {
+  align-content: stretch;
+}
+
+.app-shell.task-detail-view .page-prompt-panel,
+.app-shell.task-detail-view .slide-list-panel {
+  border-color: #dbe4f0;
+  box-shadow: 0 16px 36px rgb(16 33 59 / 7%);
+}
+
+.app-shell.task-detail-view .page-prompt-panel .section-heading,
+.app-shell.task-detail-view .slide-list-panel .section-heading {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e6edf6;
+}
+
+.app-shell.task-detail-view .page-prompt-panel label {
+  color: #4d5f78;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.app-shell.task-detail-view .page-prompt-panel select,
+.app-shell.task-detail-view .page-prompt-panel textarea {
+  border-color: #cfd9e8;
+  background: #fbfdff;
+}
+
+.app-shell.task-detail-view .page-prompt-panel textarea {
+  min-height: 210px;
+}
+
+.app-shell.task-detail-view .page-prompt-actions {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+}
+
+.app-shell.task-detail-view .page-handoff-prompt {
+  max-height: 96px;
+  border-color: #e1e8f2;
+  background: #f8fafc;
+}
+
+.app-shell.task-detail-view .section-actions .ghost-action {
+  min-height: 34px;
+}
+
+.app-shell.task-detail-view #appendSlideFromList {
+  border-color: #9bb7de;
+  background: #f6f9ff;
+  color: #123b7a;
+}
+
+.app-shell.task-detail-view .slide-list {
+  gap: 7px;
+}
+
+.app-shell.task-detail-view .slide-row {
+  border-color: #dfe7f2;
+}
+
+.app-shell.task-detail-view .slide-main span {
+  font-size: 14px;
+}
+
+.app-shell.task-detail-view .slide-main strong {
+  font-size: 12px;
+}
+
+.app-shell.task-detail-view .preview-panel {
+  min-height: calc(100vh - 300px);
+  border-color: #d7e1ee;
+  background: #ffffff;
+  box-shadow: 0 20px 60px rgb(16 33 59 / 10%);
+}
+
+.app-shell.task-detail-view .preview-toolbar {
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e6edf6;
+}
+
+.app-shell.task-detail-view .preview-toolbar h3 {
+  font-size: 20px;
+}
+
+.app-shell.task-detail-view .preview-controls {
+  width: fit-content;
+  max-width: 100%;
+  padding: 6px;
+  border: 1px solid #dfe7f2;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.app-shell.task-detail-view .preview-controls .ghost-action,
+.app-shell.task-detail-view .preview-controls select {
+  min-height: 32px;
+}
+
+.app-shell.task-detail-view .preview-zone {
+  height: clamp(620px, calc(100vh - 330px), 920px);
+  border-color: #d2dce9;
+  background:
+    linear-gradient(135deg, rgb(255 255 255 / 28%) 0 25%, transparent 25% 50%, rgb(255 255 255 / 28%) 50% 75%, transparent 75%) 0 0 / 28px 28px,
+    #dce5ef;
+}
+
+.app-shell.task-detail-view .preview-stage {
+  box-shadow: 0 22px 56px rgb(16 33 59 / 16%);
+}
+
+.app-shell.task-detail-view .advanced-panel,
+.app-shell.task-detail-view .log-panel,
+.app-shell.task-detail-view .qa-panel,
+.app-shell.task-detail-view .revision-panel {
+  border-color: #dfe7f2;
+  box-shadow: none;
+}
+
+.app-shell.task-detail-view .advanced-panel summary {
+  font-size: 15px;
+}
+
+@media (max-width: 980px) {
+  .app-shell,
+  .app-shell.mode-select-view,
+  .app-shell.new-task-view,
+  .app-shell.task-center-view,
+  .app-shell.task-detail-view,
+  .app-shell.setup-collapsed {
+    grid-template-columns: 1fr;
+    height: auto;
+    overflow: visible;
+  }
+
+  .setup-panel,
+  .app-shell.mode-select-view .left-rail,
+  .app-shell.new-task-view .left-rail,
+  .app-shell.task-center-view .left-rail {
+    border-right: 0;
+    border-bottom: 1px solid #dfe5ee;
+  }
+
+  .create-workspace {
+    place-items: stretch;
+  }
+
+  .composer-control-bar {
+    align-items: stretch;
+  }
+
+  .composer-control-bar label,
+  .composer-control-bar .primary-action,
+  .preference-action {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .page-prompt-actions,
+  .page-stream-select {
+    grid-template-columns: 1fr;
+  }
+
+  .page-stream {
+    max-height: none;
+  }
+
+  .app-shell.task-detail-view #taskDetailShell.workspace-panel {
+    padding: 14px;
+  }
+
+  .app-shell.task-detail-view .workspace-header,
+  .app-shell.task-detail-view .next-action-panel,
+  .app-shell.task-detail-view .content-grid,
+  .app-shell.task-detail-view .status-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell.task-detail-view .primary-next-action {
+    width: 100%;
+  }
+
+  .app-shell.task-detail-view .preview-zone {
+    height: min(68vh, 560px);
+  }
+}
+
+/* Workbench v0.2 production loop: right-side manual review panel */
+.app-shell.task-detail-view #taskDetailShell .content-grid {
+  grid-template-columns: minmax(320px, 380px) minmax(0, 1fr) minmax(280px, 320px);
+}
+
+.slide-review-panel {
+  border: 1px solid #dbe4f0;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 16px 36px rgb(16 33 59 / 7%);
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  min-width: 0;
+}
+
+.slide-review-panel.disabled {
+  opacity: 0.7;
+}
+
+.slide-review-hint,
+.slide-review-meta {
+  margin: 0;
+  font-size: 12px;
+  color: #5a6b84;
+}
+
+.review-field {
+  display: grid;
+  gap: 6px;
+}
+
+.review-inline-options {
+  grid-template-columns: 1fr 1fr;
+}
+
+.review-inline-options label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #31435f;
+}
+
+.review-score-group {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.review-score-btn {
+  min-height: 32px;
+  border: 1px solid #cfd9e8;
+  border-radius: 8px;
+  background: #f8fbff;
+  color: #123b7a;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.review-score-btn.active {
+  border-color: #123b7a;
+  background: #123b7a;
+  color: #fff;
+}
+
+.review-tags {
+  border: 1px dashed #d8e2f0;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.review-tags legend {
+  padding: 0 4px;
+  font-size: 12px;
+  color: #4d5f78;
+}
+
+.review-tags label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: #31435f;
+}
+
+.review-tags label:last-child {
+  margin-bottom: 0;
+}
+
+.review-actions .primary-action {
+  width: 100%;
+}
+
+.slide-review-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 20px;
+  padding: 0 6px;
+  margin-left: 6px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  background: #e8edf6;
+  color: #344054;
+}
+
+.slide-review-badge.score-4,
+.slide-review-badge.score-5 {
+  background: #e8f7ee;
+  color: #1f7a3d;
+}
+
+.slide-review-badge.score-1,
+.slide-review-badge.score-2 {
+  background: #fdecec;
+  color: #8b1f1a;
+}
+
+@media (max-width: 1700px) {
+  .app-shell.task-detail-view #taskDetailShell .content-grid {
+    grid-template-columns: minmax(320px, 380px) minmax(0, 1fr);
+  }
+
+  .slide-review-panel {
+    grid-column: 1 / -1;
+  }
+}

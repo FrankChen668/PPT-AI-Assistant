@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <!-- SIE consulting ending placeholder -->
+  <rect x="0" y="0" width="1280" height="720" fill="#2C3E50"/>
+  <text x="640" y="300" text-anchor="middle" fill="#FFFFFF" font-family="Microsoft YaHei, Arial, sans-serif" font-size="60" font-weight="700">谢谢</text>
+  <text x="640" y="360" text-anchor="middle" fill="#B4C6CA" font-family="Microsoft YaHei, Arial, sans-serif" font-size="24">Q&amp;A / Contact</text>
+  <line x1="500" y1="400" x2="780" y2="400" stroke="#AD053D" stroke-width="6"/>
+</svg>

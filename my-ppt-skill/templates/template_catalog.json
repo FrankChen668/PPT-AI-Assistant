@@ -1,0 +1,1509 @@
+{
+  "templates": [
+    {
+      "template_key": "academic_defense",
+      "tier": "Gold",
+      "use_cases": [
+        "Thesis defense",
+        "Academic presentations",
+        "Research progress reports",
+        "Grant applications"
+      ],
+      "audiences": [
+        "Academic committees",
+        "Advisors",
+        "Students",
+        "Researchers"
+      ],
+      "style_tags": [
+        "academic",
+        "research",
+        "rigorous",
+        "blue",
+        "structured"
+      ],
+      "density": "medium",
+      "visual_strengths": [
+        "Complete defense-oriented page set",
+        "Strong institutional header",
+        "Readable academic hierarchy",
+        "Useful key-message strip and open content area"
+      ],
+      "avoid_when": [
+        "Commercial product launches",
+        "Highly visual brand campaigns",
+        "Playful consumer storytelling"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Gold because it is complete, readable, distinct, and directly useful for a common high-value academic scenario.",
+      "source_path": "ppt-ai-core/templates/layouts/academic_defense",
+      "composition_patterns": [
+        "hero headline + structured evidence blocks"
+      ],
+      "avoid_copying": [
+        "Do not replicate academic_defense page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Thesis defense",
+        "Academic presentations",
+        "Research progress reports"
+      ]
+    },
+    {
+      "template_key": "academic_defense_research_board",
+      "tier": "Silver",
+      "use_cases": [
+        "Research board review",
+        "Grant milestone checkpoint",
+        "Cross-lab academic summary"
+      ],
+      "audiences": [
+        "Research directors",
+        "Academic committees",
+        "Principal investigators"
+      ],
+      "style_tags": [
+        "academic",
+        "research",
+        "structured",
+        "formal",
+        "blue"
+      ],
+      "density": "medium",
+      "visual_strengths": [
+        "Clear scholarly hierarchy",
+        "Stable section rhythm",
+        "Strong readability for evidence slides"
+      ],
+      "avoid_when": [
+        "Consumer brand storytelling",
+        "Investor pitch theatrics",
+        "Campaign-style presentations"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Silver because it remains domain-focused despite strong structural quality.",
+      "source_path": "ppt-ai-core/templates/layouts/academic_defense_research_board",
+      "composition_patterns": [
+        "stable bilateral grid + policy rail"
+      ],
+      "avoid_copying": [
+        "Do not replicate academic_defense_research_board page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Research board review",
+        "Grant milestone checkpoint",
+        "Cross-lab academic summary"
+      ]
+    },
+    {
+      "template_key": "ai_ops",
+      "tier": "Gold",
+      "use_cases": [
+        "Telecom AI operations architecture",
+        "IT system overview",
+        "Digital transformation proposal",
+        "Smart infrastructure report"
+      ],
+      "audiences": [
+        "CIO/CTO",
+        "Enterprise architects",
+        "Telecom operators",
+        "Digital transformation teams"
+      ],
+      "style_tags": [
+        "enterprise",
+        "telecom",
+        "AI operations",
+        "high-density",
+        "architecture",
+        "red-blue"
+      ],
+      "density": "high",
+      "visual_strengths": [
+        "Purpose-built high-density system",
+        "Modular zoning",
+        "Extra reference_style.svg",
+        "Strong red/blue enterprise identity"
+      ],
+      "avoid_when": [
+        "Lightweight keynote",
+        "Brand-neutral executive summary",
+        "Decks needing spacious editorial pacing"
+      ],
+      "reference_pages": [
+        "reference_style.svg",
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Gold because it fills a unique high-density enterprise architecture niche and includes a dedicated style reference.",
+      "source_path": "ppt-ai-core/templates/layouts/ai_ops",
+      "composition_patterns": [
+        "layered architecture map + directed flow connectors",
+        "modular zoning with bounded annotation lanes"
+      ],
+      "avoid_copying": [
+        "Do not replicate ai_ops page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Telecom AI operations architecture",
+        "IT system overview",
+        "Digital transformation proposal"
+      ]
+    },
+    {
+      "template_key": "ai_ops_architecture_review",
+      "tier": "Silver",
+      "use_cases": [
+        "Architecture review",
+        "AI operations capability map",
+        "Platform modernization review"
+      ],
+      "audiences": [
+        "Enterprise architects",
+        "Platform leads",
+        "CTO/CIO reviewers"
+      ],
+      "style_tags": [
+        "enterprise",
+        "architecture",
+        "high-density",
+        "ai-ops",
+        "modular"
+      ],
+      "density": "high",
+      "visual_strengths": [
+        "Dense modular zoning",
+        "Strong technical authority",
+        "Good map/process compatibility"
+      ],
+      "avoid_when": [
+        "Short keynote with sparse content",
+        "Narrative-first storytelling decks",
+        "General training slides"
+      ],
+      "reference_pages": [
+        "reference_style.svg",
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Silver until more real decks prove stable readability at high density.",
+      "source_path": "ppt-ai-core/templates/layouts/ai_ops_architecture_review",
+      "composition_patterns": [
+        "layered architecture map + directed flow connectors",
+        "modular zoning with bounded annotation lanes"
+      ],
+      "avoid_copying": [
+        "Do not replicate ai_ops_architecture_review page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Architecture review",
+        "AI operations capability map",
+        "Platform modernization review"
+      ]
+    },
+    {
+      "template_key": "anthropic",
+      "tier": "Gold",
+      "use_cases": [
+        "AI/LLM tech talks",
+        "Developer conferences",
+        "Technical training",
+        "Product launches"
+      ],
+      "audiences": [
+        "Developers",
+        "AI product teams",
+        "Technical leaders",
+        "Product marketing teams"
+      ],
+      "style_tags": [
+        "AI",
+        "technology",
+        "hybrid",
+        "card-based",
+        "modern",
+        "conclusion-first"
+      ],
+      "density": "medium",
+      "visual_strengths": [
+        "Strong dark cover/chapter rhythm",
+        "Modern AI palette",
+        "Clear card-based content page",
+        "Useful semantic colors"
+      ],
+      "avoid_when": [
+        "Traditional finance reports",
+        "Solemn government reports",
+        "Print-heavy documents"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Gold because it is visually distinct and highly useful for current AI and technology decks.",
+      "source_path": "ppt-ai-core/templates/layouts/anthropic",
+      "composition_patterns": [
+        "layered architecture map + directed flow connectors"
+      ],
+      "avoid_copying": [
+        "Do not replicate anthropic page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "AI/LLM tech talks",
+        "Developer conferences",
+        "Technical training"
+      ]
+    },
+    {
+      "template_key": "exhibit",
+      "tier": "Gold",
+      "use_cases": [
+        "Strategic planning",
+        "Executive report",
+        "Investment analysis",
+        "Board presentation"
+      ],
+      "audiences": [
+        "Board",
+        "C-level",
+        "Investors",
+        "Strategy teams"
+      ],
+      "style_tags": [
+        "exhibit",
+        "premium",
+        "dark",
+        "conclusion-first",
+        "data-driven"
+      ],
+      "density": "medium",
+      "visual_strengths": [
+        "Excellent takeaway-bar pattern",
+        "Strong executive dark style",
+        "Concise page furniture",
+        "High conclusion-first signal"
+      ],
+      "avoid_when": [
+        "Warm education/training decks",
+        "Low-contrast projection environments",
+        "Playful visual storytelling"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Gold because the content page gives the Executor a clean Exhibit-style anchor without forcing geometry.",
+      "source_path": "ppt-ai-core/templates/layouts/exhibit",
+      "composition_patterns": [
+        "hero headline + structured evidence blocks"
+      ],
+      "avoid_copying": [
+        "Do not replicate exhibit page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Strategic planning",
+        "Executive report",
+        "Investment analysis"
+      ]
+    },
+    {
+      "template_key": "exhibit_investor_brief",
+      "tier": "Gold",
+      "use_cases": [
+        "Investor briefing",
+        "Board financial narrative",
+        "Quarterly operating review"
+      ],
+      "audiences": [
+        "Investors",
+        "Board",
+        "CFO office"
+      ],
+      "style_tags": [
+        "exhibit",
+        "dark",
+        "conclusion-first",
+        "finance",
+        "premium"
+      ],
+      "density": "medium",
+      "visual_strengths": [
+        "High-contrast conclusion bar",
+        "Strong executive gravitas",
+        "Disciplined data-forward tone"
+      ],
+      "avoid_when": [
+        "Warm education decks",
+        "Low-contrast projection rooms",
+        "Brand-playful launches"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Use as investor-tone anchor; preserve conclusion-first flow and keep ornament minimal.",
+      "source_path": "ppt-ai-core/templates/layouts/exhibit_investor_brief",
+      "composition_patterns": [
+        "metric stage + risk/reward pairing"
+      ],
+      "avoid_copying": [
+        "Do not replicate exhibit_investor_brief page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Investor briefing",
+        "Board financial narrative",
+        "Quarterly operating review"
+      ]
+    },
+    {
+      "template_key": "google_product_update",
+      "tier": "Gold",
+      "use_cases": [
+        "Product quarterly update",
+        "Engineering-business sync",
+        "Roadmap communication"
+      ],
+      "audiences": [
+        "Product managers",
+        "Engineering leaders",
+        "Cross-functional stakeholders"
+      ],
+      "style_tags": [
+        "clean",
+        "modern",
+        "technology",
+        "light",
+        "spacious"
+      ],
+      "density": "low",
+      "visual_strengths": [
+        "Readable modern typography",
+        "Balanced whitespace",
+        "Friendly but professional tone"
+      ],
+      "avoid_when": [
+        "Formal policy hearings",
+        "Dense financial filings",
+        "Ceremonial government narratives"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Preferred when clarity and collaborative tone matter more than visual drama.",
+      "source_path": "ppt-ai-core/templates/layouts/google_product_update",
+      "composition_patterns": [
+        "layered architecture map + directed flow connectors"
+      ],
+      "avoid_copying": [
+        "Do not replicate google_product_update page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Product quarterly update",
+        "Engineering-business sync",
+        "Roadmap communication"
+      ]
+    },
+    {
+      "template_key": "google_style",
+      "tier": "Gold",
+      "use_cases": [
+        "Technical sharing",
+        "Annual report",
+        "Project showcase",
+        "Data-driven presentation"
+      ],
+      "audiences": [
+        "Product teams",
+        "Engineering teams",
+        "Cross-functional business reviewers"
+      ],
+      "style_tags": [
+        "clean",
+        "modern",
+        "technology",
+        "brand-color",
+        "spacious",
+        "light"
+      ],
+      "density": "low",
+      "visual_strengths": [
+        "Clean light palette",
+        "Recognizable color accents",
+        "Generous whitespace",
+        "Flexible content zone"
+      ],
+      "avoid_when": [
+        "Solemn government decks",
+        "Heavy formal finance decks",
+        "Pages requiring dense tables"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Gold because it is broad, flexible, and easy for Executor to adapt safely.",
+      "source_path": "ppt-ai-core/templates/layouts/google_style",
+      "composition_patterns": [
+        "layered architecture map + directed flow connectors"
+      ],
+      "avoid_copying": [
+        "Do not replicate google_style page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Technical sharing",
+        "Annual report",
+        "Project showcase"
+      ]
+    },
+    {
+      "template_key": "government_blue",
+      "tier": "Gold",
+      "use_cases": [
+        "Government briefing",
+        "Smart city report",
+        "Digital transformation",
+        "Policy interpretation",
+        "Investment promotion"
+      ],
+      "audiences": [
+        "Government agencies",
+        "State-owned enterprises",
+        "Public-sector partners"
+      ],
+      "style_tags": [
+        "government",
+        "blue",
+        "formal",
+        "technology",
+        "public-sector"
+      ],
+      "density": "medium",
+      "visual_strengths": [
+        "Strong blue government identity",
+        "Polished cover",
+        "Clear chapter/title system",
+        "Flexible content guidance"
+      ],
+      "avoid_when": [
+        "Party-building red theme",
+        "Consumer product launch",
+        "Premium finance deck"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Gold because it is the strongest broad public-sector reference in the first batch.",
+      "source_path": "ppt-ai-core/templates/layouts/government_blue",
+      "composition_patterns": [
+        "stable bilateral grid + policy rail",
+        "layered architecture map + directed flow connectors"
+      ],
+      "avoid_copying": [
+        "Do not replicate government_blue page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Government briefing",
+        "Smart city report",
+        "Digital transformation"
+      ]
+    },
+    {
+      "template_key": "government_blue_policy_brief",
+      "tier": "Gold",
+      "use_cases": [
+        "Policy progress briefing",
+        "SOE governance update",
+        "Public-sector digital report"
+      ],
+      "audiences": [
+        "Government leaders",
+        "SOE executives",
+        "Public-sector program teams"
+      ],
+      "style_tags": [
+        "government",
+        "blue",
+        "formal",
+        "policy",
+        "public-sector"
+      ],
+      "density": "medium",
+      "visual_strengths": [
+        "Formal institutional hierarchy",
+        "Strong chapter separation",
+        "Stable blue authority tone"
+      ],
+      "avoid_when": [
+        "Consumer-facing marketing decks",
+        "Finance luxury branding",
+        "Neon technology storytelling"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Use when institutional trust and policy readability are primary goals.",
+      "source_path": "ppt-ai-core/templates/layouts/government_blue_policy_brief",
+      "composition_patterns": [
+        "stable bilateral grid + policy rail"
+      ],
+      "avoid_copying": [
+        "Do not replicate government_blue_policy_brief page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Policy progress briefing",
+        "SOE governance update",
+        "Public-sector digital report"
+      ]
+    },
+    {
+      "template_key": "government_red",
+      "tier": "Silver",
+      "use_cases": [
+        "Government report",
+        "Party-building scenario",
+        "Official work summary"
+      ],
+      "audiences": [
+        "Government teams",
+        "Public-sector stakeholders",
+        "Official reporting audiences"
+      ],
+      "style_tags": [
+        "government",
+        "red",
+        "formal",
+        "authoritative",
+        "public-sector"
+      ],
+      "density": "medium",
+      "visual_strengths": [
+        "Clear ceremonial identity",
+        "Complete page set",
+        "Strong red visual code"
+      ],
+      "avoid_when": [
+        "Technology-forward government topics better served by government_blue",
+        "Neutral corporate reporting",
+        "Playful or international decks"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Silver because it is useful but narrower and more ceremonial than government_blue; recommend only when red/government symbolism is explicitly requested.",
+      "source_path": "ppt-ai-core/templates/layouts/government_red",
+      "composition_patterns": [
+        "stable bilateral grid + policy rail"
+      ],
+      "avoid_copying": [
+        "Do not replicate government_red page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Government report",
+        "Party-building scenario",
+        "Official work summary"
+      ]
+    },
+    {
+      "template_key": "mckinsey",
+      "tier": "Gold",
+      "use_cases": [
+        "Strategy report",
+        "Consulting proposal",
+        "Investment analysis",
+        "Executive decision deck"
+      ],
+      "audiences": [
+        "Executives",
+        "Board",
+        "Investors",
+        "Strategy teams"
+      ],
+      "style_tags": [
+        "consulting",
+        "structured",
+        "premium",
+        "data-driven",
+        "light"
+      ],
+      "density": "medium",
+      "visual_strengths": [
+        "Strong key insight bar",
+        "Premium consulting header",
+        "Useful flexible layout hints",
+        "Professional hierarchy"
+      ],
+      "avoid_when": [
+        "Playful consumer decks",
+        "Emotional storytelling",
+        "Heavily illustrated brand campaigns"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Gold because it is one of the strongest general-purpose executive anchors; avoid over-copying exact page geometry.",
+      "source_path": "ppt-ai-core/templates/layouts/mckinsey",
+      "composition_patterns": [
+        "conclusion bar + asymmetric evidence columns"
+      ],
+      "avoid_copying": [
+        "Do not replicate mckinsey page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Strategy report",
+        "Consulting proposal",
+        "Investment analysis"
+      ]
+    },
+    {
+      "template_key": "mckinsey_decision_memo",
+      "tier": "Gold",
+      "use_cases": [
+        "Executive decision memo",
+        "Board strategy brief",
+        "Investment committee update"
+      ],
+      "audiences": [
+        "Board members",
+        "Executive committee",
+        "Strategy office"
+      ],
+      "style_tags": [
+        "consulting",
+        "decision-first",
+        "premium",
+        "structured",
+        "light"
+      ],
+      "density": "medium",
+      "visual_strengths": [
+        "Strong decision headline hierarchy",
+        "Clean evidence framing",
+        "Stable executive rhythm"
+      ],
+      "avoid_when": [
+        "Playful consumer campaigns",
+        "Illustration-heavy storytelling",
+        "Highly emotional narrative decks"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Variant tuned for decision memo scenes; keep concise evidence blocks and avoid card overuse.",
+      "source_path": "ppt-ai-core/templates/layouts/mckinsey_decision_memo",
+      "composition_patterns": [
+        "conclusion bar + asymmetric evidence columns"
+      ],
+      "avoid_copying": [
+        "Do not replicate mckinsey_decision_memo page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Executive decision memo",
+        "Board strategy brief",
+        "Investment committee update"
+      ]
+    },
+    {
+      "template_key": "medical_university",
+      "tier": "Silver",
+      "use_cases": [
+        "Medical report",
+        "Case discussion",
+        "Hospital research presentation",
+        "Clinical teaching"
+      ],
+      "audiences": [
+        "Medical faculty",
+        "Clinicians",
+        "Hospital administrators",
+        "Research teams"
+      ],
+      "style_tags": [
+        "medical",
+        "academic",
+        "clinical",
+        "blue",
+        "trustworthy"
+      ],
+      "density": "medium",
+      "visual_strengths": [
+        "Complete medical/academic page set",
+        "Appropriate blue/green health palette",
+        "Content hints for cases, tests, imaging, and treatment plans"
+      ],
+      "avoid_when": [
+        "Non-medical corporate reporting",
+        "Consumer launches",
+        "Board strategy decks"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Silver because it has strong scenario fit but is too narrow for first-batch default recommendation; validate image/table-heavy clinical pages before Gold.",
+      "source_path": "ppt-ai-core/templates/layouts/medical_university",
+      "composition_patterns": [
+        "hero headline + structured evidence blocks"
+      ],
+      "avoid_copying": [
+        "Do not replicate medical_university page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Medical report",
+        "Case discussion",
+        "Hospital research presentation"
+      ]
+    },
+    {
+      "template_key": "pixel_retro",
+      "tier": "Silver",
+      "use_cases": [
+        "Gaming-themed tech sharing",
+        "Developer culture talk",
+        "Retro product demo"
+      ],
+      "audiences": [
+        "Developers",
+        "Creative teams",
+        "Internal tech communities"
+      ],
+      "style_tags": [
+        "pixel",
+        "retro",
+        "cyber",
+        "neon",
+        "playful",
+        "dark"
+      ],
+      "density": "medium",
+      "visual_strengths": [
+        "Highly distinctive pixel/cyber visual identity",
+        "Strong cover and chapter personality",
+        "Clear special-scenario value"
+      ],
+      "avoid_when": [
+        "Executive board decks",
+        "Formal government/finance reports",
+        "Print-first documents"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Silver because it is memorable but too niche, filter-heavy, and stylistically risky for first-batch default use.",
+      "source_path": "ppt-ai-core/templates/layouts/pixel_retro",
+      "composition_patterns": [
+        "hero headline + structured evidence blocks"
+      ],
+      "avoid_copying": [
+        "Do not replicate pixel_retro page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Gaming-themed tech sharing",
+        "Developer culture talk",
+        "Retro product demo"
+      ]
+    },
+    {
+      "template_key": "psychology_attachment",
+      "tier": "Silver",
+      "use_cases": [
+        "Psychotherapy training",
+        "Counseling lecture",
+        "Attachment theory workshop",
+        "Healing-oriented education"
+      ],
+      "audiences": [
+        "Counselors",
+        "Psychology students",
+        "Workshop participants",
+        "Educators"
+      ],
+      "style_tags": [
+        "psychology",
+        "healing",
+        "warm",
+        "counseling",
+        "soft"
+      ],
+      "density": "low",
+      "visual_strengths": [
+        "Warm professional tone",
+        "Useful quote/tag devices",
+        "Differentiated from business templates"
+      ],
+      "avoid_when": [
+        "Dense executive analysis",
+        "Technical architecture",
+        "Formal policy reports"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Silver because it is narrow-domain and softer in tone; validate workshop readability and asset handling before broad recommendation.",
+      "source_path": "ppt-ai-core/templates/layouts/psychology_attachment",
+      "composition_patterns": [
+        "hero headline + structured evidence blocks"
+      ],
+      "avoid_copying": [
+        "Do not replicate psychology_attachment page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Psychotherapy training",
+        "Counseling lecture",
+        "Attachment theory workshop"
+      ]
+    },
+    {
+      "template_key": "consulting_classic",
+      "tier": "Silver",
+      "use_cases": [
+        "Consulting report",
+        "Table-first analysis",
+        "Restrained business review"
+      ],
+      "audiences": [
+        "Enterprise clients",
+        "Consultants",
+        "Operations teams",
+        "B2B decision makers"
+      ],
+      "style_tags": [
+        "consulting",
+        "restrained",
+        "table-first",
+        "wine-red",
+        "blue-gray"
+      ],
+      "density": "high",
+      "visual_strengths": [
+        "Useful table-first direction",
+        "Extra timeline content reference",
+        "Restrained palette for serious B2B work"
+      ],
+      "avoid_when": [
+        "Premium board deck requiring polished cover language",
+        "Visual storytelling",
+        "Decks needing rich page variety"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "03_content_history_growth_timeline.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Silver because the direction is useful, but current SVG references are skeletal and placeholder-heavy; polish before Gold.",
+      "source_path": "ppt-ai-core/templates/layouts/consulting_classic",
+      "composition_patterns": [
+        "conclusion bar + asymmetric evidence columns",
+        "modular zoning with bounded annotation lanes"
+      ],
+      "avoid_copying": [
+        "Do not replicate consulting_classic page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Consulting report",
+        "Table-first analysis",
+        "Restrained business review"
+      ]
+    },
+    {
+      "template_key": "smart_red",
+      "tier": "Silver",
+      "use_cases": [
+        "Tech company introduction",
+        "Education solution",
+        "Vibrant business proposal"
+      ],
+      "audiences": [
+        "Sales teams",
+        "Product marketing",
+        "Education/business stakeholders"
+      ],
+      "style_tags": [
+        "red-orange",
+        "vibrant",
+        "business",
+        "technology",
+        "geometric"
+      ],
+      "density": "medium",
+      "visual_strengths": [
+        "Energetic color system",
+        "Simple page set",
+        "Good for modern company introductions"
+      ],
+      "avoid_when": [
+        "Conservative executive board report",
+        "Academic defense",
+        "Government reporting"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Silver because it is visually useful but less distinctive and less mature than first-batch technology/business Gold options.",
+      "source_path": "ppt-ai-core/templates/layouts/smart_red",
+      "composition_patterns": [
+        "layered architecture map + directed flow connectors"
+      ],
+      "avoid_copying": [
+        "Do not replicate smart_red page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Tech company introduction",
+        "Education solution",
+        "Vibrant business proposal"
+      ]
+    },
+    {
+      "template_key": "中国电建_常规",
+      "tier": "Silver",
+      "use_cases": [
+        "Engineering construction report",
+        "State-owned enterprise update",
+        "Energy project presentation"
+      ],
+      "audiences": [
+        "SOE managers",
+        "Engineering clients",
+        "Energy/infrastructure stakeholders"
+      ],
+      "style_tags": [
+        "PowerChina",
+        "SOE",
+        "engineering",
+        "energy",
+        "standard"
+      ],
+      "density": "medium",
+      "visual_strengths": [
+        "Solid brand system",
+        "Complete local logo assets",
+        "Conventional report structure"
+      ],
+      "avoid_when": [
+        "International high-end roadshows",
+        "Brand-neutral decks",
+        "Modern technology showcase"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Silver because it is useful but mostly superseded by 中国电建_现代 for first-batch impact and distinctiveness.",
+      "source_path": "ppt-ai-core/templates/layouts/中国电建_常规",
+      "composition_patterns": [
+        "layered architecture map + directed flow connectors"
+      ],
+      "avoid_copying": [
+        "Do not replicate 中国电建_常规 page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Engineering construction report",
+        "State-owned enterprise update",
+        "Energy project presentation"
+      ]
+    },
+    {
+      "template_key": "中国电建_现代",
+      "tier": "Gold",
+      "use_cases": [
+        "Major engineering report",
+        "International business showcase",
+        "Technology achievement release",
+        "Energy infrastructure proposal"
+      ],
+      "audiences": [
+        "SOE leaders",
+        "Engineering clients",
+        "International partners",
+        "Infrastructure investors"
+      ],
+      "style_tags": [
+        "PowerChina",
+        "engineering",
+        "modern",
+        "energy",
+        "deep-blue",
+        "infrastructure"
+      ],
+      "density": "medium",
+      "visual_strengths": [
+        "Modern engineering identity",
+        "Complete logo assets",
+        "Precise content frame",
+        "Strong cover/chapter presence"
+      ],
+      "avoid_when": [
+        "Non-energy domains",
+        "Small internal workshops",
+        "Brand-neutral strategy decks"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Gold because it is the strongest energy/engineering anchor and has clear visual differentiation from general templates.",
+      "source_path": "ppt-ai-core/templates/layouts/中国电建_现代",
+      "composition_patterns": [
+        "layered architecture map + directed flow connectors"
+      ],
+      "avoid_copying": [
+        "Do not replicate 中国电建_现代 page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Major engineering report",
+        "International business showcase",
+        "Technology achievement release"
+      ]
+    },
+    {
+      "template_key": "中汽研_商务",
+      "tier": "Silver",
+      "use_cases": [
+        "Certification showcase",
+        "High-end business report",
+        "Technology promotion",
+        "CATARC business visit"
+      ],
+      "audiences": [
+        "CATARC leadership",
+        "Certification clients",
+        "Automotive business partners"
+      ],
+      "style_tags": [
+        "CATARC",
+        "business",
+        "technology",
+        "deep-blue",
+        "premium"
+      ],
+      "density": "medium",
+      "visual_strengths": [
+        "Strong premium tech-business cover",
+        "Clear page chrome",
+        "Useful brand assets"
+      ],
+      "avoid_when": [
+        "Brand-neutral decks",
+        "Non-automotive industry work",
+        "Simple internal training"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Silver because image placeholders point to project image variables and need binding validation before Gold promotion.",
+      "source_path": "ppt-ai-core/templates/layouts/中汽研_商务",
+      "composition_patterns": [
+        "layered architecture map + directed flow connectors"
+      ],
+      "avoid_copying": [
+        "Do not replicate 中汽研_商务 page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Certification showcase",
+        "High-end business report",
+        "Technology promotion"
+      ]
+    },
+    {
+      "template_key": "中汽研_常规",
+      "tier": "Silver",
+      "use_cases": [
+        "Certification display",
+        "Evaluation presentation",
+        "Technology promotion",
+        "Business visit"
+      ],
+      "audiences": [
+        "CATARC stakeholders",
+        "Certification clients",
+        "Automotive technology teams"
+      ],
+      "style_tags": [
+        "CATARC",
+        "certification",
+        "automotive",
+        "standard",
+        "authoritative"
+      ],
+      "density": "medium",
+      "visual_strengths": [
+        "Stable authoritative style",
+        "Local logo assets",
+        "Complete reference pages"
+      ],
+      "avoid_when": [
+        "High-end launch",
+        "Futuristic technology story",
+        "Non-automotive contexts"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Silver because it is solid but visually conservative and superseded by stronger CATARC variants for first-batch use.",
+      "source_path": "ppt-ai-core/templates/layouts/中汽研_常规",
+      "composition_patterns": [
+        "hero headline + structured evidence blocks"
+      ],
+      "avoid_copying": [
+        "Do not replicate 中汽研_常规 page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Certification display",
+        "Evaluation presentation",
+        "Technology promotion"
+      ]
+    },
+    {
+      "template_key": "中汽研_现代",
+      "tier": "Silver",
+      "use_cases": [
+        "Forward-looking automotive technology showcase",
+        "Strategic release",
+        "High-end business reporting"
+      ],
+      "audiences": [
+        "CATARC leadership",
+        "Automotive technology partners",
+        "Launch-event audiences"
+      ],
+      "style_tags": [
+        "CATARC",
+        "future-tech",
+        "automotive",
+        "neon-blue",
+        "modern"
+      ],
+      "density": "medium",
+      "visual_strengths": [
+        "Distinct future-tech identity",
+        "Strong dark cover",
+        "Asymmetric content style"
+      ],
+      "avoid_when": [
+        "Conservative certification report",
+        "Brand-neutral corporate deck",
+        "Print-first summary"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Silver because it is visually striking but narrower and riskier than first-batch broad-use templates; validate readability and asset binding before Gold.",
+      "source_path": "ppt-ai-core/templates/layouts/中汽研_现代",
+      "composition_patterns": [
+        "hero headline + structured evidence blocks"
+      ],
+      "avoid_copying": [
+        "Do not replicate 中汽研_现代 page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Forward-looking automotive technology showcase",
+        "Strategic release",
+        "High-end business reporting"
+      ]
+    },
+    {
+      "template_key": "招商银行",
+      "tier": "Gold",
+      "use_cases": [
+        "Premium financial report",
+        "Corporate banking presentation",
+        "Annual business review",
+        "Client proposal"
+      ],
+      "audiences": [
+        "Financial institutions",
+        "Executives",
+        "Enterprise banking teams",
+        "Premium clients"
+      ],
+      "style_tags": [
+        "finance",
+        "premium",
+        "red-gold",
+        "refined",
+        "brand"
+      ],
+      "density": "medium",
+      "visual_strengths": [
+        "Strong financial identity",
+        "Refined red/gold system",
+        "Open content area",
+        "Local brand asset present"
+      ],
+      "avoid_when": [
+        "Non-finance technical architecture",
+        "Government reports",
+        "Casual training decks"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Gold because it gives the first batch a credible finance-style anchor; use only when financial branding fits.",
+      "source_path": "ppt-ai-core/templates/layouts/招商银行",
+      "composition_patterns": [
+        "metric stage + risk/reward pairing"
+      ],
+      "avoid_copying": [
+        "Do not replicate 招商银行 page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Premium financial report",
+        "Corporate banking presentation",
+        "Annual business review"
+      ]
+    },
+    {
+      "template_key": "科技蓝商务",
+      "tier": "Silver",
+      "use_cases": [
+        "Tech-business report",
+        "Solution proposal",
+        "Product lifecycle/process explanation"
+      ],
+      "audiences": [
+        "Corporate reviewers",
+        "Product teams",
+        "Solution sales teams"
+      ],
+      "style_tags": [
+        "tech-blue",
+        "business",
+        "corporate",
+        "solution",
+        "process"
+      ],
+      "density": "medium",
+      "visual_strengths": [
+        "Strong tech-blue cover",
+        "Simple content frame",
+        "Clear business proposal tone"
+      ],
+      "avoid_when": [
+        "Brand-neutral general decks",
+        "Finance premium decks",
+        "Academic/government scenarios"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Silver because several references contain product-specific wording such as 维链医疗云 and confidential footer language; genericize before Gold.",
+      "source_path": "ppt-ai-core/templates/layouts/科技蓝商务",
+      "composition_patterns": [
+        "hero headline + structured evidence blocks"
+      ],
+      "avoid_copying": [
+        "Do not replicate 科技蓝商务 page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "Tech-business report",
+        "Solution proposal",
+        "Product lifecycle/process explanation"
+      ]
+    },
+    {
+      "template_key": "重庆大学",
+      "tier": "Silver",
+      "use_cases": [
+        "University defense",
+        "Research report",
+        "Teaching presentation",
+        "Scholarly exchange"
+      ],
+      "audiences": [
+        "Chongqing University students",
+        "Advisors",
+        "Academic committees",
+        "Campus stakeholders"
+      ],
+      "style_tags": [
+        "university",
+        "academic",
+        "CQU",
+        "blue",
+        "mountain-city"
+      ],
+      "density": "medium",
+      "visual_strengths": [
+        "Distinct campus identity",
+        "Local logo assets",
+        "Modern academic geometry"
+      ],
+      "avoid_when": [
+        "Non-CQU academic decks",
+        "Corporate or government reporting",
+        "Brand-neutral research decks"
+      ],
+      "reference_pages": [
+        "01_cover.svg",
+        "02_toc.svg",
+        "02_chapter.svg",
+        "03_content.svg",
+        "04_ending.svg"
+      ],
+      "notes": "Silver because it is strong but institution-specific; academic_defense is the safer first-batch academic default.",
+      "source_path": "ppt-ai-core/templates/layouts/重庆大学",
+      "composition_patterns": [
+        "hero headline + structured evidence blocks"
+      ],
+      "avoid_copying": [
+        "Do not replicate 重庆大学 page geometry one-to-one; rewrite structure to fit narrative.",
+        "Reuse visual grammar only (hierarchy, rhythm, emphasis), not pixel-level decoration.",
+        "Replace color accents/icon motifs when they signal another brand identity."
+      ],
+      "best_for": [
+        "University defense",
+        "Research report",
+        "Teaching presentation"
+      ]
+    }
+  ]
+}

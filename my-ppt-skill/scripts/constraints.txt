@@ -1,0 +1,15 @@
+# Dependency constraints for reproducible CI installs.
+# Install with:
+#   pip install -r scripts/requirements.txt -c scripts/constraints.txt
+
+python-pptx<2
+cairosvg<3
+Pillow<11
+lxml<6
+defusedxml<1
+# Optional PDF input support; install scripts/requirements-pdf.txt when needed.
+PyMuPDF<2
+requests<3
+beautifulsoup4<5
+openai<2
+numpy<3

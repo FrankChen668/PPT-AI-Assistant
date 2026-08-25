@@ -1,0 +1,55 @@
+# Python caches and local environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Local machine/editor noise
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
+tmp/
+output/
+artifacts/tmp-tests/
+.cursor/
+.codex-run/
+
+# Local secrets (never commit)
+.env
+.env.*
+!.env.template
+
+# Workbench runtime state
+.workbench-server.pid
+workbench/*.db
+workbench/*.db-*
+workbench/tasks/
+workbench/uploads/
+workbench/settings.local.json
+workbench/connections.local.json
+workbench/role_routing.local.json
+
+# Generated AI-PPT project outputs.
+# Source-of-truth project inputs remain tracked:
+# design_spec.md, outline.md, blueprint.json
+my-ppt-skill/projects/_archive/
+my-ppt-skill/projects/.workbench_archive/
+my-ppt-skill/projects/**/svg_output/
+my-ppt-skill/projects/**/svg_final/
+my-ppt-skill/projects/**/exports/
+my-ppt-skill/projects/**/qa/
+my-ppt-skill/projects/**/workbench_status.json
+my-ppt-skill/projects/**/executor_packets/
+
+# Experimental and temporary project runs (date-suffixed working copies).
+my-ppt-skill/tmp/
+my-ppt-skill/qa/
+my-ppt-skill/svg_output/
+my-ppt-skill/svg_final/
+my-ppt-skill/exports/
+my-ppt-skill/executor_packets/
+my-ppt-skill/.codex-run/

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <!-- SIE consulting TOC placeholder -->
+  <rect x="0" y="0" width="1280" height="720" fill="#F2F6F6"/>
+  <text x="100" y="110" fill="#2C3E50" font-family="Microsoft YaHei, Arial, sans-serif" font-size="42" font-weight="700">目录</text>
+  <line x1="100" y1="130" x2="1180" y2="130" stroke="#7C969D" stroke-width="2"/>
+  <text x="120" y="220" fill="#4A5558" font-family="Microsoft YaHei, Arial, sans-serif" font-size="28">01  项目背景与目标</text>
+  <text x="120" y="300" fill="#4A5558" font-family="Microsoft YaHei, Arial, sans-serif" font-size="28">02  核心发现与分析</text>
+  <text x="120" y="380" fill="#4A5558" font-family="Microsoft YaHei, Arial, sans-serif" font-size="28">03  行动建议与路线图</text>
+  <text x="120" y="460" fill="#4A5558" font-family="Microsoft YaHei, Arial, sans-serif" font-size="28">04  附录与下一步</text>
+</svg>

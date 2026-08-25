@@ -1,0 +1,8 @@
+{
+  "version": "v1",
+  "export": {
+    "subprocess_timeout_sec": null,
+    "fallback_on_locked_stable_target": true,
+    "max_locked_fallback_attempts": 1
+  }
+}

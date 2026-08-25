@@ -1,0 +1,1690 @@
+/* Workbench UI retrofit P0-P2 */
+.icon-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.btn-icon {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+.rail-new-task,
+.rail-nav-action,
+.utility-tab,
+.primary-next-action,
+.download-link,
+.page-prompt-actions .ghost-action,
+.preview-controls .ghost-action,
+.task-center-controls .search-field,
+.task-center-controls .filter-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  width: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0;
+  justify-content: center;
+}
+
+.task-center-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 200px auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.task-center-controls .task-batch-delete {
+  min-height: 38px;
+  padding: 8px 14px;
+  white-space: nowrap;
+}
+
+.task-center-controls .search-field,
+.task-center-controls .filter-field {
+  min-height: 38px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: #fff;
+  padding: 0 10px;
+  color: #475467;
+}
+
+.task-center-controls input,
+.task-center-controls select {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  outline: none;
+}
+
+.aux-status-strip {
+  gap: 8px;
+  opacity: 0.88;
+}
+
+.aux-status-strip .result-item {
+  border-color: #e6edf6;
+  background: #fbfcff;
+  box-shadow: none;
+}
+
+.download-link {
+  min-width: auto;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  background: #fff;
+  color: var(--brand-primary);
+}
+
+.app-shell.task-detail-view .preview-controls {
+  width: auto;
+}
+
+.page-prompt-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.page-action-group {
+  display: grid;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.page-action-group .ghost-action {
+  min-height: 36px;
+  width: 100%;
+}
+
+.page-action-group.primary-group .ghost-action {
+  border-color: #b7c9e6;
+  background: #f7faff;
+  color: #123b7a;
+}
+
+.page-action-group.primary-group {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.page-more-actions {
+  border: 1px solid #dbe6f5;
+  border-radius: 10px;
+  background: #fbfdff;
+  padding: 6px;
+}
+
+.page-more-actions > summary {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+}
+
+.page-more-actions > summary::-webkit-details-marker {
+  display: none;
+}
+
+.page-more-actions .secondary-group {
+  margin-top: 8px;
+}
+
+.page-action-group.secondary-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  width: 100%;
+}
+
+.page-action-group.danger-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  padding-top: 8px;
+}
+
+.page-action-group.danger-group .danger-action {
+  border-color: #f2c7c3;
+  background: #fff6f5;
+  color: #8b1f1a;
+  width: 100%;
+  min-width: 0;
+  justify-content: center;
+}
+
+.page-action-group .icon-btn {
+  width: auto;
+  min-width: 0;
+  justify-content: flex-start;
+  padding: 0 12px;
+}
+
+@media (max-width: 1200px) {
+  .page-action-group.primary-group {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.slide-row strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.app-shell.task-detail-view .primary-next-action {
+  min-height: 54px;
+  font-size: 15px;
+}
+
+.app-shell.task-detail-view .primary-next-action .btn-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.app-shell.task-detail-view .utility-tabs {
+  position: static;
+  z-index: auto;
+  background: #fff;
+  border-bottom: 1px solid #e8edf5;
+  padding-bottom: 8px;
+}
+
+.app-shell.task-detail-view .utility-tab {
+  min-height: 34px;
+  padding: 0 10px;
+}
+
+#taskDetailShell .content-grid {
+  padding-right: 8px;
+}
+
+@media (max-width: 1200px) {
+  .task-center-controls {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1700px) {
+  .app-shell.task-detail-view #taskDetailShell .content-grid {
+    grid-template-columns: minmax(320px, 380px) minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .app-shell.task-detail-view #taskDetailShell .preview-zone {
+    height: clamp(520px, calc(100vh - 320px), 820px);
+  }
+}
+
+/* Workbench remediation 2026-05-13 (Phase 2) */
+.settings-status.error {
+  color: var(--state-danger);
+}
+
+.app-shell.setup-collapsed {
+  grid-template-columns: 64px minmax(0, 1fr);
+}
+
+.app-shell.setup-collapsed .recent-tasks-panel,
+.app-shell.setup-collapsed .setup-collapsed-summary {
+  display: none !important;
+}
+
+.app-shell.setup-collapsed .rail-nav {
+  align-items: center;
+}
+
+.app-shell.setup-collapsed .rail-nav .rail-new-task,
+.app-shell.setup-collapsed .rail-nav .rail-nav-action {
+  width: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  justify-content: center;
+  padding: 0;
+}
+
+.app-shell.setup-collapsed .rail-nav .rail-new-task span,
+.app-shell.setup-collapsed .rail-nav .rail-nav-action span {
+  display: none;
+}
+
+#taskDetailShell .content-grid,
+#taskDetailShell .preview-panel,
+#taskDetailShell .preview-zone {
+  min-width: 0;
+}
+
+.app-shell.task-detail-view #taskDetailShell .content-grid {
+  grid-template-columns: minmax(320px, 360px) minmax(0, 1fr);
+  gap: 16px;
+}
+
+.app-shell.task-detail-view .preview-controls {
+  margin-left: auto;
+  justify-content: flex-end;
+  width: auto;
+  max-width: 100%;
+  border-color: #d6e0ee;
+  background: rgb(255 255 255 / 88%);
+}
+
+.app-shell.task-detail-view #taskDetailShell .preview-zone {
+  height: clamp(480px, calc(100vh - 350px), 760px);
+  background: linear-gradient(180deg, #e7edf5 0%, #dbe4ef 100%);
+}
+
+.app-shell.task-detail-view .preview-stage {
+  box-shadow: 0 24px 56px rgb(16 33 59 / 18%);
+}
+
+@media (max-width: 1366px) and (min-width: 981px) {
+  .app-shell {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .app-shell.task-detail-view #taskDetailShell.workspace-panel > * {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+
+  .app-shell.task-detail-view #taskDetailShell .content-grid {
+    grid-template-columns: minmax(300px, 340px) minmax(0, 1fr);
+    gap: 12px;
+    padding-bottom: 16px;
+  }
+
+  .app-shell.task-detail-view .page-prompt-panel textarea {
+    min-height: 136px;
+  }
+
+  .app-shell.task-detail-view .slide-list {
+    max-height: 240px;
+    overflow: auto;
+  }
+
+  .app-shell.task-detail-view #taskDetailShell .preview-zone {
+    height: clamp(420px, calc(100vh - 360px), 620px);
+  }
+
+  .app-shell.task-detail-view .preview-controls {
+    padding: 4px;
+  }
+
+  .app-shell.task-detail-view .preview-controls .ghost-action,
+  .app-shell.task-detail-view .preview-controls select {
+    min-height: 30px;
+  }
+}
+
+.document-upload-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.document-upload-row input[type="file"] {
+  flex: 1;
+  font-size: 13px;
+}
+
+/* Workbench task studio refresh, 2026-05-31.
+   Keep the existing controls and data flow; only rebalance the task detail view. */
+.app-shell.task-detail-view:not(.setup-collapsed) {
+  grid-template-columns: 292px minmax(0, 1fr);
+  gap: 0;
+  height: 100vh;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0;
+  background: #eef3f8;
+}
+
+.app-shell.task-detail-view:not(.setup-collapsed) .left-rail {
+  height: 100vh;
+  overflow: auto;
+  border: 0;
+  border-right: 1px solid #dfe7f2;
+  background: linear-gradient(180deg, #fbfdff 0%, #eef3f8 100%);
+  padding: 24px 16px;
+}
+
+.app-shell.task-detail-view:not(.setup-collapsed) .setup-head {
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.app-shell.task-detail-view:not(.setup-collapsed) .setup-head h1 {
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.app-shell.task-detail-view:not(.setup-collapsed) .panel-toggle {
+  min-height: 38px;
+  border-color: #d7e2ef;
+  background: #f8fbff;
+  color: #123b7a;
+}
+
+.app-shell.task-detail-view:not(.setup-collapsed) .rail-new-task,
+.app-shell.task-detail-view:not(.setup-collapsed) .rail-nav-action {
+  min-height: 42px;
+  border-radius: 8px;
+}
+
+.app-shell.task-detail-view:not(.setup-collapsed) .recent-tasks-panel {
+  margin-top: 18px;
+  padding-top: 16px;
+}
+
+.app-shell.task-detail-view:not(.setup-collapsed) #taskDetailShell.workspace-panel {
+  height: 100vh;
+  overflow: auto;
+  padding: 0 26px 28px;
+  border: 0;
+  border-radius: 0;
+  background: linear-gradient(180deg, #ffffff 0, #ffffff 78px, #f5f8fb 78px, #f5f8fb 100%);
+}
+
+.app-shell.task-detail-view:not(.setup-collapsed) #taskDetailShell.workspace-panel > * {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.app-shell.task-detail-view:not(.setup-collapsed) #taskDetailShell.workspace-panel > .workspace-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  margin: 0 -26px;
+  padding: 18px 26px 14px;
+  border-bottom: 1px solid #e3eaf3;
+  background: rgb(255 255 255 / 94%);
+  backdrop-filter: blur(10px);
+}
+
+.app-shell.task-detail-view:not(.setup-collapsed) .workspace-header h2 {
+  font-size: 25px;
+  line-height: 1.12;
+  color: #101828;
+}
+
+.app-shell.task-detail-view:not(.setup-collapsed) .state-pill {
+  min-height: 34px;
+  border: 0;
+  border-radius: 999px;
+  background: #eef4fb;
+  color: #101828;
+  padding: 8px 14px;
+}
+
+.app-shell.task-detail-view:not(.setup-collapsed) .next-action-panel {
+  margin-top: 18px;
+  border: 1px solid #dfe7f2;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 16px 34px rgb(16 33 59 / 6%);
+  padding: 20px 22px;
+}
+
+.app-shell.task-detail-view:not(.setup-collapsed) .next-action-panel::before {
+  display: none;
+}
+
+.app-shell.task-detail-view:not(.setup-collapsed) .next-action-panel h3 {
+  font-size: 24px;
+  line-height: 1.16;
+  color: #101828;
+}
+
+.app-shell.task-detail-view:not(.setup-collapsed) .next-action-helper {
+  color: #667085 !important;
+  font-weight: 600;
+}
+
+.app-shell.task-detail-view:not(.setup-collapsed) .primary-next-action {
+  min-width: 196px;
+  min-height: 48px;
+  border-color: #202124;
+  border-radius: 999px;
+  background: #202124;
+  color: #ffffff;
+  box-shadow: none;
+}
+
+.app-shell.task-detail-view:not(.setup-collapsed) .primary-next-action:not(:disabled):hover {
+  border-color: #111827;
+  background: #111827;
+  box-shadow: 0 12px 24px rgb(16 24 40 / 16%);
+}
+
+.app-shell.task-detail-view:not(.setup-collapsed) .workflow-map,
+.app-shell.task-detail-view:not(.setup-collapsed) .page-stream-panel,
+.app-shell.task-detail-view:not(.setup-collapsed) .task-events-card {
+  display: none !important;
+}
+
+.app-shell.task-detail-view:not(.setup-collapsed) .aux-status-strip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+  color: #667085;
+}
+
+.app-shell.task-detail-view:not(.setup-collapsed) .aux-status-strip .status-summary {
+  min-width: 0;
+  flex: 1;
+}
+
+.app-shell.task-detail-view:not(.setup-collapsed) .aux-status-strip .plain-status-hint {
+  display: none;
+}
+
+.app-shell.task-detail-view:not(.setup-collapsed) .aux-status-strip .download-link {
+  min-height: 34px;
+  border-radius: 999px;
+}
+
+.app-shell.task-detail-view #taskDetailShell .task-detail-workbench {
+  display: grid;
+  grid-template-columns: 208px minmax(0, 1fr) 318px;
+  gap: 16px;
+  min-height: calc(100vh - 244px);
+  margin-top: 18px;
+  padding-bottom: 18px;
+  align-items: start;
+}
+
+.app-shell.task-detail-view #taskDetailShell.inspector-collapsed .task-detail-workbench {
+  grid-template-columns: 208px minmax(0, 1fr) 44px;
+}
+
+.app-shell.task-detail-view .detail-slide-rail,
+.app-shell.task-detail-view .detail-main-stage,
+.app-shell.task-detail-view .detail-inspector {
+  min-width: 0;
+}
+
+.app-shell.task-detail-view .detail-slide-rail {
+  position: sticky;
+  top: 82px;
+}
+
+.app-shell.task-detail-view .detail-main-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.app-shell.task-detail-view .detail-inspector {
+  position: sticky;
+  top: 82px;
+  border-color: #dfe7f2;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 14px 30px rgb(16 33 59 / 6%);
+  overflow: hidden;
+}
+
+.app-shell.task-detail-view .slide-list-panel,
+.app-shell.task-detail-view .page-prompt-panel,
+.app-shell.task-detail-view #taskDetailShell .preview-panel {
+  border: 1px solid #dfe7f2;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 14px 30px rgb(16 33 59 / 6%);
+}
+
+.app-shell.task-detail-view .slide-list-panel,
+.app-shell.task-detail-view #taskDetailShell .page-prompt-panel {
+  padding: 14px;
+}
+
+.app-shell.task-detail-view .slide-list-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: calc(100vh - 100px);
+}
+
+.app-shell.task-detail-view .slide-list-panel .section-heading,
+.app-shell.task-detail-view .page-prompt-panel .section-heading {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.app-shell.task-detail-view .slide-rail-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.app-shell.task-detail-view .slide-count-label {
+  color: #667085;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.app-shell.task-detail-view .slide-rail-add {
+  width: 100%;
+  margin-top: 10px;
+  border-color: #bfd4f7;
+  background: #f7fbff;
+  color: #2563eb;
+}
+
+.app-shell.task-detail-view .slide-rail-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.app-shell.task-detail-view #refreshStatus {
+  color: #202124;
+}
+
+.app-shell.task-detail-view .slide-list {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+  overflow: auto;
+  padding-right: 2px;
+}
+
+.app-shell.task-detail-view .slide-row {
+  min-height: 74px;
+  border-radius: 8px;
+}
+
+.app-shell.task-detail-view .slide-main > span,
+.app-shell.task-detail-view .slide-main > strong {
+  white-space: nowrap;
+}
+
+.app-shell.task-detail-view .page-prompt-heading-copy {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  gap: 2px 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+.app-shell.task-detail-view .page-prompt-heading-copy .eyebrow {
+  grid-column: 1 / -1;
+}
+
+.app-shell.task-detail-view .page-prompt-heading-copy .current-page-action-hint {
+  min-width: 0;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0;
+  border-width: 1px;
+  border-left-width: 3px;
+  border-radius: 999px;
+  padding: 4px 9px;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.app-shell.task-detail-view .page-command-composer {
+  display: grid;
+  gap: 12px;
+}
+
+.app-shell.task-detail-view .page-command-input {
+  min-width: 0;
+}
+
+.app-shell.task-detail-view .page-prompt-panel textarea {
+  min-height: 92px;
+  max-height: 140px;
+  border-color: #d7e0ec;
+  background: #fbfdff;
+}
+
+.app-shell.task-detail-view .page-command-toolbar {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 10px 12px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.app-shell.task-detail-view .page-command-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(140px, 180px));
+  gap: 10px;
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.app-shell.task-detail-view .page-command-options label,
+.app-shell.task-detail-view .page-command-actions,
+.app-shell.task-detail-view .page-command-actions .page-action-group {
+  min-width: 0;
+}
+
+.app-shell.task-detail-view .page-command-actions {
+  display: flex;
+  align-items: end;
+  justify-content: flex-end;
+  gap: 8px;
+  flex: 0 1 auto;
+}
+
+.app-shell.task-detail-view .page-command-actions .page-action-group {
+  display: flex;
+  width: auto;
+}
+
+.app-shell.task-detail-view .page-command-actions .ghost-action {
+  width: auto;
+}
+
+.app-shell.task-detail-view #autoGeneratePage {
+  border-color: #202124;
+  background: #202124;
+  color: #ffffff;
+  width: auto;
+  min-width: 154px;
+  margin-top: 0;
+  justify-content: center;
+}
+
+.app-shell.task-detail-view #downloadCurrentPage {
+  border-color: #2f6fed;
+  background: #2f6fed;
+  color: #ffffff;
+}
+
+.app-shell.task-detail-view #taskDetailShell .preview-panel {
+  padding: 16px;
+}
+
+.app-shell.task-detail-view .preview-toolbar {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.app-shell.task-detail-view .preview-toolbar h3 {
+  font-size: 22px;
+  line-height: 1.18;
+}
+
+.app-shell.task-detail-view .preview-controls {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 0 auto;
+  border-color: transparent;
+  background: transparent;
+  padding: 0;
+}
+
+.app-shell.task-detail-view .preview-controls .ghost-action,
+.app-shell.task-detail-view .preview-controls select {
+  min-height: 34px;
+  border-radius: 8px;
+  border-color: #e3eaf3;
+  background: #ffffff;
+  color: #202124;
+}
+
+.app-shell.task-detail-view #taskDetailShell .preview-zone {
+  height: clamp(460px, calc(100vh - 360px), 760px);
+  border: 1px solid #d7e1ee;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #e8eef6 0%, #dce6f1 100%);
+  padding: 16px;
+}
+
+.app-shell.task-detail-view .preview-stage {
+  box-shadow: 0 24px 58px rgb(16 33 59 / 16%);
+}
+
+.app-shell.task-detail-view .task-detail-header-actions,
+.app-shell.task-detail-view .inspector-header,
+.app-shell.task-detail-view .inspector-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.app-shell.task-detail-view .inspector-header {
+  justify-content: space-between;
+  border-bottom: 1px solid #edf2f7;
+  padding: 10px;
+}
+
+.app-shell.task-detail-view .inspector-tabs {
+  flex: 1;
+}
+
+.app-shell.task-detail-view .inspector-tab {
+  flex: 1;
+  min-height: 34px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #667085;
+  font-weight: 700;
+}
+
+.app-shell.task-detail-view .inspector-tab.active {
+  background: #eef4ff;
+  color: #1d4ed8;
+}
+
+.app-shell.task-detail-view .inspector-panel {
+  display: grid;
+  gap: 14px;
+  padding: 14px;
+}
+
+.app-shell.task-detail-view .inspector-panel.hidden {
+  display: none;
+}
+
+.app-shell.task-detail-view .inspector-panel textarea {
+  min-height: 250px;
+  max-height: 520px;
+}
+
+.app-shell.task-detail-view .revision-list {
+  display: grid;
+  gap: 8px;
+  max-height: 420px;
+  overflow: auto;
+}
+
+.app-shell.task-detail-view .revision-item {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  border: 1px solid #dfe7f2;
+  border-radius: 8px;
+  background: #fbfdff;
+  padding: 10px;
+  text-align: left;
+}
+
+.app-shell.task-detail-view .inspector-expand {
+  width: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  justify-content: center;
+}
+
+.app-shell.task-detail-view.setup-collapsed {
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 0;
+  padding: 0;
+}
+
+.app-shell.task-detail-view.setup-collapsed #taskDetailShell.workspace-panel {
+  border-radius: 0;
+}
+
+@media (max-width: 1500px) and (min-width: 1181px) {
+  .app-shell.task-detail-view:not(.setup-collapsed) {
+    grid-template-columns: 276px minmax(0, 1fr);
+  }
+
+  .app-shell.task-detail-view:not(.setup-collapsed) #taskDetailShell.workspace-panel {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .app-shell.task-detail-view:not(.setup-collapsed) #taskDetailShell.workspace-panel > .workspace-header {
+    margin-left: -18px;
+    margin-right: -18px;
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+}
+
+@media (max-width: 1500px) and (min-width: 1181px) {
+  .app-shell.task-detail-view #taskDetailShell .task-detail-workbench,
+  .app-shell.task-detail-view #taskDetailShell.inspector-collapsed .task-detail-workbench {
+    grid-template-columns: 208px minmax(0, 1fr);
+  }
+
+  .app-shell.task-detail-view .detail-slide-rail {
+    grid-row: 1 / span 2;
+  }
+
+  .app-shell.task-detail-view .detail-main-stage,
+  .app-shell.task-detail-view .detail-inspector,
+  .app-shell.task-detail-view .inspector-expand {
+    grid-column: 2;
+  }
+
+  .app-shell.task-detail-view .detail-inspector {
+    position: static;
+  }
+
+  .app-shell.task-detail-view .inspector-expand {
+    justify-self: end;
+  }
+}
+
+@media (max-width: 1180px) {
+  .app-shell.task-detail-view:not(.setup-collapsed) {
+    display: grid;
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+    padding: 0;
+  }
+
+  .app-shell.task-detail-view:not(.setup-collapsed) .left-rail {
+    height: auto;
+    border-right: 0;
+    border-bottom: 1px solid #dfe7f2;
+  }
+
+  .app-shell.task-detail-view:not(.setup-collapsed) #taskDetailShell.workspace-panel {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    padding: 0 16px 20px;
+  }
+
+  .app-shell.task-detail-view:not(.setup-collapsed) #taskDetailShell.workspace-panel > .workspace-header {
+    margin-left: -16px;
+    margin-right: -16px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .app-shell.task-detail-view:not(.setup-collapsed) .workspace-header,
+  .app-shell.task-detail-view:not(.setup-collapsed) .next-action-panel,
+  .app-shell.task-detail-view:not(.setup-collapsed) .aux-status-strip,
+  .app-shell.task-detail-view #taskDetailShell .task-detail-workbench,
+  .app-shell.task-detail-view #taskDetailShell.inspector-collapsed .task-detail-workbench {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell.task-detail-view .detail-slide-rail,
+  .app-shell.task-detail-view .detail-inspector {
+    position: static;
+  }
+
+  .app-shell.task-detail-view .slide-list-panel {
+    max-height: none;
+  }
+
+  .app-shell.task-detail-view .slide-list {
+    flex: none;
+    max-height: 320px;
+  }
+
+  .app-shell.task-detail-view .page-command-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-shell.task-detail-view .page-command-actions {
+    flex: 1 1 auto;
+  }
+
+  .app-shell.task-detail-view:not(.setup-collapsed) .primary-next-action {
+    width: 100%;
+  }
+
+  .app-shell.task-detail-view #taskDetailShell .preview-zone {
+    height: min(68vh, 560px);
+  }
+}
+
+@media (max-width: 680px) {
+  .app-shell.task-detail-view .page-prompt-heading-copy {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell.task-detail-view .page-prompt-heading-copy .current-page-action-hint {
+    width: 100%;
+  }
+
+  .app-shell.task-detail-view .page-command-toolbar,
+  .app-shell.task-detail-view .page-command-options,
+  .app-shell.task-detail-view .page-command-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .app-shell.task-detail-view .page-command-actions .page-action-group,
+  .app-shell.task-detail-view .page-command-actions .ghost-action,
+  .app-shell.task-detail-view #autoGeneratePage {
+    width: 100%;
+  }
+}
+
+.document-drop-zone {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px dashed var(--line-color, #c6d3e8);
+  border-radius: 8px;
+  background: #f8fbff;
+  color: var(--text-secondary, #4f5d75);
+  font-size: 13px;
+}
+
+.document-drop-zone.dragover {
+  border-color: var(--brand-primary, #1f5fd6);
+  background: #eef4ff;
+}
+
+.document-upload-hint {
+  margin-top: 8px;
+  color: var(--text-secondary, #5d6b82);
+  font-size: 12px;
+}
+
+.document-source-list {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.document-source-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 1px solid #d7e2f2;
+  border-radius: 8px;
+  background: #ffffff;
+  font-size: 12px;
+}
+
+/* C08-a：全局 toast 出口，appendLog/resetLog 的可见反馈落点 */
+.toast-host {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1200;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: min(360px, calc(100vw - 40px));
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border-left: 4px solid #2f6fed;
+  background: #101828;
+  color: #ffffff;
+  font-size: 13px;
+  line-height: 1.4;
+  box-shadow: 0 12px 30px rgb(16 24 40 / 24%);
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  word-break: break-word;
+}
+
+.toast-error {
+  border-left-color: #f04438;
+  background: #7a271a;
+}
+
+.toast-leaving {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+/* ===== C09 task detail v2.1, 2026-07-31.
+   Design source: docs/product/pagewise-generation/prototypes/task-detail-v2.1.html.
+   Keep every existing element id and data flow; only re-arrange presentation. ===== */
+
+.app-shell.task-detail-view #taskDetailShell .task-detail-workbench {
+  grid-template-columns: 168px minmax(0, 1fr) 288px;
+  gap: 12px;
+  align-items: stretch;
+  min-height: 0;
+  height: calc(100vh - 180px);
+  margin-top: 14px;
+  padding-bottom: 10px;
+}
+
+.app-shell.task-detail-view #taskDetailShell.inspector-collapsed .task-detail-workbench {
+  grid-template-columns: 168px minmax(0, 1fr) 30px;
+}
+
+.app-shell.task-detail-view #taskDetailShell .task-detail-workbench:has(.detail-slide-rail.rail-min) {
+  grid-template-columns: 56px minmax(0, 1fr) 288px;
+}
+
+.app-shell.task-detail-view #taskDetailShell.inspector-collapsed .task-detail-workbench:has(.detail-slide-rail.rail-min) {
+  grid-template-columns: 56px minmax(0, 1fr) 30px;
+}
+
+/* ---- left rail: page numbers + status dots, collapsible ---- */
+.app-shell.task-detail-view .detail-slide-rail {
+  position: static;
+  top: auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+
+.app-shell.task-detail-view .slide-list-panel {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+  padding: 10px;
+  height: 100%;
+}
+
+.app-shell.task-detail-view .slide-rail-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.app-shell.task-detail-view .slide-row {
+  min-height: 0;
+  margin-bottom: 2px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+}
+
+.app-shell.task-detail-view .slide-row:hover {
+  border-color: transparent;
+  background: #f3f5f9;
+}
+
+.app-shell.task-detail-view .slide-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  font-size: 12.5px;
+  color: #101828;
+}
+
+.app-shell.task-detail-view .slide-row.active,
+.app-shell.task-detail-view .slide-main.active {
+  border: 0;
+  background: #e9f0fa;
+  color: #123b7a;
+  font-weight: 700;
+  box-shadow: none;
+}
+
+.app-shell.task-detail-view .slide-main .slide-no {
+  white-space: nowrap;
+}
+
+.app-shell.task-detail-view .slide-main .slide-dot {
+  width: 7px;
+  height: 7px;
+  margin-left: auto;
+  border-radius: 50%;
+  background: #c9d0da;
+  flex: 0 0 auto;
+}
+
+.app-shell.task-detail-view .slide-main .slide-dot.generated {
+  background: #157347;
+}
+
+.app-shell.task-detail-view .slide-main .slide-dot.failed {
+  background: #b42318;
+}
+
+.app-shell.task-detail-view .slide-main .slide-dot.generating {
+  background: #8a5a00;
+}
+
+/* collapsed rail: page number + dot only */
+.app-shell.task-detail-view .detail-slide-rail.rail-min .slide-rail-title,
+.app-shell.task-detail-view .detail-slide-rail.rail-min #refreshStatus,
+.app-shell.task-detail-view .detail-slide-rail.rail-min .slide-rail-add,
+.app-shell.task-detail-view .detail-slide-rail.rail-min .slide-rail-actions {
+  display: none;
+}
+
+.app-shell.task-detail-view .detail-slide-rail.rail-min .section-heading.compact {
+  justify-content: center;
+}
+
+.app-shell.task-detail-view .detail-slide-rail.rail-min .slide-main {
+  justify-content: center;
+  gap: 4px;
+  padding: 0 4px;
+}
+
+.app-shell.task-detail-view .detail-slide-rail.rail-min .slide-main .slide-dot {
+  margin-left: 0;
+}
+
+.app-shell.task-detail-view .detail-slide-rail.rail-min .slide-main .slide-no {
+  font-size: 0;
+}
+
+.app-shell.task-detail-view .detail-slide-rail.rail-min .slide-main .slide-no::after {
+  content: attr(data-page);
+  font-size: 12.5px;
+}
+
+.app-shell.task-detail-view .detail-slide-rail.rail-min .slide-review-badge {
+  display: none;
+}
+
+/* ---- middle stage: bar + canvas + docked composer ---- */
+.app-shell.task-detail-view .detail-main-stage {
+  position: relative;
+  gap: 10px;
+  min-height: 0;
+  height: 100%;
+}
+
+.app-shell.task-detail-view #taskDetailShell .preview-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.app-shell.task-detail-view .stage-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+}
+
+.app-shell.task-detail-view .stage-bar-copy {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.app-shell.task-detail-view .stage-bar-copy h3 {
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.app-shell.task-detail-view .stage-bar .current-page-action-hint {
+  display: inline-block;
+  margin: 0;
+  height: 22px;
+  line-height: 22px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 999px;
+  background: #f2f4f7;
+  color: #667085;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  max-width: 360px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app-shell.task-detail-view .stage-bar .current-page-action-hint.failed {
+  background: #fdecec;
+  color: #b42318;
+}
+
+.app-shell.task-detail-view .stage-bar .current-page-action-hint.passed {
+  background: #e9f6ef;
+  color: #157347;
+}
+
+.app-shell.task-detail-view .stage-bar .current-page-action-hint.waiting {
+  background: #fff7e8;
+  color: #8a5a00;
+}
+
+.app-shell.task-detail-view #taskDetailShell .preview-zone {
+  flex: 1;
+  min-height: 280px;
+  height: auto;
+}
+
+/* failed state: translucent overlay, keep the old preview underneath */
+.app-shell.task-detail-view .preview-retry {
+  inset: 10px;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  z-index: 8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border: 0;
+  border-radius: 6px;
+  background: rgb(244 247 251 / 78%);
+  backdrop-filter: blur(2px);
+  box-shadow: none;
+  text-align: center;
+}
+
+.app-shell.task-detail-view .preview-retry.hidden {
+  display: none;
+}
+
+.app-shell.task-detail-view .preview-retry p {
+  max-width: 540px;
+}
+
+.preview-retry-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ---- docked composer ---- */
+.app-shell.task-detail-view #taskDetailShell .page-prompt-panel.page-command-dock {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.app-shell.task-detail-view .page-command-dock .page-command-composer {
+  display: block;
+}
+
+.app-shell.task-detail-view .composer-box {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  max-width: 860px;
+  margin: 0 auto;
+  border: 1px solid #dfe7f2;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 7px 8px 7px 12px;
+  box-shadow: 0 4px 14px rgb(16 33 59 / 5%);
+}
+
+.app-shell.task-detail-view .composer-box:focus-within {
+  border-color: #9bb7de;
+  box-shadow: 0 4px 14px rgb(18 59 122 / 12%);
+}
+
+.app-shell.task-detail-view .composer-box .page-command-input {
+  flex: 1;
+  min-width: 0;
+  display: block;
+}
+
+.app-shell.task-detail-view .page-prompt-panel textarea#currentPageIterationNote {
+  width: 100%;
+  min-height: 28px;
+  max-height: 120px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  outline: none;
+  resize: none;
+  padding: 4px 0;
+  line-height: 1.6;
+}
+
+.app-shell.task-detail-view .composer-box .primary-action {
+  white-space: nowrap;
+  min-height: 34px;
+}
+
+.composer-opt-wrap {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.composer-opt-btn {
+  position: relative;
+  font-size: 15px;
+}
+
+.opt-dot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #123b7a;
+}
+
+.opt-dot.hidden {
+  display: none;
+}
+
+.page-options-popover {
+  position: absolute;
+  right: 0;
+  bottom: 40px;
+  z-index: 30;
+  display: grid;
+  gap: 8px;
+  min-width: 200px;
+  border: 1px solid #dfe7f2;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 10px 12px;
+  box-shadow: 0 10px 26px rgb(16 33 59 / 12%);
+  text-align: left;
+}
+
+.page-options-popover.hidden {
+  display: none;
+}
+
+.page-options-popover label {
+  display: grid;
+  gap: 4px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #667085;
+}
+
+.page-options-popover select {
+  height: 30px;
+  border: 1px solid #dfe7f2;
+  border-radius: 6px;
+  background: #ffffff;
+  padding: 0 6px;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+/* ---- more actions menu: destructive action isolated ---- */
+.more-actions-wrap {
+  position: relative;
+}
+
+.more-actions-menu {
+  position: absolute;
+  right: 0;
+  top: 34px;
+  z-index: 30;
+  min-width: 132px;
+  border: 1px solid #dfe7f2;
+  border-radius: 9px;
+  background: #ffffff;
+  padding: 4px;
+  box-shadow: 0 10px 26px rgb(16 33 59 / 12%);
+}
+
+.more-actions-menu.hidden {
+  display: none;
+}
+
+.menu-item {
+  display: block;
+  width: 100%;
+  min-height: 30px;
+  padding: 4px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  font-size: 12.5px;
+  text-align: left;
+  color: #101828;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  background: #f3f5f9;
+}
+
+.menu-item:disabled {
+  color: #98a2b3;
+  cursor: not-allowed;
+}
+
+.menu-item.danger-menu-item {
+  color: #b42318;
+}
+
+.menu-item.danger-menu-item:hover:not(:disabled) {
+  background: #fdecec;
+}
+
+/* ---- fullscreen prompt editor over the middle stage ---- */
+.prompt-editor {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #dfe7f2;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 24px 56px rgb(16 33 59 / 16%);
+}
+
+.prompt-editor.hidden {
+  display: none;
+}
+
+.prompt-editor-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 18px;
+  border-bottom: 1px solid #e9eef6;
+}
+
+.prompt-editor-head strong {
+  font-size: 13.5px;
+}
+
+.prompt-editor-count {
+  font-size: 12px;
+  color: #98a2b3;
+}
+
+.prompt-editor-head-grow {
+  flex: 1;
+}
+
+.prompt-editor-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.app-shell.task-detail-view .prompt-editor textarea#currentPagePrompt {
+  flex: 1;
+  min-height: 0;
+  max-width: 820px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 22px 24px 30px;
+  border: 0;
+  background: #ffffff;
+  box-shadow: none;
+  outline: none;
+  resize: none;
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+.prompt-editor-tip {
+  margin: 0;
+  padding: 12px 18px;
+  border-top: 1px solid #e9eef6;
+  font-size: 11.5px;
+  color: #98a2b3;
+}
+
+/* ---- inspector: prompt summary card ---- */
+.inspector-prompt-field {
+  display: grid;
+  gap: 6px;
+}
+
+.inspector-prompt-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #667085;
+}
+
+.prompt-summary-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 1px solid #dfe7f2;
+  border-radius: 9px;
+  background: #fbfcfe;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.prompt-summary-card:hover {
+  border-color: #9bb7de;
+}
+
+.prompt-summary-preview {
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1.65;
+  color: #101828;
+  white-space: pre-line;
+}
+
+.prompt-summary-preview.empty {
+  color: #98a2b3;
+}
+
+.prompt-summary-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #dfe7f2;
+  font-size: 11.5px;
+  color: #98a2b3;
+}
+
+.prompt-summary-edit {
+  margin-left: auto;
+  color: #123b7a;
+  font-weight: 600;
+}
+
+.inspector-prompt-field .field-note {
+  margin: 0;
+  font-size: 11px;
+  color: #98a2b3;
+  line-height: 1.5;
+}
+
+/* ---- C09 fixes after first smoke run ---- */
+
+/* Narrow rail header must stay on one line at 168px. */
+.app-shell.task-detail-view .slide-rail-title,
+.app-shell.task-detail-view .slide-rail-title h3 {
+  white-space: nowrap;
+}
+
+.app-shell.task-detail-view .slide-rail-title h3 {
+  font-size: 13px;
+}
+
+.app-shell.task-detail-view .slide-list-panel .section-heading.compact {
+  flex-wrap: nowrap;
+  gap: 4px;
+}
+
+/* Keep page rows pinned to the top instead of stretching over the full rail height. */
+.app-shell.task-detail-view .slide-list {
+  align-content: start;
+  grid-auto-rows: min-content;
+}
+
+/* v2.1 rails are narrow enough for three columns down to 1200px;
+   below that applyDetailBreakpoint() collapses the inspector via JS. */
+@media (max-width: 1500px) and (min-width: 1181px) {
+  .app-shell.task-detail-view #taskDetailShell .task-detail-workbench {
+    grid-template-columns: 168px minmax(0, 1fr) 288px;
+  }
+
+  .app-shell.task-detail-view #taskDetailShell.inspector-collapsed .task-detail-workbench {
+    grid-template-columns: 168px minmax(0, 1fr) 30px;
+  }
+
+  .app-shell.task-detail-view #taskDetailShell .task-detail-workbench:has(.detail-slide-rail.rail-min) {
+    grid-template-columns: 56px minmax(0, 1fr) 288px;
+  }
+
+  .app-shell.task-detail-view #taskDetailShell.inspector-collapsed .task-detail-workbench:has(.detail-slide-rail.rail-min) {
+    grid-template-columns: 56px minmax(0, 1fr) 30px;
+  }
+
+  .app-shell.task-detail-view .detail-slide-rail {
+    grid-row: auto;
+  }
+
+  .app-shell.task-detail-view .detail-main-stage,
+  .app-shell.task-detail-view .detail-inspector,
+  .app-shell.task-detail-view .inspector-expand {
+    grid-column: auto;
+  }
+}

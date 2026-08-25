@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "case_id": "gold-ai-work-upgrade-p14-p28",
+  "status": "gold",
+  "source_note": "Competitor-generated remaining AI work upgrade slides, effective content pages P14/P15/P16/P17/P20/P21/P23/P24/P25/P26/P27/P28. Use for design-action learning only, not pixel-level cloning.",
+  "source_pptx": "<local-reference-deck>",
+  "usage": "Reference for composite visual grammar, evidence-centered proof pages, capability ladders, and chapter rhythm planning.",
+  "slides": [
+    {
+      "page_label": "P14",
+      "title": "售前工作的难点，不只是写PPT",
+      "primary_grammar_id": "problem-labels",
+      "secondary_grammar_ids": ["workflow-chain"],
+      "section_rhythm_role": "problem_scan",
+      "design_actions": [
+        "Turn six business difficulties into short problem labels before showing explanations.",
+        "Use a left vertical chain as the business spine and right-side expanded cards as evidence.",
+        "End with a strong bottom conclusion that reframes PPT as customer understanding, solution judgment, and expression design."
+      ]
+    },
+    {
+      "page_label": "P15",
+      "title": "AI介入售前的关键链路",
+      "primary_grammar_id": "composite-flow-responsibility",
+      "secondary_grammar_ids": ["workflow-chain", "human-ai-division"],
+      "section_rhythm_role": "chain_explain",
+      "design_actions": [
+        "Place the five-step workflow as the top read path.",
+        "Split lower content into AI acceleration and human responsibility zones.",
+        "Make final responsibility visually stronger than AI generation."
+      ]
+    },
+    {
+      "page_label": "P20",
+      "title": "交付Skill能力引擎",
+      "primary_grammar_id": "capability-equation-engine",
+      "secondary_grammar_ids": ["capability-amplifier", "responsibility-loop"],
+      "section_rhythm_role": "engine_model",
+      "design_actions": [
+        "Open with a visible equation strip: Skill equals role, context, template, rules, checklist, standards, and format.",
+        "Use a central capability engine as the protagonist.",
+        "Explain each component in a numbered list without letting the list dominate the engine."
+      ]
+    },
+    {
+      "page_label": "P21",
+      "title": "典型交付Skill场景",
+      "primary_grammar_id": "maturity-ladder",
+      "secondary_grammar_ids": ["phase-transition"],
+      "section_rhythm_role": "maturity_ladder",
+      "design_actions": [
+        "Use three stacked layers to show capability elevation.",
+        "Attach concrete Skill chips to each maturity level.",
+        "Use right-side quotations to translate each layer into delivery value."
+      ]
+    },
+    {
+      "page_label": "P25",
+      "title": "把需求画出来",
+      "primary_grammar_id": "artifact-centered-proof",
+      "secondary_grammar_ids": ["problem-labels", "input-process-output"],
+      "section_rhythm_role": "case_proof",
+      "evidence_artifact_type": "prototype_or_demo_screen",
+      "design_actions": [
+        "Make the prototype screen the central evidence object.",
+        "Keep traditional text-demand pain points on the left and prototype validation values on the right.",
+        "Use bottom conclusion to make the artifact's role explicit: problems come from not drawing the requirement early enough."
+      ]
+    },
+    {
+      "page_label": "P28",
+      "title": "从功能设计到可运行Demo",
+      "primary_grammar_id": "artifact-centered-proof",
+      "secondary_grammar_ids": ["input-process-output", "demo-transition"],
+      "section_rhythm_role": "demo_proof",
+      "evidence_artifact_type": "demo_console",
+      "design_actions": [
+        "Use input-process-output cards for the top explanation.",
+        "Show a pseudo product window and console as proof that the idea became a runnable demo.",
+        "Use small metrics to quantify startup-cost reduction and prototype output speed."
+      ]
+    }
+  ],
+  "chapter_rhythm_sequence": [
+    "problem_scan",
+    "chain_explain",
+    "case_proof",
+    "comparison_process",
+    "engine_model",
+    "maturity_ladder",
+    "chain_explain",
+    "review_panel",
+    "case_proof",
+    "closure_summary",
+    "capability_map",
+    "demo_proof"
+  ]
+}

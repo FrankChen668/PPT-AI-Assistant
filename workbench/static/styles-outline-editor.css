@@ -1,0 +1,229 @@
+/* styles-outline-editor.css — C13-A 大纲确认点：大纲编辑面板样式 */
+
+.outline-editor-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+  padding: 16px;
+  border: 1px solid var(--border-color, #d9e2f0);
+  border-radius: 10px;
+  background: var(--surface-color, #ffffff);
+}
+
+.outline-editor-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.outline-editor-head h3 {
+  margin: 2px 0 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.outline-thesis-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-left: 3px solid transparent;
+  padding-left: 10px;
+  transition: border-color 0.15s ease;
+}
+
+.outline-thesis-field.changed {
+  border-left-color: var(--accent-color, #ff7a1a);
+}
+
+.outline-thesis-field textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-color, #d9e2f0);
+  border-radius: 6px;
+  font: inherit;
+  resize: vertical;
+}
+
+.outline-slide-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.outline-slide-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color, #d9e2f0);
+  border-left: 3px solid transparent;
+  border-radius: 8px;
+  background: var(--surface-muted, #f7f9fc);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.outline-slide-card.changed {
+  border-left-color: var(--accent-color, #ff7a1a);
+}
+
+.outline-slide-card.outline-dragging {
+  opacity: 0.55;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.outline-slide-card.outline-drop-target {
+  border-top: 3px solid var(--accent-color, #ff7a1a);
+}
+
+.outline-slide-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.outline-drag-handle {
+  cursor: grab;
+  color: var(--muted-color, #667085);
+  font-weight: 700;
+  user-select: none;
+}
+
+.outline-drag-handle:active {
+  cursor: grabbing;
+}
+
+.outline-slide-number {
+  flex: 0 0 auto;
+  color: var(--muted-color, #667085);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.outline-title-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid var(--border-color, #d9e2f0);
+  border-radius: 6px;
+  font: inherit;
+  font-weight: 600;
+}
+
+.outline-slide-tools {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+}
+
+.outline-slide-tools .icon-btn {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  line-height: 1;
+}
+
+.outline-field-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.outline-field-label > span,
+.outline-points-title {
+  color: var(--muted-color, #667085);
+  font-size: 12px;
+}
+
+.outline-claim-input {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--border-color, #d9e2f0);
+  border-radius: 6px;
+  font: inherit;
+  resize: vertical;
+}
+
+.outline-points-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.outline-point-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.outline-point-bullet {
+  color: var(--accent-color, #ff7a1a);
+  font-weight: 700;
+  flex: 0 0 auto;
+}
+
+.outline-point-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 5px 8px;
+  border: 1px solid var(--border-color, #d9e2f0);
+  border-radius: 6px;
+  font: inherit;
+}
+
+.outline-point-remove {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  line-height: 1;
+  color: var(--muted-color, #667085);
+}
+
+.outline-add-point {
+  align-self: flex-start;
+  padding: 4px 10px;
+  color: var(--muted-color, #667085);
+  font-size: 12px;
+}
+
+.outline-add-slide {
+  align-self: flex-start;
+}
+
+.outline-editor-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.outline-skip-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted-color, #667085);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.outline-skip-label input {
+  cursor: pointer;
+}
+
+.composer-skip-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted-color, #667085);
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.composer-skip-label input {
+  cursor: pointer;
+}

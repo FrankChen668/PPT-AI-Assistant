@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <!-- Reusable consulting timeline structure; replace placeholders with source-backed content. -->
+  <rect x="0" y="0" width="1280" height="720" fill="#F9FCFC"/>
+  <rect x="0" y="606" width="1280" height="114" fill="#E6EDEE"/>
+  <text x="36" y="164" fill="#E6EDEE" opacity="0.46" font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif" font-size="104" font-weight="700">TIMELINE</text>
+
+  <text x="80" y="126" fill="#AD053D" font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif" font-size="48" font-weight="700">发展历程 / 能力升级路径</text>
+  <text x="82" y="178" fill="#6B7E85" font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif" font-size="20">
+    <tspan x="82" dy="0">使命 / 价值观 / 核心结论（待填）</tspan>
+    <tspan x="82" dy="30">仅使用已确认的项目材料，不自动补充企业事实</tspan>
+  </text>
+  <line x1="80" y1="204" x2="700" y2="204" stroke="#B4C6CA" stroke-width="2"/>
+
+  <text x="1052" y="110" fill="#AD053D" font-family="Arial, Microsoft YaHei, sans-serif" font-size="42" font-weight="700" font-style="italic">STYLE</text>
+  <text x="1144" y="108" fill="#2C3E50" font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif" font-size="30" font-weight="700">咨询风</text>
+  <line x1="1052" y1="130" x2="1200" y2="130" stroke="#B4C6CA" stroke-width="2"/>
+
+  <path d="M72 586 C222 548 350 528 506 481 C668 431 790 410 915 340 C1035 270 1115 185 1180 126" fill="none" stroke="#AD053D" stroke-width="7" stroke-linecap="round"/>
+  <polygon points="1180,126 1138,136 1165,163" fill="#AD053D"/>
+  <polygon points="396,514 431,516 404,540" fill="#AD053D"/>
+  <polygon points="760,384 797,373 780,410" fill="#AD053D"/>
+
+  <text x="84" y="378" fill="#AD053D" font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif" font-size="26" font-weight="700">阶段一 / 时间范围（待填）</text>
+  <text x="84" y="418" fill="#AD053D" font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif" font-size="30" font-weight="700">
+    <tspan x="84" dy="0">阶段名称（待填）</tspan>
+    <tspan x="84" dy="38">能力定位（待填）</tspan>
+  </text>
+
+  <text x="446" y="290" fill="#AD053D" font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif" font-size="26" font-weight="700">阶段二 / 时间范围（待填）</text>
+  <text x="446" y="330" fill="#AD053D" font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif" font-size="30" font-weight="700">
+    <tspan x="446" dy="0">阶段名称（待填）</tspan>
+    <tspan x="446" dy="38">能力定位（待填）</tspan>
+  </text>
+
+  <text x="792" y="128" fill="#AD053D" font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif" font-size="26" font-weight="700">阶段三 / 时间范围（待填）</text>
+  <text x="792" y="168" fill="#AD053D" font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif" font-size="30" font-weight="700">
+    <tspan x="792" dy="0">阶段名称（待填）</tspan>
+    <tspan x="792" dy="38">能力定位（待填）</tspan>
+    <tspan x="792" dy="38">关键成果（待填）</tspan>
+  </text>
+
+  <circle cx="246" cy="520" r="66" fill="#FFFFFF" stroke="#B4C6CA" stroke-width="3"/>
+  <circle cx="246" cy="520" r="52" fill="#AD053D"/>
+  <text x="246" y="528" text-anchor="middle" fill="#FFFFFF" font-family="Arial, Microsoft YaHei, sans-serif" font-size="22" font-weight="700">01</text>
+
+  <circle cx="565" cy="445" r="66" fill="#FFFFFF" stroke="#B4C6CA" stroke-width="3"/>
+  <circle cx="565" cy="445" r="52" fill="#AD053D"/>
+  <text x="565" y="453" text-anchor="middle" fill="#FFFFFF" font-family="Arial, Microsoft YaHei, sans-serif" font-size="22" font-weight="700">02</text>
+
+  <circle cx="915" cy="340" r="66" fill="#FFFFFF" stroke="#B4C6CA" stroke-width="3"/>
+  <circle cx="915" cy="340" r="52" fill="#AD053D"/>
+  <text x="915" y="348" text-anchor="middle" fill="#FFFFFF" font-family="Arial, Microsoft YaHei, sans-serif" font-size="22" font-weight="700">03</text>
+
+  <rect x="852" y="414" width="348" height="188" fill="#FFFFFF" stroke="#B4C6CA" stroke-width="2" rx="6"/>
+  <rect x="852" y="414" width="348" height="52" fill="#4A5558" rx="6"/>
+  <rect x="852" y="456" width="348" height="10" fill="#4A5558"/>
+  <text x="878" y="449" fill="#FFFFFF" font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif" font-size="22" font-weight="700">当前阶段关键动作（待填）</text>
+
+  <circle cx="878" cy="488" r="4" fill="#AD053D"/>
+  <text x="896" y="494" fill="#2C3E50" font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif" font-size="16">动作一（待填）</text>
+  <circle cx="878" cy="520" r="4" fill="#AD053D"/>
+  <text x="896" y="526" fill="#2C3E50" font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif" font-size="16">动作二（待填）</text>
+  <circle cx="878" cy="552" r="4" fill="#AD053D"/>
+  <text x="896" y="558" fill="#2C3E50" font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif" font-size="16">动作三（待填）</text>
+  <circle cx="878" cy="584" r="4" fill="#AD053D"/>
+  <text x="896" y="590" fill="#2C3E50" font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif" font-size="16">动作四（待填）</text>
+
+  <rect x="80" y="638" width="580" height="42" fill="#FFFFFF" stroke="#B4C6CA" stroke-width="1" rx="4"/>
+  <text x="104" y="665" fill="#4A5558" font-family="Microsoft YaHei, PingFang SC, Arial, sans-serif" font-size="16">模式用途：发展历程、战略演进、能力升级路径、里程碑复盘</text>
+  <rect x="1112" y="638" width="88" height="42" fill="#AD053D" rx="4"/>
+  <text x="1156" y="665" text-anchor="middle" fill="#FFFFFF" font-family="Arial, Microsoft YaHei, sans-serif" font-size="16" font-weight="700">SIE</text>
+</svg>
