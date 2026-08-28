@@ -6,7 +6,7 @@ Workbench is the local browser control panel for page-by-page AI PPT production.
 
 - Local AI-PPT companion for individuals and small teams.
 - Not SaaS in the current stage.
-- Controlled sharing for 3-4 trusted users on an office private LAN is supported.
+- Controlled sharing for 3-4 trusted users on an office private LAN is supported only as an explicit opt-in.
 - Public-network, authenticated multi-tenant, and untrusted multi-user deployment remain out of scope.
 
 ## Start
@@ -16,23 +16,23 @@ python -m workbench.healthcheck
 python start_workbench.py
 ```
 
-Open:
+Open by default:
 
 ```text
 http://localhost:8765
-http://<private-lan-ip>:8765
 ```
 
 - `python -m workbench.healthcheck` validates local readiness and reports missing env-ref values.
 - `python start_workbench.py` loads the repository-root `.env`, runs the readiness check, and starts the server.
-- The server defaults to `WORKBENCH_HOST=0.0.0.0` and `WORKBENCH_PORT=8765`. Static files and APIs share one origin, so no CORS configuration or separate frontend process is required.
+- Normal Workbench package/launcher runtime defaults to `WORKBENCH_HOST=127.0.0.1` and `WORKBENCH_PORT=8765`. Static files and APIs share one origin, so no CORS configuration or separate frontend process is required.
+- To share with trusted colleagues on the same office private LAN, explicitly set `WORKBENCH_HOST=0.0.0.0`, restrict the firewall to the private profile, then use `http://<private-lan-ip>:8765`.
 - Projects are created under `my-ppt-skill/projects/<project_name>/`.
 
 ## Generation Path
 
 1. Create a task in the browser.
 2. Workbench writes structured project files (`design_spec.md`, `outline.md`, `blueprint.json`, per-slide tasks).
-3. Workbench uses `api_auto`: it calls locally configured model APIs to generate missing `svg_output/slide_XX.svg` pages.
+3. Workbench uses `api_auto`: it sends the generation prompt/material needed for the request to the locally configured model Provider and generates missing `svg_output/slide_XX.svg` pages.
 4. Workbench refreshes preview, runs QA, and only exposes the PPT download when the recommended next action is `download_pptx`.
 
 If real generation is unavailable (for example the API key is missing), Workbench returns an explicit error and guidance instead of a placeholder result.
@@ -50,6 +50,7 @@ python scripts/build_project.py projects/<project> --phase finalize --skip-rende
 
 ## Product Boundary
 
+- Project files and generated artifacts are stored locally by default, but model generation is not offline: prompts/material needed for generation are sent to the configured third-party Provider. Provider-side processing and retention are governed by that Provider's terms.
 - Model/API settings persist provider/model/base_url only. API keys are runtime secrets and are not written as plaintext into local settings files.
 - Store only env-var references such as `siliconflow_api_key_env=WORKBENCH_SILICONFLOW_API_KEY`; real keys go into repository-root `.env` or your shell environment.
 - Placeholder SVG generation is dry-run only (healthcheck / explicit placeholder action) and is blocked from real delivery acceptance.
@@ -58,4 +59,4 @@ python scripts/build_project.py projects/<project> --phase finalize --skip-rende
 ## More
 
 - Installation and troubleshooting: [docs/first-run-checklist.md](../docs/first-run-checklist.md)
-- Local security boundary: [docs/security-local-boundary.md](../docs/security-local-boundary.md)
+- Local security and Provider data boundary: [docs/security-local-boundary.md](../docs/security-local-boundary.md)

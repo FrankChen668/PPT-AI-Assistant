@@ -6,9 +6,10 @@ Workbench 启动脚本。
 用法：
     python start_workbench.py
 
-访问：
+默认访问：
     http://localhost:8765
-    http://当前电脑内网IP:8765
+
+可信办公室内网共享需要显式设置 WORKBENCH_HOST=0.0.0.0，且当前没有认证、授权或用户数据隔离。
 """
 import os
 import sys
@@ -35,7 +36,8 @@ def load_env(path: Path) -> None:
 def main() -> None:
     load_env(ROOT / ".env")
 
-    # 把项目根加入路径，确保 workbench 包可导入
+    # 把项目根加入路径，确保 workbench 包可导入。workbench package 在没有
+    # 显式 WORKBENCH_HOST 时使用 127.0.0.1；.env 中的显式 LAN 配置保持优先。
     if str(ROOT) not in sys.path:
         sys.path.insert(0, str(ROOT))
 

@@ -1,6 +1,6 @@
 # Change Spec Template — Public Version
 
-> 公开仓库变更提案模板。Private Dev Repo 使用完整版 `docs/agent-control/AI_CHANGE_SPEC.md`。
+> 公开仓库变更提案模板。Private Dev Repo 使用更完整的内部变更控制文档；这些 Private-only 文档不进入 Public Snapshot。
 
 ---
 

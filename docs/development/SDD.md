@@ -1,6 +1,6 @@
 # Lightweight SDD (Spec-Driven Development) — Public Guide
 
-> 精简版 SDD，供公开仓库外部贡献者参考。Private Dev Repo 使用完整版 `docs/meta-model/meta-index.md` 与 `docs/agent-control/AI_CHANGE_SPEC.md`。
+> 精简版 SDD，供公开仓库外部贡献者参考。Private Dev Repo 使用更完整的内部治理与变更控制文档；这些 Private-only 文档不进入 Public Snapshot。
 
 ## 核心循环
 

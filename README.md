@@ -34,7 +34,7 @@
 - **基于真实材料逐页生成**：输入你的 Markdown / 文本材料，AI 逐页组织信息，而不是一句话生成空洞模板
 - **支持单页修改 / 重生成**：哪页不满意改哪页，其余页面保持不变
 - **输出原生可编辑 PPTX**：文本框、形状直接在 PowerPoint 里编辑，不是整页截图
-- **Local-first**：材料与生成结果都在本机，不经第三方存储
+- **Local-first**：项目文件与生成产物默认保存在本机；调用第三方模型 Provider 时，生成所需的提示词与材料内容会发送给你配置的 Provider
 
 ---
 
@@ -113,7 +113,7 @@ python start_workbench.py
 - 当前定位为 **本地个人 / 小团队工具**
 - 不支持公网 SaaS / 多租户 / 复杂权限
 - PDF 输入为 optional，需额外依赖
-- 第三方模型的可用性与额度由对应 Provider 决定
+- 第三方模型的可用性、额度、数据处理与保留规则由对应 Provider 决定
 
 ---
 
@@ -131,10 +131,11 @@ python start_workbench.py
 
 ## 🔒 Local & Security
 
-- 默认本地运行
-- 可用于 **受控办公室内网**（3-4 可信用户）
-- **不建议直接暴露公网**
+- Workbench **默认仅监听 `127.0.0.1`**
+- 只有在可信办公室私有内网共享时，才显式设置 `WORKBENCH_HOST=0.0.0.0`
+- **不建议直接暴露公网**；当前没有认证、授权或用户数据隔离
 - API Key 通过环境变量注入，**不提交仓库**
+- 使用第三方模型 Provider 会把生成所需输入发送给该 Provider；请按对应 Provider 的隐私、处理与保留条款判断材料是否适合发送
 
 > 详见：[`docs/security-local-boundary.md`](docs/security-local-boundary.md)
 
@@ -164,7 +165,7 @@ Public Alpha 欢迎通过 [GitHub Issues](https://github.com/FrankChen668/PPT-AI
 ### 普通用户优先
 - [First Run Checklist](docs/first-run-checklist.md) — 本地启动与配置
 - [Workbench README](workbench/README.md) — Workbench 运行路径
-- [Security Boundary](docs/security-local-boundary.md) — 本地 / 网络边界
+- [Security Boundary](docs/security-local-boundary.md) — 本地 / 网络 / Provider 数据边界
 
 ### 开发者 / 贡献者入口（公开版）
 - [AGENTS.md](AGENTS.md) — 公开贡献协议与核心原则
