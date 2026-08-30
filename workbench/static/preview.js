@@ -44,17 +44,19 @@ function updateFullscreenButton() {
 }
 
 function slideshowSlides() {
-  return Array.isArray(latestStatus?.slides) ? latestStatus.slides : [];
+  return Array.isArray(latestStatus?.slides)
+    ? [...latestStatus.slides].sort((left, right) => Number(left.slide_no || 0) - Number(right.slide_no || 0))
+    : [];
 }
 
 function showSlideshowSlide(slideId = slideshowSlide) {
   const slides = slideshowSlides();
   if (!slideshowOverlay || !slideshowFrame || !slideshowCounter || !slides.length) return;
-  const ids = slides.map((slide) => Number(slide.slide_id || 0)).filter((id) => id > 0);
-  const minId = Math.min(...ids);
-  const maxId = Math.max(...ids);
-  slideshowSlide = Math.min(Math.max(Number(slideId) || selectedSlide || minId, minId), maxId);
-  const current = slides.find((slide) => Number(slide.slide_id || 0) === slideshowSlide) || null;
+  const requestedId = Number(slideId) || Number(selectedSlide);
+  let currentIndex = slides.findIndex((slide) => Number(slide.slide_id || 0) === requestedId);
+  if (currentIndex < 0) currentIndex = 0;
+  const current = slides[currentIndex] || null;
+  slideshowSlide = Number(current?.slide_id || 0);
   const hasSvg = Boolean(activeProject && slideIsDisplayable(current));
   if (hasSvg) {
     slideshowFrame.src = slidePreviewUrl(slideshowSlide);
@@ -63,9 +65,9 @@ function showSlideshowSlide(slideId = slideshowSlide) {
   }
   slideshowFrame.classList.toggle("hidden", !hasSvg);
   slideshowEmpty?.classList.toggle("hidden", hasSvg);
-  slideshowCounter.textContent = `${slideshowSlide} / ${maxId}`;
-  if (slideshowPrev) slideshowPrev.disabled = slideshowSlide <= minId;
-  if (slideshowNext) slideshowNext.disabled = slideshowSlide >= maxId;
+  slideshowCounter.textContent = `${Number(current?.slide_no || currentIndex + 1)} / ${slides.length}`;
+  if (slideshowPrev) slideshowPrev.disabled = currentIndex <= 0;
+  if (slideshowNext) slideshowNext.disabled = currentIndex >= slides.length - 1;
 }
 
 async function openSlideshow() {
@@ -91,7 +93,10 @@ async function closeSlideshowOverlay() {
 }
 
 function stepSlideshow(delta) {
-  showSlideshowSlide(slideshowSlide + delta);
+  const slides = slideshowSlides();
+  const currentIndex = slides.findIndex((slide) => Number(slide.slide_id || 0) === Number(slideshowSlide));
+  const next = slides[currentIndex + Number(delta)];
+  if (next) showSlideshowSlide(Number(next.slide_id || 0));
 }
 
 async function loadStatus(options = {}) {
@@ -103,6 +108,9 @@ async function loadStatus(options = {}) {
     throw new Error(response.message || "读取状态失败。");
   }
   latestStatus = useLite ? mergeLiteStatus(latestStatus, response.data) : response.data;
+  if (Array.isArray(latestStatus?.slides) && latestStatus.slides.length && !slideStateById(selectedSlide)) {
+    selectedSlide = Number(latestStatus.slides[0].slide_id || 0);
+  }
   activeProjectTitle = userFacingTaskTitle(latestStatus?.task_title || activeProject);
   if (Array.isArray(latestStatus?.slides)) {
     latestStatus.slides.forEach((slide) => reconcileLocalDraftWithServer(slide));
@@ -179,7 +187,7 @@ async function activateProject(project) {
   activeTaskId = "";
   activeProject = project;
   activeProjectTitle = "";
-  selectedSlide = 1;
+  selectedSlide = 0;
   setWorkbenchView("task_detail");
   projectName.textContent = activeProject;
   saveActiveProject();
@@ -227,11 +235,12 @@ async function restoreActiveProject() {
 
 async function refreshCurrentPreviewLegacy() {
   if (!activeProject) return;
-  selectedSlideTitle.textContent = `第 ${selectedSlide} 页`;
+  const displayNo = slideNoById(selectedSlide);
+  selectedSlideTitle.textContent = `第 ${displayNo} 页`;
   const current = selectedSlideState();
   if (!current || !slideIsDisplayable(current)) {
     previewState.setHasContent(false);
-    previewHint.textContent = `第 ${selectedSlide} 页还没有生成。请把交接内容发给助手，完成后回到这里刷新。`;
+    previewHint.textContent = `第 ${displayNo} 页还没有生成。请把交接内容发给助手，完成后回到这里刷新。`;
     previewHint.classList.remove("hidden");
     previewLoading.classList.add("hidden");
     svgPreview.removeAttribute("src");
@@ -244,7 +253,7 @@ async function refreshCurrentPreviewLegacy() {
   const probe = await fetch(url);
   if (!probe.ok) {
     previewState.setHasContent(false);
-    previewHint.textContent = `第 ${selectedSlide} 页还没有生成。请把交接内容发给助手，完成后回到这里刷新。`;
+    previewHint.textContent = `第 ${displayNo} 页还没有生成。请把交接内容发给助手，完成后回到这里刷新。`;
     previewHint.classList.remove("hidden");
     previewLoading.classList.add("hidden");
     svgPreview.removeAttribute("src");
@@ -263,7 +272,8 @@ async function refreshCurrentPreviewLegacy() {
 async function refreshCurrentPreview() {
   if (!activeProject) return;
   const previewSlide = Number(selectedSlide);
-  selectedSlideTitle.textContent = `第 ${previewSlide} 页`;
+  const displayNo = slideNoById(previewSlide);
+  selectedSlideTitle.textContent = `第 ${displayNo} 页`;
   const current = selectedSlideState();
   if (!current || !slideIsDisplayable(current)) {
     previewState.setHasContent(false);
@@ -271,7 +281,7 @@ async function refreshCurrentPreview() {
     previewHint.classList.remove("hidden");
     clearPreviewLoadFallback();
     if (autoGenerationRunning && shouldShowPreviewBusy(previewSlide)) {
-      setPreviewBusy(`正在生成第 ${previewSlide} 页...`);
+      setPreviewBusy(`正在生成第 ${displayNo} 页...`);
     } else {
       setPreviewBusy("", false);
     }
@@ -284,7 +294,7 @@ async function refreshCurrentPreview() {
   const url = slidePreviewUrl(previewSlide, slidePreviewVersion(current));
   const previewAlreadyLoaded = currentPreviewMatches(previewSlide, url);
   if (shouldShowPreviewBusy(previewSlide) && !previewAlreadyLoaded) {
-    setPreviewBusy(`正在加载第 ${previewSlide} 页预览...`);
+    setPreviewBusy(`正在加载第 ${displayNo} 页预览...`);
   } else {
     setPreviewBusy("", false);
   }

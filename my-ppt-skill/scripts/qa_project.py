@@ -913,6 +913,7 @@ def validate_blueprint(blueprint: dict[str, Any], findings: list[Finding], tags:
         return []
 
     seen_ids: set[int] = set()
+    seen_slide_nos: set[int] = set()
     valid_slides: list[dict[str, Any]] = []
     for index, slide in enumerate(slides, start=1):
         path = f"blueprint.json/slides/{index}"
@@ -931,8 +932,23 @@ def validate_blueprint(blueprint: dict[str, Any], findings: list[Finding], tags:
             emit(findings, "error", "duplicate-slide-id", path, f"Duplicate slide id: {slide_id}.")
         else:
             seen_ids.add(slide_id)
-            if slide_id != index:
-                emit(findings, "warning", "nonsequential-slide-id", path, f"Expected id {index}, got {slide_id}.")
+
+        slide_no = slide.get("slide_no")
+        if slide_no is not None:
+            if not isinstance(slide_no, int) or isinstance(slide_no, bool) or slide_no < 1:
+                emit(findings, "error", "invalid-slide-no", path, "slide_no must be a positive integer.")
+            elif slide_no in seen_slide_nos:
+                emit(findings, "error", "duplicate-slide-no", path, f"Duplicate slide_no: {slide_no}.")
+            else:
+                seen_slide_nos.add(slide_no)
+                if slide_no != index:
+                    emit(
+                        findings,
+                        "warning",
+                        "nonsequential-slide-no",
+                        path,
+                        f"Expected slide_no {index}, got {slide_no}.",
+                    )
 
         tag = slide.get("layout_tag")
         if tag not in tags:
@@ -1374,7 +1390,8 @@ def check_comparison_matrix_summarybar_svg_contract(
         sid = slide.get("id")
         if not isinstance(sid, int):
             continue
-        if slide_id is not None and sid != slide_id:
+        slide_no = int(slide.get("slide_no") or sid)
+        if slide_id is not None and slide_no != slide_id:
             continue
         if str(slide.get("layout_tag") or "").strip() != "Comparison-Matrix-SummaryBar":
             continue
@@ -1438,7 +1455,7 @@ def check_comparison_matrix_summarybar_svg_contract(
                 f"Slide {sid} slide_plan is missing comparison summary slot: {COMPARISON_SUMMARY_SLOT_ID}.",
             )
 
-        svg_path = svg_dir / f"slide_{sid:02d}.svg"
+        svg_path = svg_dir / f"slide_{slide_no:02d}.svg"
         text_nodes = _load_svg_text_nodes(svg_path)
         if text_nodes is None:
             metrics["comparison_svg_contract_skipped_parse_count"] += 1
@@ -1917,7 +1934,8 @@ def check_core_orbit_relationship_svg_contract(
         sid = slide.get("id")
         if not isinstance(sid, int):
             continue
-        if slide_id is not None and sid != slide_id:
+        slide_no = int(slide.get("slide_no") or sid)
+        if slide_id is not None and slide_no != slide_id:
             continue
         if str(slide.get("scene_type") or "").strip() != "core_orbit_relationship":
             continue
@@ -1942,7 +1960,7 @@ def check_core_orbit_relationship_svg_contract(
         if not has_plan:
             continue
 
-        svg_path = svg_dir / f"slide_{sid:02d}.svg"
+        svg_path = svg_dir / f"slide_{slide_no:02d}.svg"
         text_nodes = _load_svg_text_nodes(svg_path)
         elements = _load_svg_elements(svg_path)
         if text_nodes is None or elements is None:
@@ -2000,7 +2018,8 @@ def check_roadmap_lane_milestones_svg_contract(
         sid = slide.get("id")
         if not isinstance(sid, int):
             continue
-        if slide_id is not None and sid != slide_id:
+        slide_no = int(slide.get("slide_no") or sid)
+        if slide_id is not None and slide_no != slide_id:
             continue
         if str(slide.get("layout_tag") or "").strip() != "Roadmap-Lane-Milestones":
             continue
@@ -2054,7 +2073,7 @@ def check_roadmap_lane_milestones_svg_contract(
                 f"Slide {sid} has non-contiguous roadmap phase slots in slide_plan: missing {missing_plan_phase_slots}.",
             )
 
-        svg_path = svg_dir / f"slide_{sid:02d}.svg"
+        svg_path = svg_dir / f"slide_{slide_no:02d}.svg"
         text_nodes = _load_svg_text_nodes(svg_path)
         if text_nodes is None:
             metrics["roadmap_svg_contract_skipped_parse_count"] += 1
@@ -2148,7 +2167,8 @@ def check_architecture_three_zones_svg_contract(
         sid = slide.get("id")
         if not isinstance(sid, int):
             continue
-        if slide_id is not None and sid != slide_id:
+        slide_no = int(slide.get("slide_no") or sid)
+        if slide_id is not None and slide_no != slide_id:
             continue
         if str(slide.get("layout_tag") or "").strip() != "Architecture-Three-Zones":
             continue
@@ -2194,7 +2214,7 @@ def check_architecture_three_zones_svg_contract(
         metrics["architecture_svg_contract_applicable_slide_ids"].append(sid)
         metrics["architecture_svg_contract_applicable_group_count"] += len(slot_groups)
 
-        svg_path = svg_dir / f"slide_{sid:02d}.svg"
+        svg_path = svg_dir / f"slide_{slide_no:02d}.svg"
         text_nodes = _load_svg_text_nodes(svg_path)
         if text_nodes is None:
             metrics["architecture_svg_contract_skipped_parse_count"] += 1
@@ -2386,7 +2406,8 @@ def validate_planning_consistency(
         must_keep_claims = plan_row.get("must_keep_claims")
         if not isinstance(must_keep_claims, list) or not must_keep_claims:
             continue
-        svg_text = _load_svg_text_blob(svg_dir, slide_id).lower()
+        slide_no = int(slide.get("slide_no") or slide_id)
+        svg_text = _load_svg_text_blob(svg_dir, slide_no).lower()
         for claim in must_keep_claims:
             if not isinstance(claim, str):
                 continue
@@ -2399,7 +2420,7 @@ def validate_planning_consistency(
                     findings,
                     "warning",
                     "planning-consistency-claim-missing",
-                    str(svg_dir / f"slide_{slide_id:02d}.svg"),
+                    str(svg_dir / f"slide_{slide_no:02d}.svg"),
                     (
                         f"Slide {slide_id} must_keep_claim was not found in target SVG text: "
                         f"{claim[:80]!r}. Avoid dropping core conclusions during repair."
@@ -3307,7 +3328,7 @@ def validate_svg_set(
 
     svg_files = sorted(svg_dir.glob("slide_*.svg"))
     expected = {
-        f"slide_{int(slide.get('id', idx)):02d}.svg"
+        f"slide_{int(slide.get('slide_no') or idx):02d}.svg"
         for idx, slide in enumerate(slides, start=1)
         if isinstance(slide, dict)
     }
@@ -3519,7 +3540,8 @@ def _load_visual_quality_slide_contexts(project_dir: Path) -> dict[int, dict[str
         if not isinstance(sid, int):
             continue
         visual_plan = visual_plans.get(sid)
-        contexts[sid] = {
+        slide_no = int(slide.get("slide_no") or sid)
+        contexts[slide_no] = {
             "slide": slide,
             "visual_plan": visual_plan,
             "usable": isinstance(visual_plan, dict),

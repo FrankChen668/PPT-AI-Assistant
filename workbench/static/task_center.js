@@ -252,7 +252,7 @@ async function activateTask(taskId) {
   const task = response.data?.task || {};
   activeTaskId = String(task.id || taskId);
   activeProject = String(task.project_name || "");
-  selectedSlide = 1;
+  selectedSlide = 0;
   setWorkbenchView("task_detail");
   if (activeProject) syncBrowserProjectUrl(activeProject);
   if (setupCollapsedSummary) setSetupCollapsed(false);
@@ -428,7 +428,7 @@ async function createCodexTask() {
   setWorkbenchView("task_detail");
   saveActiveProject();
   syncBrowserProjectUrl(activeProject);
-  selectedSlide = 1;
+  selectedSlide = 0;
   projectName.textContent = userFacingTaskTitle(response.data.task_title || activeProject);
   updateButtons(true);
   updateCollapsedSummary();

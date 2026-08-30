@@ -158,7 +158,8 @@ def _collect_visual_effect_advisories(project_dir: Path) -> list[dict[str, Any]]
             continue
 
         slide_id = int(slide.get("slide_id") or 0)
-        svg_rel = str(slide.get("svg_path") or f"svg_output/slide_{slide_id:02d}.svg")
+        slide_no = int(slide.get("slide_no") or slide_id)
+        svg_rel = str(slide.get("svg_path") or f"svg_output/slide_{slide_no:02d}.svg")
         svg_path = project_dir / svg_rel
         if not svg_path.exists():
             continue

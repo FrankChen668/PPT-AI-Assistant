@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import base64
 import binascii
+import hashlib
 import importlib
 import json
 import mimetypes
@@ -43,6 +44,7 @@ from workbench.page_authoring import (
     delete_slide_from_project,
     insert_slide_after_project,
     is_true_single_page_workflow,
+    migrate_project_slide_identity,
     normalize_content_handling,
     normalize_page_style,
     repair_budget_overload as repair_budget_overload,
@@ -210,6 +212,8 @@ SLIDE_GENERATION_QUEUE_TIMEOUT_SEC = 90.0
 DELETE_STALE_LOCK_TIMEOUT_SEC = 120.0
 _GENERATION_SEMAPHORE_LOCK = threading.Lock()
 _GENERATION_SEMAPHORES: dict[str, threading.BoundedSemaphore] = {}
+_PROJECT_STRUCTURE_LOCK_GUARD = threading.Lock()
+_PROJECT_STRUCTURE_LOCKS: dict[str, threading.RLock] = {}
 _TASK_STORE_MIGRATION_LOCK = threading.Lock()
 _TASK_STORE_MIGRATED = False
 _TASK_STORE_MIGRATED_KEYS: set[tuple[str, str]] = set()
@@ -525,6 +529,68 @@ def project_generation_semaphore(project_name: str) -> threading.BoundedSemaphor
         return sem
 
 
+def project_structure_lock(project_name: str) -> threading.RLock:
+    clean = validate_project_name(project_name)
+    with _PROJECT_STRUCTURE_LOCK_GUARD:
+        lock = _PROJECT_STRUCTURE_LOCKS.get(clean)
+        if lock is None:
+            lock = threading.RLock()
+            _PROJECT_STRUCTURE_LOCKS[clean] = lock
+        return lock
+
+
+def structure_mutation_busy_context(target: Path, status: dict[str, Any] | None = None) -> dict[str, Any] | None:
+    current = status if isinstance(status, dict) else load_status(target)
+    if not isinstance(current, dict):
+        return None
+    project_status = str(current.get("project_status") or "").strip().lower()
+    if project_status in {"generating", "qa_running", "export_running"}:
+        return {"busy_scope": "project", "busy_status": project_status}
+    export = current.get("export") if isinstance(current.get("export"), dict) else {}
+    export_status = str(export.get("status") or "").strip().lower()
+    if export_status == "running":
+        return {"busy_scope": "export", "busy_status": export_status}
+    store = task_store()
+    task = store.get_task_by_project(target.name)
+    if task:
+        with store.connect() as conn:
+            rows = conn.execute(
+                """
+                SELECT events.slide_id
+                FROM workbench_page_events AS events
+                JOIN (
+                  SELECT slide_id, MAX(id) AS latest_id
+                  FROM workbench_page_events
+                  WHERE task_id = ?
+                    AND event_type IN ('slide_export_started', 'slide_export_completed', 'slide_export_failed')
+                  GROUP BY slide_id
+                ) AS latest ON latest.latest_id = events.id
+                WHERE events.event_type = 'slide_export_started'
+                """,
+                (str(task.get("id") or ""),),
+            ).fetchall()
+        export_active = {int(row["slide_id"] or 0) for row in rows if int(row["slide_id"] or 0) > 0}
+        if export_active:
+            return {
+                "busy_scope": "export",
+                "busy_status": "running",
+                "busy_slide_id": min(export_active),
+            }
+    slides = current.get("slides") if isinstance(current.get("slides"), list) else []
+    for slide in slides:
+        if not isinstance(slide, dict):
+            continue
+        generation_phase = str(slide.get("generation_phase") or "").strip().lower()
+        if slide_is_busy_for_delete(slide) or generation_phase in {"admitted", "starting", "running"}:
+            return {
+                "busy_scope": "slide",
+                "busy_status": str(slide.get("status") or ""),
+                "busy_qa_status": str(slide.get("qa_status") or ""),
+                "busy_slide_id": int(slide.get("slide_id") or 0),
+            }
+    return None
+
+
 def acquire_generation_slot(project_name: str, timeout_sec: float | None = None) -> tuple[threading.BoundedSemaphore, bool, float]:
     semaphore = project_generation_semaphore(project_name)
     timeout_value = SLIDE_GENERATION_QUEUE_TIMEOUT_SEC if timeout_sec is None else float(timeout_sec)
@@ -725,16 +791,66 @@ def exported_pptx_path(target: Path, *, require_current: bool = False) -> Path |
     return resolve_latest_exported_pptx(target, require_current=require_current)
 
 
-def single_slide_export_path(target: Path, slide_id: int) -> Path | None:
+def single_slide_artifact_candidates(target: Path, slide_no: int) -> list[Path]:
     single_pages_dir = target / "exports" / "single-pages"
-    canonical = single_pages_dir / f"slide_{slide_id:02d}.pptx"
-    pattern = f"slide_{slide_id:02d}*.pptx"
-    candidates = [path for path in single_pages_dir.glob(pattern) if path.is_file()]
-    if canonical.exists() and canonical not in candidates:
-        candidates.append(canonical)
+    stem = f"slide_{int(slide_no):02d}"
+    return [
+        path
+        for path in single_pages_dir.glob(f"{stem}*.pptx")
+        if path.is_file() and (path.name == f"{stem}.pptx" or path.name.startswith(f"{stem}--"))
+    ]
+
+
+def single_slide_export_path(target: Path, slide_id: int) -> Path | None:
+    candidates = single_slide_artifact_candidates(target, slide_id)
     if not candidates:
         return None
     return max(candidates, key=lambda path: (path.stat().st_mtime, path.name))
+
+
+def single_slide_export_freshness(project_name: str, target: Path, slide_id: int, slide_no: int) -> dict[str, Any]:
+    source_svg = target / "svg_output" / f"slide_{slide_no:02d}.svg"
+    if not source_svg.exists():
+        source_svg = target / "svg_final" / f"slide_{slide_no:02d}.svg"
+    if not source_svg.exists():
+        return {"fresh": False, "reason": "source_svg_missing"}
+    current_hash = hashlib.sha256(source_svg.read_bytes()).hexdigest()
+    store = task_store()
+    task = store.get_task_by_project(project_name)
+    if not task:
+        return {"fresh": False, "reason": "export_provenance_missing", "current_svg_sha256": current_hash}
+    event = store.latest_successful_slide_export(str(task.get("id") or ""), slide_id)
+    payload = event.get("payload") if isinstance(event, dict) else None
+    exported_hash = str(payload.get("source_svg_sha256") or "") if isinstance(payload, dict) else ""
+    artifact_hash = str(payload.get("artifact_pptx_sha256") or "") if isinstance(payload, dict) else ""
+    if not exported_hash or not artifact_hash:
+        return {"fresh": False, "reason": "export_provenance_missing", "current_svg_sha256": current_hash}
+    matched_artifact = None
+    for path in single_slide_artifact_candidates(target, slide_no):
+        try:
+            if hashlib.sha256(path.read_bytes()).hexdigest() == artifact_hash:
+                matched_artifact = path
+                break
+        except OSError:
+            continue
+    if matched_artifact is None:
+        return {
+            "fresh": False,
+            "reason": "artifact_pptx_changed",
+            "current_svg_sha256": current_hash,
+            "exported_svg_sha256": exported_hash,
+            "artifact_pptx_sha256": artifact_hash,
+        }
+    return {
+        "fresh": exported_hash == current_hash,
+        "reason": "" if exported_hash == current_hash else "source_svg_changed",
+        "current_svg_sha256": current_hash,
+        "exported_svg_sha256": exported_hash,
+        "current_pptx_sha256": artifact_hash,
+        "artifact_path": str(matched_artifact),
+        "review_required": bool(payload.get("review_required")) if isinstance(payload, dict) else False,
+        "export_mode": str(payload.get("export_mode") or "") if isinstance(payload, dict) else "",
+    }
 
 
 def count_pptx_slides(pptx_path: Path) -> int | None:
@@ -778,6 +894,15 @@ def task_store():
     return store
 
 
+def allocate_slide_id_for_project(project_name: str, target: Path) -> int:
+    observed_ids = migrate_project_slide_identity(target)
+    store = task_store()
+    task = store.get_task_by_project(project_name)
+    if not task:
+        raise ValueError("Task not found for project slide identity allocation.")
+    return store.allocate_slide_id(str(task.get("id") or ""), observed_slide_ids=observed_ids)
+
+
 def iso_now() -> str:
     return datetime.now().astimezone().isoformat(timespec="seconds")
 
@@ -812,10 +937,12 @@ def record_page_event_for_project(
         task = store.get_task_by_project(project_name)
         if not task:
             return {}
+        slide_no = 0 if int(slide_id) == 0 else slide_no_for_identity(project_dir(project_name), slide_id)
         return store.append_page_event(
             str(task["id"]),
             project_name=project_name,
             slide_id=slide_id,
+            slide_no_at_event=slide_no,
             event_type=event_type,
             phase=phase,
             status=status,
@@ -886,7 +1013,8 @@ def enrich_slides_for_workbench(
             enriched.append(slide)
             continue
         review = reviews.get(slide_id, {})
-        packet_json, packet_md = slide_packet_paths(target, slide_id)
+        slide_no = int(slide.get("slide_no") or slide_id)
+        packet_json, packet_md = slide_packet_paths(target, slide_no)
         has_svg = bool(slide.get("has_svg"))
         qa_status = str(slide.get("qa_status") or "not_run")
         slide["packet_status"] = "packet_ready" if packet_json.exists() else "packet_missing"
@@ -940,12 +1068,14 @@ def sync_status_slides_with_blueprint(target: Path, status: dict) -> bool:
         content_handling = normalize_content_handling(slide.get("content_handling") if isinstance(slide, dict) else "")
         page_style = normalize_page_style(slide.get("page_style") if isinstance(slide, dict) else "")
         prompt = str(content.get("body") or content.get("support") or "") if isinstance(content, dict) else ""
-        existing = existing_by_id.get(index)
+        stable_id = int(slide.get("id") or index) if isinstance(slide, dict) else index
+        existing = existing_by_id.get(stable_id)
         if isinstance(existing, dict):
             merged = dict(existing)
         else:
             merged = {
-                "slide_id": index,
+                "slide_id": stable_id,
+                "slide_no": index,
                 "title": default_title or f"{index}. 未命名页面",
                 "page_type": page_type,
                 "content_handling": content_handling,
@@ -959,9 +1089,12 @@ def sync_status_slides_with_blueprint(target: Path, status: dict) -> bool:
                 "last_error": "",
             }
             changed = True
-        if int(merged.get("slide_id") or 0) != index:
+        if int(merged.get("slide_id") or 0) != stable_id:
             changed = True
-        merged["slide_id"] = index
+        merged["slide_id"] = stable_id
+        if int(merged.get("slide_no") or 0) != index:
+            merged["slide_no"] = index
+            changed = True
         if not str(merged.get("title") or "").strip():
             merged["title"] = default_title or f"{index}. 未命名页面"
             changed = True
@@ -1514,24 +1647,49 @@ def slide_count_for_project(name: str) -> int:
     return len(slides) if isinstance(slides, list) else 0
 
 
-def slide_path(target: Path, slide_id: int, folder: str = "svg_output") -> Path:
-    if slide_id < 1 or slide_id > 99:
+def slide_no_for_identity(target: Path, slide_id: int) -> int:
+    blueprint = read_blueprint(target)
+    slides = blueprint.get("slides")
+    if not isinstance(slides, list):
+        raise ValueError("blueprint.json slides must be a list.")
+    requested_id = int(slide_id)
+    seen_ids: set[int] = set()
+    for index, slide in enumerate(slides, start=1):
+        if not isinstance(slide, dict):
+            raise ValueError("blueprint.json contains an invalid slide identity.")
+        try:
+            current_id = int(slide.get("id") or 0)
+        except (TypeError, ValueError) as exc:
+            raise ValueError("blueprint.json contains an invalid slide identity.") from exc
+        if current_id < 1 or current_id in seen_ids:
+            raise ValueError("blueprint.json contains a duplicated or invalid slide identity.")
+        seen_ids.add(current_id)
+        if current_id == requested_id:
+            return index
+    raise ValueError(f"Slide identity {slide_id} does not exist.")
+
+
+def slide_path(target: Path, slide_no: int, folder: str = "svg_output") -> Path:
+    if slide_no < 1 or slide_no > 99:
         raise ValueError("slide id must be between 1 and 99.")
-    return target / folder / f"slide_{slide_id:02d}.svg"
+    return target / folder / f"slide_{slide_no:02d}.svg"
 
 
 def project_slide_status(name: str) -> list[dict]:
     target = project_dir(name)
-    count = slide_count_for_project(name)
+    blueprint = read_blueprint(target)
+    blueprint_slides = blueprint.get("slides") if isinstance(blueprint, dict) else []
     slides: list[dict] = []
     qa_report = target / "qa" / "report.md"
-    for slide_id in range(1, count + 1):
-        output = slide_path(target, slide_id, "svg_output")
-        final = slide_path(target, slide_id, "svg_final")
-        task = target / "agent_tasks" / f"slide_{slide_id:02d}.md"
+    for slide_no, blueprint_slide in enumerate(blueprint_slides, start=1):
+        slide_id = int(blueprint_slide.get("id") or slide_no) if isinstance(blueprint_slide, dict) else slide_no
+        output = slide_path(target, slide_no, "svg_output")
+        final = slide_path(target, slide_no, "svg_final")
+        task = target / "agent_tasks" / f"slide_{slide_no:02d}.md"
         slides.append(
             {
                 "slide_id": slide_id,
+                "slide_no": slide_no,
                 "has_svg_output": output.exists(),
                 "has_svg_final": final.exists(),
                 "has_task": task.exists(),
@@ -1854,6 +2012,7 @@ def project_status_lite(name: str) -> dict:
         lite_slides.append(
             {
                 "slide_id": int(slide.get("slide_id") or 0),
+                "slide_no": int(slide.get("slide_no") or 0),
                 "title": str(slide.get("title") or ""),
                 "status": str(slide.get("status") or ""),
                 "has_svg": bool(slide.get("has_svg")),
@@ -2601,10 +2760,11 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
         if slide_route is not None:
             name, slide_id, action = slide_route
             target = project_dir(name)
+            slide_no = slide_no_for_identity(target, slide_id)
             if action == "svg":
-                svg = slide_path(target, slide_id, "svg_output")
+                svg = slide_path(target, slide_no, "svg_output")
                 if not svg.exists():
-                    svg = slide_path(target, slide_id, "svg_final")
+                    svg = slide_path(target, slide_no, "svg_final")
                 if not svg.exists():
                     json_response(self, fail("SVG not found"), 404)
                     return
@@ -2619,9 +2779,9 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
                 self.serve_file(svg, "image/svg+xml; charset=utf-8")
                 return
             if action == "preview":
-                svg = slide_path(target, slide_id, "svg_output")
+                svg = slide_path(target, slide_no, "svg_output")
                 if not svg.exists():
-                    svg = slide_path(target, slide_id, "svg_final")
+                    svg = slide_path(target, slide_no, "svg_final")
                 if not svg.exists():
                     json_response(self, fail("SVG not found"), 404)
                     return
@@ -2633,17 +2793,17 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
                     status="ok",
                     payload={"source": "slide_html_preview_route", "bytes": svg.stat().st_size},
                 )
-                serve_slide_preview_html(self, name, slide_id, svg)
+                serve_slide_preview_html(self, name, slide_no, svg)
                 return
             if action == "task":
-                task = target / "agent_tasks" / f"slide_{slide_id:02d}.md"
+                task = target / "agent_tasks" / f"slide_{slide_no:02d}.md"
                 if not task.exists():
                     json_response(self, fail("Slide task not found"), 404)
                     return
                 serve_text(self, task.read_text(encoding="utf-8"), "text/markdown; charset=utf-8")
                 return
             if action == "revisions":
-                revisions = list_slide_revisions(target, slide_id)
+                revisions = list_slide_revisions(target, slide_no)
                 json_response(self, ok("slide revisions", name, {"slide_id": slide_id, "revisions": revisions}))
                 return
             if action == "review":
@@ -2659,17 +2819,27 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
                 json_response(self, ok("slide review", name, {"slide_id": slide_id, "review": review}))
                 return
             if action == "export-pptx":
-                export = single_slide_export_path(target, slide_id)
-                if export is None or not export.exists():
-                    promoted = promote_single_slide_work_output(target, slide_id)
-                    if promoted is not None:
-                        export = promoted
-                if export is None or not export.exists():
+                candidates = single_slide_artifact_candidates(target, slide_no)
+                if not candidates:
+                    json_response(self, fail("Single-slide PPTX not generated yet."), 404)
+                    return
+                freshness = single_slide_export_freshness(name, target, slide_id, slide_no)
+                if not freshness.get("fresh"):
+                    self._json_error(
+                        409,
+                        code="single_slide_export_stale",
+                        message="Single-slide PPTX is stale or has no freshness provenance. Re-export this slide.",
+                        context={"project": name, "slide_id": slide_id, "slide_no": slide_no},
+                        data={**freshness, "recommended_action": "re-export slide"},
+                    )
+                    return
+                export = Path(str(freshness.get("artifact_path") or ""))
+                if not export.is_file():
                     json_response(self, fail("Single-slide PPTX not generated yet."), 404)
                     return
                 self.serve_download(
                     export,
-                    f"{name}-slide-{slide_id:02d}.pptx",
+                    f"{name}-slide-{slide_no:02d}.pptx",
                     "application/vnd.openxmlformats-officedocument.presentationml.presentation",
                 )
                 return
@@ -2694,9 +2864,10 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
         if action == "svg":
             params = parse_qs(query)
             slide_id = int(params.get("slide", ["1"])[0])
-            svg = slide_path(target, slide_id, "svg_output")
+            slide_no = slide_no_for_identity(target, slide_id)
+            svg = slide_path(target, slide_no, "svg_output")
             if not svg.exists():
-                svg = slide_path(target, slide_id, "svg_final")
+                svg = slide_path(target, slide_no, "svg_final")
             if not svg.exists():
                 json_response(self, fail("SVG not found"), 404)
                 return
@@ -2813,19 +2984,31 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
             if action == "insert-after":
                 target = project_dir(name)
                 payload = read_json_body(self)
-                status = load_status(target) or build_initial_status_from_blueprint(name, target)
-                if is_true_single_page_workflow(status):
-                    json_response(self, fail("单页任务只能保留 1 页。需要多页 PPT 时，请新建多页任务。"), 409)
-                    return
-                result = insert_slide_after_project(
-                    target,
-                    slide_id,
-                    page_type=str(payload.get("page_type") or "content"),
-                    title=str(payload.get("title") or ""),
-                    prompt=str(payload.get("prompt") or ""),
-                    content_handling=str(payload.get("content_handling") or ""),
-                    page_style=str(payload.get("page_style") or ""),
-                )
+                with project_structure_lock(name):
+                    status = load_status(target) or build_initial_status_from_blueprint(name, target)
+                    if is_true_single_page_workflow(status):
+                        json_response(self, fail("单页任务只能保留 1 页。需要多页 PPT 时，请新建多页任务。"), 409)
+                        return
+                    busy = structure_mutation_busy_context(target, status)
+                    if busy:
+                        self._json_error(
+                            409,
+                            code="page_structure_mutation_blocked",
+                            message="Page structure mutation is blocked while generation, QA or export is active.",
+                            context={"project": name, **busy},
+                            data=busy,
+                        )
+                        return
+                    result = insert_slide_after_project(
+                        target,
+                        slide_id,
+                        page_type=str(payload.get("page_type") or "content"),
+                        title=str(payload.get("title") or ""),
+                        prompt=str(payload.get("prompt") or ""),
+                        content_handling=str(payload.get("content_handling") or ""),
+                        page_style=str(payload.get("page_style") or ""),
+                        new_slide_id=allocate_slide_id_for_project(name, target),
+                    )
                 json_response(self, ok("slide inserted", project=name, data=result))
                 return
             if action == "restore-revision":
@@ -2885,18 +3068,30 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
         if action == "slides":
             target = project_dir(name)
             payload = read_json_body(self)
-            status = load_status(target) or build_initial_status_from_blueprint(name, target)
-            if is_true_single_page_workflow(status):
-                json_response(self, fail("单页任务只能保留 1 页。需要多页 PPT 时，请新建多页任务。"), 409)
-                return
-            result = append_slide_to_project(
-                target,
-                page_type=str(payload.get("page_type") or "content"),
-                title=str(payload.get("title") or ""),
-                prompt=str(payload.get("prompt") or ""),
-                content_handling=str(payload.get("content_handling") or ""),
-                page_style=str(payload.get("page_style") or ""),
-            )
+            with project_structure_lock(name):
+                status = load_status(target) or build_initial_status_from_blueprint(name, target)
+                if is_true_single_page_workflow(status):
+                    json_response(self, fail("单页任务只能保留 1 页。需要多页 PPT 时，请新建多页任务。"), 409)
+                    return
+                busy = structure_mutation_busy_context(target, status)
+                if busy:
+                    self._json_error(
+                        409,
+                        code="page_structure_mutation_blocked",
+                        message="Page structure mutation is blocked while generation, QA or export is active.",
+                        context={"project": name, **busy},
+                        data=busy,
+                    )
+                    return
+                result = append_slide_to_project(
+                    target,
+                    page_type=str(payload.get("page_type") or "content"),
+                    title=str(payload.get("title") or ""),
+                    prompt=str(payload.get("prompt") or ""),
+                    content_handling=str(payload.get("content_handling") or ""),
+                    page_style=str(payload.get("page_style") or ""),
+                    new_slide_id=allocate_slide_id_for_project(name, target),
+                )
             json_response(self, ok("slide appended", project=name, data=result))
             return
         if action == "placeholder-svg":
@@ -3108,45 +3303,60 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
             json_response(self, fail("Not found"), 404)
             return
         target = project_dir(name)
-        status = load_status(target) or {}
-        status_slides = status.get("slides") if isinstance(status, dict) else None
-        if isinstance(status_slides, list):
-            target_slide = next((item for item in status_slides if int(item.get("slide_id") or 0) == int(slide_id)), None)
-            if isinstance(target_slide, dict) and slide_is_busy_for_delete(target_slide):
-                if slide_is_stale_for_delete(target_slide, status):
-                    age_sec = slide_delete_lock_age_seconds(target_slide, status) or 0.0
-                    has_svg = bool(target_slide.get("has_svg"))
-                    target_slide["status"] = "svg_ready" if has_svg else "waiting_codex"
-                    target_slide["qa_status"] = "not_run"
-                    target_slide["last_error"] = ""
-                    target_slide["lock_updated_at"] = datetime.now().astimezone().isoformat(timespec="seconds")
-                    add_event(
-                        status,
-                        "slide_delete_stale_unlock",
-                        f"Slide {slide_id} stale lock auto-unlocked before delete (age={age_sec:.1f}s).",
-                    )
-                    save_status(target, status)
-                else:
-                    self._json_error(
-                        409,
-                        code="slide_delete_blocked",
-                        message="Target slide generation or QA is running. Please retry delete after it completes.",
-                        context={
-                            "project": name,
-                            "slide_id": slide_id,
-                            "busy_slide_id": int(target_slide.get("slide_id") or 0),
-                            "busy_status": str(target_slide.get("status") or ""),
-                            "busy_qa_status": str(target_slide.get("qa_status") or ""),
-                        },
-                        data={
-                            "slide_id": slide_id,
-                            "busy_slide_id": int(target_slide.get("slide_id") or 0),
-                            "busy_status": str(target_slide.get("status") or ""),
-                            "busy_qa_status": str(target_slide.get("qa_status") or ""),
-                        },
-                    )
-                    return
-        result = delete_slide_from_project(target, slide_id)
+        with project_structure_lock(name):
+            status = load_status(target) or {}
+            status_slides = status.get("slides") if isinstance(status, dict) else None
+            if isinstance(status_slides, list):
+                target_slide = next((item for item in status_slides if int(item.get("slide_id") or 0) == int(slide_id)), None)
+                if isinstance(target_slide, dict) and slide_is_busy_for_delete(target_slide):
+                    if slide_is_stale_for_delete(target_slide, status):
+                        age_sec = slide_delete_lock_age_seconds(target_slide, status) or 0.0
+                        has_svg = bool(target_slide.get("has_svg"))
+                        target_slide["status"] = "svg_ready" if has_svg else "waiting_codex"
+                        target_slide["qa_status"] = "not_run"
+                        target_slide["last_error"] = ""
+                        target_slide["lock_updated_at"] = datetime.now().astimezone().isoformat(timespec="seconds")
+                        add_event(
+                            status,
+                            "slide_delete_stale_unlock",
+                            f"Slide {slide_id} stale lock auto-unlocked before delete (age={age_sec:.1f}s).",
+                        )
+                        save_status(target, status)
+                    else:
+                        self._json_error(
+                            409,
+                            code="slide_delete_blocked",
+                            message="Target slide generation or QA is running. Please retry delete after it completes.",
+                            context={
+                                "project": name,
+                                "slide_id": slide_id,
+                                "busy_slide_id": int(target_slide.get("slide_id") or 0),
+                                "busy_status": str(target_slide.get("status") or ""),
+                                "busy_qa_status": str(target_slide.get("qa_status") or ""),
+                            },
+                            data={
+                                "slide_id": slide_id,
+                                "busy_slide_id": int(target_slide.get("slide_id") or 0),
+                                "busy_status": str(target_slide.get("status") or ""),
+                                "busy_qa_status": str(target_slide.get("qa_status") or ""),
+                            },
+                        )
+                        return
+            busy = structure_mutation_busy_context(target, status)
+            if busy:
+                self._json_error(
+                    409,
+                    code="page_structure_mutation_blocked",
+                    message="Page structure mutation is blocked while generation, QA or export is active.",
+                    context={"project": name, "slide_id": slide_id, **busy},
+                    data={"slide_id": slide_id, **busy},
+                )
+                return
+            result = delete_slide_from_project(target, slide_id)
+            store = task_store()
+            task = store.get_task_by_project(name)
+            if task:
+                store.delete_slide_review(str(task.get("id") or ""), slide_id)
         json_response(self, ok("slide deleted", project=name, data=result))
 
     def parse_project_route(self, path: str) -> tuple[str, str]:

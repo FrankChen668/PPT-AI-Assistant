@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import re
 import shutil
+from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -188,7 +189,8 @@ def build_initial_status_from_blueprint(name: str, target: Path) -> dict:
                     title = str(slide.get("title") or content.get("headline") or content.get("statement") or "").strip()
                 slides.append(
                     {
-                        "slide_id": index,
+                        "slide_id": int(slide.get("id") or index) if isinstance(slide, dict) else index,
+                        "slide_no": index,
                         "title": title or f"{index}. 未命名页面",
                         "page_type": str(slide.get("page_type") or "content") if isinstance(slide, dict) else "content",
                         "prompt": str(content.get("body") or content.get("support") or "") if isinstance(content, dict) else "",
@@ -247,11 +249,15 @@ def build_page_slide(
     prompt: str,
     content_handling: str = DEFAULT_CONTENT_HANDLING,
     page_style: str = DEFAULT_PAGE_STYLE,
+    *,
+    slide_no: int | None = None,
 ) -> dict:
-    clean_title = normalize_page_title(slide_id, title, prompt)
+    page_number = int(slide_no or slide_id)
+    clean_title = normalize_page_title(page_number, title, prompt)
     clean_prompt = prompt.strip()
     return {
         "id": slide_id,
+        "slide_no": page_number,
         "title": clean_title,
         "layout_tag": DEFAULT_LAYOUT_TAG,
         "page_type": page_type,
@@ -272,8 +278,10 @@ def build_page_visual_plan(
     page_style: str = DEFAULT_PAGE_STYLE,
     *,
     mode: str = "append_page",
+    slide_no: int | None = None,
 ) -> dict:
-    clean_title = normalize_page_title(slide_id, title, prompt)
+    page_number = int(slide_no or slide_id)
+    clean_title = normalize_page_title(page_number, title, prompt)
     compact_prompt = compact_page_body(prompt, 420) or DEFAULT_VISUAL_BRIEF
     director = direct_page(title=clean_title, prompt=prompt, mode=mode)
     content_fields = build_blueprint_content_fields(clean_title, prompt)
@@ -284,6 +292,7 @@ def build_page_visual_plan(
         density_budget = {"max_text_nodes": 28, "max_body_lines": 10, "max_chars": 700}
     return {
         "slide_id": slide_id,
+        "slide_no": page_number,
         "title": clean_title,
         "page_type": page_type,
         "content_handling": normalize_content_handling(content_handling),
@@ -341,17 +350,21 @@ def build_page_status(
     prompt: str,
     content_handling: str = DEFAULT_CONTENT_HANDLING,
     page_style: str = DEFAULT_PAGE_STYLE,
+    *,
+    slide_no: int | None = None,
 ) -> dict:
-    clean_title = normalize_page_title(slide_id, title, prompt)
+    page_number = int(slide_no or slide_id)
+    clean_title = normalize_page_title(page_number, title, prompt)
     return {
         "slide_id": slide_id,
+        "slide_no": page_number,
         "title": clean_title,
         "page_type": page_type,
         "content_handling": normalize_content_handling(content_handling),
         "page_style": normalize_page_style(page_style),
         "prompt": prompt,
         "status": "waiting_codex",
-        "svg_path": f"svg_output/slide_{slide_id:02d}.svg",
+        "svg_path": f"svg_output/slide_{page_number:02d}.svg",
         "has_svg": False,
         "qa_status": "not_run",
         "revision_count": 0,
@@ -384,6 +397,12 @@ def archive_deleted_slide_artifacts(target: Path, slide_id: int) -> str:
         if not src.exists():
             continue
         dst = archive_dir / folder / f"{stem}{suffix}"
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        src.replace(dst)
+        archived_any = True
+    single_pages_dir = target / "exports" / "single-pages"
+    for src in sorted(single_pages_dir.glob(f"{stem}--*.pptx")):
+        dst = archive_dir / "exports" / "single-pages" / src.name
         dst.parent.mkdir(parents=True, exist_ok=True)
         src.replace(dst)
         archived_any = True
@@ -426,6 +445,10 @@ def rename_slide_artifacts(target: Path, old_id: int, new_id: int) -> None:
     ]
     for folder, suffix in artifact_specs:
         move_path(target / folder / f"{old_stem}{suffix}", target / folder / f"{new_stem}{suffix}")
+    single_pages_dir = target / "exports" / "single-pages"
+    for src in sorted(single_pages_dir.glob(f"{old_stem}--*.pptx")):
+        suffix = src.name[len(old_stem) :]
+        move_path(src, single_pages_dir / f"{new_stem}{suffix}")
     move_path(target / "revisions" / old_stem, target / "revisions" / new_stem)
     move_path(target / "exports" / "single-pages" / "_work" / old_stem, target / "exports" / "single-pages" / "_work" / new_stem)
 
@@ -443,6 +466,8 @@ def delete_slide_artifacts(target: Path, slide_id: int) -> None:
     ]
     for folder, suffix in artifact_specs:
         remove_path(target / folder / f"{stem}{suffix}")
+    for path in (target / "exports" / "single-pages").glob(f"{stem}--*.pptx"):
+        remove_path(path)
     remove_path(target / "revisions" / stem)
     remove_path(target / "exports" / "single-pages" / "_work" / stem)
 
@@ -455,53 +480,57 @@ def default_title_after_reindex(title: str, old_id: int, new_id: int) -> str:
 def reindex_blueprint_slides(slides: list, deleted_slide_id: int) -> list:
     next_slides: list[dict[str, Any]] = []
     for old_index, slide in enumerate(slides, start=1):
-        if old_index == deleted_slide_id:
-            continue
         if not isinstance(slide, dict):
             slide = {}
-        new_id = len(next_slides) + 1
+        item_id = int(slide.get("id") or 0)
+        if item_id == deleted_slide_id:
+            continue
+        new_no = len(next_slides) + 1
         next_slide = dict(slide)
-        next_slide["id"] = new_id
-        next_slide["title"] = default_title_after_reindex(str(next_slide.get("title") or ""), old_index, new_id)
+        next_slide["id"] = item_id
+        next_slide["slide_no"] = new_no
+        next_slide["title"] = default_title_after_reindex(str(next_slide.get("title") or ""), old_index, new_no)
         content = next_slide.get("content")
         if isinstance(content, dict):
             next_content = dict(content)
             for key in ("headline", "statement"):
                 if str(next_content.get(key) or "") == default_page_title(old_index):
-                    next_content[key] = default_page_title(new_id)
+                    next_content[key] = default_page_title(new_no)
             next_slide["content"] = next_content
         next_slides.append(next_slide)
     return next_slides
 
 
-def reindex_blueprint_slides_after_insert(slides: list, inserted_slide_id: int, inserted_slide: dict) -> list:
+def reindex_blueprint_slides_after_insert(
+    slides: list, inserted_slide_no: int, inserted_slide: dict
+) -> list:
     next_slides: list[dict[str, Any]] = []
 
     def append_existing(old_index: int, item: Any) -> None:
         if not isinstance(item, dict):
             item = {}
-        new_id = len(next_slides) + 1
+        new_no = len(next_slides) + 1
         next_slide = dict(item)
-        next_slide["id"] = new_id
-        next_slide["title"] = default_title_after_reindex(str(next_slide.get("title") or ""), old_index, new_id)
+        next_slide["slide_no"] = new_no
+        next_slide["title"] = default_title_after_reindex(str(next_slide.get("title") or ""), old_index, new_no)
         content = next_slide.get("content")
         if isinstance(content, dict):
             next_content = dict(content)
             for key in ("headline", "statement"):
                 if str(next_content.get(key) or "") == default_page_title(old_index):
-                    next_content[key] = default_page_title(new_id)
+                    next_content[key] = default_page_title(new_no)
             next_slide["content"] = next_content
         next_slides.append(next_slide)
 
     for old_index, slide in enumerate(slides, start=1):
-        if old_index == inserted_slide_id:
+        if old_index == inserted_slide_no:
             next_slide = dict(inserted_slide)
-            next_slide["id"] = inserted_slide_id
+            next_slide["slide_no"] = inserted_slide_no
             next_slides.append(next_slide)
         append_existing(old_index, slide)
-    if inserted_slide_id > len(slides):
+    if inserted_slide_no > len(slides):
         next_slide = dict(inserted_slide)
-        next_slide["id"] = inserted_slide_id
+        next_slide["slide_no"] = inserted_slide_no
         next_slides.append(next_slide)
     return next_slides
 
@@ -516,17 +545,18 @@ def reindex_slide_plan_items(items: list, deleted_slide_id: int, id_key: str) ->
             continue
         if not isinstance(item, dict):
             item = {}
-        new_id = len(next_items) + 1
+        new_no = len(next_items) + 1
         next_item = dict(item)
-        next_item[id_key] = new_id
-        if "id" in next_item:
-            next_item["id"] = new_id
-        next_item["title"] = default_title_after_reindex(str(next_item.get("title") or ""), item_id, new_id)
+        next_item[id_key] = item_id
+        next_item["slide_no"] = new_no
+        next_item["title"] = default_title_after_reindex(str(next_item.get("title") or ""), old_index, new_no)
         next_items.append(next_item)
     return next_items
 
 
-def reindex_slide_plan_items_after_insert(items: list, inserted_slide_id: int, inserted_item: dict, id_key: str) -> list:
+def reindex_slide_plan_items_after_insert(
+    items: list, inserted_slide_no: int, inserted_item: dict, id_key: str
+) -> list:
     next_items: list[dict[str, Any]] = []
 
     def append_existing(old_index: int, item: Any) -> None:
@@ -535,30 +565,25 @@ def reindex_slide_plan_items_after_insert(items: list, inserted_slide_id: int, i
             item_id = int(item.get(id_key) or item.get("id") or old_index)
         if not isinstance(item, dict):
             item = {}
-        new_id = len(next_items) + 1
+        new_no = len(next_items) + 1
         next_item = dict(item)
-        next_item[id_key] = new_id
-        if "id" in next_item:
-            next_item["id"] = new_id
-        next_item["title"] = default_title_after_reindex(str(next_item.get("title") or ""), item_id, new_id)
+        next_item[id_key] = item_id
+        next_item["slide_no"] = new_no
+        next_item["title"] = default_title_after_reindex(str(next_item.get("title") or ""), old_index, new_no)
         next_items.append(next_item)
 
     for old_index, item in enumerate(items, start=1):
         item_id = old_index
         if isinstance(item, dict):
             item_id = int(item.get(id_key) or item.get("id") or old_index)
-        if item_id == inserted_slide_id:
+        if old_index == inserted_slide_no:
             next_item = dict(inserted_item)
-            next_item[id_key] = inserted_slide_id
-            if "id" in next_item:
-                next_item["id"] = inserted_slide_id
+            next_item["slide_no"] = inserted_slide_no
             next_items.append(next_item)
         append_existing(old_index, item)
-    if inserted_slide_id > len(items):
+    if inserted_slide_no > len(items):
         next_item = dict(inserted_item)
-        next_item[id_key] = inserted_slide_id
-        if "id" in next_item:
-            next_item["id"] = inserted_slide_id
+        next_item["slide_no"] = inserted_slide_no
         next_items.append(next_item)
     return next_items
 
@@ -578,12 +603,13 @@ def reindex_status_slides(target: Path, status_slides: list, deleted_slide_id: i
             continue
         if not isinstance(slide, dict):
             slide = {}
-        new_id = len(next_slides) + 1
+        new_no = len(next_slides) + 1
         next_slide = dict(slide)
-        next_slide["slide_id"] = new_id
-        next_slide["title"] = default_title_after_reindex(str(next_slide.get("title") or ""), item_id, new_id)
-        next_slide["svg_path"] = f"svg_output/slide_{new_id:02d}.svg"
-        next_slide["has_svg"] = slide_svg_exists(new_id)
+        next_slide["slide_id"] = item_id
+        next_slide["slide_no"] = new_no
+        next_slide["title"] = default_title_after_reindex(str(next_slide.get("title") or ""), old_index, new_no)
+        next_slide["svg_path"] = f"svg_output/slide_{new_no:02d}.svg"
+        next_slide["has_svg"] = slide_svg_exists(new_no)
         if not next_slide["has_svg"]:
             next_slide["qa_status"] = "not_run"
             if next_slide.get("status") not in {"waiting_prompt"}:
@@ -593,7 +619,9 @@ def reindex_status_slides(target: Path, status_slides: list, deleted_slide_id: i
     return next_slides
 
 
-def reindex_status_slides_after_insert(target: Path, status_slides: list, inserted_slide_id: int, inserted_status: dict) -> list:
+def reindex_status_slides_after_insert(
+    target: Path, status_slides: list, inserted_slide_no: int, inserted_status: dict
+) -> list:
     def slide_svg_exists(slide_num: int) -> bool:
         output_svg = target / "svg_output" / f"slide_{slide_num:02d}.svg"
         final_svg = target / "svg_final" / f"slide_{slide_num:02d}.svg"
@@ -607,12 +635,13 @@ def reindex_status_slides_after_insert(target: Path, status_slides: list, insert
             item_id = int(item.get("slide_id") or old_index)
         if not isinstance(item, dict):
             item = {}
-        new_id = len(next_slides) + 1
+        new_no = len(next_slides) + 1
         next_slide = dict(item)
-        next_slide["slide_id"] = new_id
-        next_slide["title"] = default_title_after_reindex(str(next_slide.get("title") or ""), item_id, new_id)
-        next_slide["svg_path"] = f"svg_output/slide_{new_id:02d}.svg"
-        next_slide["has_svg"] = slide_svg_exists(new_id)
+        next_slide["slide_id"] = item_id
+        next_slide["slide_no"] = new_no
+        next_slide["title"] = default_title_after_reindex(str(next_slide.get("title") or ""), old_index, new_no)
+        next_slide["svg_path"] = f"svg_output/slide_{new_no:02d}.svg"
+        next_slide["has_svg"] = slide_svg_exists(new_no)
         if not next_slide["has_svg"]:
             next_slide["qa_status"] = "not_run"
             if next_slide.get("status") not in {"waiting_prompt"}:
@@ -624,20 +653,120 @@ def reindex_status_slides_after_insert(target: Path, status_slides: list, insert
         item_id = old_index
         if isinstance(slide, dict):
             item_id = int(slide.get("slide_id") or old_index)
-        if item_id == inserted_slide_id:
+        if old_index == inserted_slide_no:
             next_slide = dict(inserted_status)
-            next_slide["slide_id"] = inserted_slide_id
-            next_slide["svg_path"] = f"svg_output/slide_{inserted_slide_id:02d}.svg"
+            next_slide["slide_no"] = inserted_slide_no
+            next_slide["svg_path"] = f"svg_output/slide_{inserted_slide_no:02d}.svg"
             next_slide["has_svg"] = False
             next_slides.append(next_slide)
         append_existing(old_index, slide)
-    if inserted_slide_id > len(status_slides):
+    if inserted_slide_no > len(status_slides):
         next_slide = dict(inserted_status)
-        next_slide["slide_id"] = inserted_slide_id
-        next_slide["svg_path"] = f"svg_output/slide_{inserted_slide_id:02d}.svg"
+        next_slide["slide_no"] = inserted_slide_no
+        next_slide["svg_path"] = f"svg_output/slide_{inserted_slide_no:02d}.svg"
         next_slide["has_svg"] = False
         next_slides.append(next_slide)
     return next_slides
+
+
+def migrate_project_slide_identity(target: Path) -> list[int]:
+    blueprint = read_blueprint(target)
+    blueprint_slides = blueprint.get("slides")
+    if not isinstance(blueprint_slides, list):
+        raise ValueError("blueprint.json slides must be a list.")
+    slide_ids: list[int] = []
+    for slide in blueprint_slides:
+        if not isinstance(slide, dict) or isinstance(slide.get("id"), bool):
+            raise ValueError("Stable slide identity is missing or invalid; insert/delete is blocked.")
+        try:
+            slide_id = int(slide.get("id"))
+        except (TypeError, ValueError) as exc:
+            raise ValueError("Stable slide identity is missing or invalid; insert/delete is blocked.") from exc
+        if slide_id < 1 or slide_id in slide_ids:
+            raise ValueError("Stable slide identity is duplicated or invalid; insert/delete is blocked.")
+        slide_ids.append(slide_id)
+
+    prepared_blueprint = deepcopy(blueprint)
+    prepared_blueprint_slides = prepared_blueprint["slides"]
+    blueprint_changed = False
+    for slide_no, slide in enumerate(prepared_blueprint_slides, start=1):
+        if slide.get("slide_no") != slide_no:
+            slide["slide_no"] = slide_no
+            blueprint_changed = True
+
+    structures = [
+        (target / "slide_visual_plan.json", "slide_id"),
+        (target / "slide_plan.json", "slide_id"),
+    ]
+    prepared_structures: list[tuple[Path, dict, bool]] = []
+    for path, id_key in structures:
+        payload = read_json(path, None)
+        if payload is None:
+            continue
+        if not isinstance(payload, dict):
+            raise ValueError(f"{path.name} must contain an object.")
+        items = payload.get("slides") if isinstance(payload, dict) else None
+        if not isinstance(items, list):
+            raise ValueError(f"{path.name} slides must be a list.")
+        item_ids: list[int] = []
+        for item in items:
+            if not isinstance(item, dict):
+                raise ValueError(f"{path.name} stable slide identities do not match blueprint; insert/delete is blocked.")
+            try:
+                item_ids.append(int(item.get(id_key) or item.get("id") or 0))
+            except (TypeError, ValueError) as exc:
+                raise ValueError(
+                    f"{path.name} stable slide identities do not match blueprint; insert/delete is blocked."
+                ) from exc
+        if item_ids != slide_ids:
+            raise ValueError(f"{path.name} stable slide identities do not match blueprint; insert/delete is blocked.")
+        prepared_payload = deepcopy(payload)
+        changed = False
+        for slide_no, item in enumerate(prepared_payload["slides"], start=1):
+            if item.get("slide_no") != slide_no:
+                item["slide_no"] = slide_no
+                changed = True
+        prepared_structures.append((path, prepared_payload, changed))
+
+    status = load_status(target)
+    prepared_status: dict | None = None
+    status_changed = False
+    if status:
+        if not isinstance(status, dict):
+            raise ValueError("workbench_status.json must contain an object.")
+        items = status.get("slides")
+        if not isinstance(items, list):
+            raise ValueError("workbench_status.json slides must be a list.")
+        item_ids: list[int] = []
+        for item in items:
+            if not isinstance(item, dict):
+                raise ValueError("workbench_status.json stable slide identities do not match blueprint; insert/delete is blocked.")
+            try:
+                item_ids.append(int(item.get("slide_id") or 0))
+            except (TypeError, ValueError) as exc:
+                raise ValueError(
+                    "workbench_status.json stable slide identities do not match blueprint; insert/delete is blocked."
+                ) from exc
+        if item_ids != slide_ids:
+            raise ValueError("workbench_status.json stable slide identities do not match blueprint; insert/delete is blocked.")
+        prepared_status = deepcopy(status)
+        for slide_no, item in enumerate(prepared_status["slides"], start=1):
+            if item.get("slide_no") != slide_no:
+                item["slide_no"] = slide_no
+                status_changed = True
+            expected_path = f"svg_output/slide_{slide_no:02d}.svg"
+            if item.get("svg_path") != expected_path:
+                item["svg_path"] = expected_path
+                status_changed = True
+
+    if blueprint_changed:
+        write_json(target / "blueprint.json", prepared_blueprint)
+    for path, payload, changed in prepared_structures:
+        if changed:
+            write_json(path, payload)
+    if status_changed and prepared_status is not None:
+        save_status(target, prepared_status)
+    return slide_ids
 
 
 def clear_stale_delivery_artifacts(target: Path) -> None:
@@ -648,17 +777,23 @@ def clear_stale_delivery_artifacts(target: Path) -> None:
 
 
 def delete_slide_from_project(target: Path, slide_id: int) -> dict:
+    migrate_project_slide_identity(target)
     blueprint = read_blueprint(target)
     slides = blueprint.get("slides")
     if not isinstance(slides, list):
         raise ValueError("blueprint.json slides must be a list.")
-    if slide_id < 1 or slide_id > len(slides):
+    deleted_index = next(
+        (index for index, item in enumerate(slides) if isinstance(item, dict) and int(item.get("id") or 0) == slide_id),
+        None,
+    )
+    if deleted_index is None:
         raise ValueError("slide id does not exist in blueprint.")
+    deleted_slide_no = deleted_index + 1
 
-    archive_path = archive_deleted_slide_artifacts(target, slide_id)
-    delete_slide_artifacts(target, slide_id)
-    for old_id in range(slide_id + 1, len(slides) + 1):
-        rename_slide_artifacts(target, old_id, old_id - 1)
+    archive_path = archive_deleted_slide_artifacts(target, deleted_slide_no)
+    delete_slide_artifacts(target, deleted_slide_no)
+    for old_no in range(deleted_slide_no + 1, len(slides) + 1):
+        rename_slide_artifacts(target, old_no, old_no - 1)
 
     blueprint["slides"] = reindex_blueprint_slides(slides, slide_id)
     write_json(target / "blueprint.json", blueprint)
@@ -702,9 +837,14 @@ def delete_slide_from_project(target: Path, slide_id: int) -> dict:
     apply_formal_planning_status(status, run_formal_planning(target))
     add_event(status, "slide_deleted", f"Slide {slide_id} archived and following slides reindexed.")
     save_status(target, status)
-    selected_slide_id = min(slide_id, len(status["slides"])) if status["slides"] else 1
+    if status["slides"]:
+        selected_index = min(deleted_index, len(status["slides"]) - 1)
+        selected_slide_id = int(status["slides"][selected_index].get("slide_id") or 0)
+    else:
+        selected_slide_id = 1
     return {
         "deleted_slide_id": slide_id,
+        "deleted_slide_no": deleted_slide_no,
         "selected_slide_id": selected_slide_id,
         "slide_count": len(status["slides"]),
         "archive_path": archive_path,
@@ -719,6 +859,8 @@ def append_slide_to_project(
     prompt: str,
     content_handling: str = DEFAULT_CONTENT_HANDLING,
     page_style: str = DEFAULT_PAGE_STYLE,
+    *,
+    new_slide_id: int | None = None,
 ) -> dict:
     page_type = require_page_type(page_type)
     content_handling = normalize_content_handling(content_handling)
@@ -726,14 +868,22 @@ def append_slide_to_project(
     status = load_status(target) or build_initial_status_from_blueprint(target.name, target)
     if is_true_single_page_workflow(status):
         raise ValueError("单页任务只能保留 1 页。需要多页 PPT 时，请新建多页任务。")
+    existing_ids = migrate_project_slide_identity(target)
     blueprint = read_blueprint(target)
     slides = blueprint.setdefault("slides", [])
     if not isinstance(slides, list):
         raise ValueError("blueprint.json slides must be a list.")
-    slide_id = len(slides) + 1
+    slide_no = len(slides) + 1
+    slide_id = int(new_slide_id or (max(existing_ids, default=0) + 1))
+    if slide_id in existing_ids or slide_id < 1:
+        raise ValueError("new slide_id must be a positive unused stable identity.")
     clean_prompt = normalize_submission_prompt(prompt)
-    clean_title = normalize_page_title(slide_id, title, clean_prompt)
-    slides.append(build_page_slide(slide_id, page_type, clean_title, clean_prompt, content_handling, page_style))
+    clean_title = normalize_page_title(slide_no, title, clean_prompt)
+    slides.append(
+        build_page_slide(
+            slide_id, page_type, clean_title, clean_prompt, content_handling, page_style, slide_no=slide_no
+        )
+    )
     write_json(target / "blueprint.json", blueprint)
 
     visual_path = target / "slide_visual_plan.json"
@@ -744,7 +894,9 @@ def append_slide_to_project(
     if not isinstance(visual_slides, list):
         raise ValueError("slide_visual_plan.json slides must be a list.")
     visual_slides.append(
-        build_page_visual_plan(slide_id, page_type, clean_title, clean_prompt, content_handling, page_style)
+        build_page_visual_plan(
+            slide_id, page_type, clean_title, clean_prompt, content_handling, page_style, slide_no=slide_no
+        )
     )
     write_json(visual_path, visual_plan)
 
@@ -757,7 +909,11 @@ def append_slide_to_project(
     status_slides = status.setdefault("slides", [])
     if not isinstance(status_slides, list):
         raise ValueError("workbench_status.json slides must be a list.")
-    status_slides.append(build_page_status(slide_id, page_type, clean_title, clean_prompt, content_handling, page_style))
+    status_slides.append(
+        build_page_status(
+            slide_id, page_type, clean_title, clean_prompt, content_handling, page_style, slide_no=slide_no
+        )
+    )
     status["slide_count"] = len(status_slides)
     apply_formal_planning_status(status, run_formal_planning(target))
     add_event(status, "slide_appended", f"Slide {slide_id} appended.")
@@ -773,6 +929,8 @@ def insert_slide_after_project(
     prompt: str,
     content_handling: str = DEFAULT_CONTENT_HANDLING,
     page_style: str = DEFAULT_PAGE_STYLE,
+    *,
+    new_slide_id: int | None = None,
 ) -> dict:
     page_type = require_page_type(page_type)
     content_handling = normalize_content_handling(content_handling)
@@ -780,19 +938,27 @@ def insert_slide_after_project(
     status = load_status(target) or build_initial_status_from_blueprint(target.name, target)
     if is_true_single_page_workflow(status):
         raise ValueError("单页任务只能保留 1 页。需要多页 PPT 时，请新建多页任务。")
+    existing_ids = migrate_project_slide_identity(target)
     blueprint = read_blueprint(target)
     slides = blueprint.get("slides")
     if not isinstance(slides, list):
         raise ValueError("blueprint.json slides must be a list.")
-    if after_slide_id < 1 or after_slide_id > len(slides):
+    after_index = next(
+        (index for index, item in enumerate(slides) if isinstance(item, dict) and int(item.get("id") or 0) == after_slide_id),
+        None,
+    )
+    if after_index is None:
         raise ValueError("insert position does not exist in blueprint.")
 
-    inserted_slide_id = after_slide_id + 1
-    for old_id in range(len(slides), after_slide_id, -1):
-        rename_slide_artifacts(target, old_id, old_id + 1)
+    inserted_slide_no = after_index + 2
+    inserted_slide_id = int(new_slide_id or (max(existing_ids, default=0) + 1))
+    if inserted_slide_id in existing_ids or inserted_slide_id < 1:
+        raise ValueError("new slide_id must be a positive unused stable identity.")
+    for old_no in range(len(slides), inserted_slide_no - 1, -1):
+        rename_slide_artifacts(target, old_no, old_no + 1)
 
     clean_prompt = normalize_submission_prompt(prompt)
-    clean_title = normalize_page_title(inserted_slide_id, title, clean_prompt)
+    clean_title = normalize_page_title(inserted_slide_no, title, clean_prompt)
     inserted_slide = build_page_slide(
         inserted_slide_id,
         page_type,
@@ -800,8 +966,9 @@ def insert_slide_after_project(
         clean_prompt,
         content_handling,
         page_style,
+        slide_no=inserted_slide_no,
     )
-    blueprint["slides"] = reindex_blueprint_slides_after_insert(slides, inserted_slide_id, inserted_slide)
+    blueprint["slides"] = reindex_blueprint_slides_after_insert(slides, inserted_slide_no, inserted_slide)
     write_json(target / "blueprint.json", blueprint)
 
     inserted_visual = build_page_visual_plan(
@@ -811,6 +978,7 @@ def insert_slide_after_project(
         clean_prompt,
         content_handling,
         page_style,
+        slide_no=inserted_slide_no,
     )
     visual_path = target / "slide_visual_plan.json"
     visual_plan = read_json(visual_path, {})
@@ -819,7 +987,9 @@ def insert_slide_after_project(
     visual_slides = visual_plan.setdefault("slides", [])
     if not isinstance(visual_slides, list):
         raise ValueError("slide_visual_plan.json slides must be a list.")
-    visual_plan["slides"] = reindex_slide_plan_items_after_insert(visual_slides, inserted_slide_id, inserted_visual, "slide_id")
+    visual_plan["slides"] = reindex_slide_plan_items_after_insert(
+        visual_slides, inserted_slide_no, inserted_visual, "slide_id"
+    )
     write_json(visual_path, visual_plan)
 
     slide_plan_path = target / "slide_plan.json"
@@ -827,7 +997,9 @@ def insert_slide_after_project(
     if isinstance(slide_plan, dict):
         slide_plan_items = slide_plan.get("slides")
         if isinstance(slide_plan_items, list):
-            slide_plan["slides"] = reindex_slide_plan_items_after_insert(slide_plan_items, inserted_slide_id, inserted_visual, "slide_id")
+            slide_plan["slides"] = reindex_slide_plan_items_after_insert(
+                slide_plan_items, inserted_slide_no, inserted_visual, "slide_id"
+            )
             write_json(slide_plan_path, slide_plan)
 
     clear_stale_delivery_artifacts(target)
@@ -847,8 +1019,11 @@ def insert_slide_after_project(
         clean_prompt,
         content_handling,
         page_style,
+        slide_no=inserted_slide_no,
     )
-    status["slides"] = reindex_status_slides_after_insert(target, status_slides, inserted_slide_id, inserted_status)
+    status["slides"] = reindex_status_slides_after_insert(
+        target, status_slides, inserted_slide_no, inserted_status
+    )
     status["slide_count"] = len(status["slides"])
     status["project_status"] = "svg_partial"
     export = status.setdefault("export", {})
@@ -868,6 +1043,7 @@ def insert_slide_after_project(
     save_status(target, status)
     return {
         "slide_id": inserted_slide_id,
+        "slide_no": inserted_slide_no,
         "slide_count": len(status["slides"]),
         "status": inserted_status,
     }
@@ -885,16 +1061,24 @@ def update_page_authoring_evidence(
     page_type = require_page_type(page_type)
     content_handling = normalize_content_handling(content_handling)
     page_style = normalize_page_style(page_style)
+    migrate_project_slide_identity(target)
     blueprint = read_blueprint(target)
     slides = blueprint.get("slides")
-    if not isinstance(slides, list) or slide_id > len(slides):
+    if not isinstance(slides, list):
         raise ValueError("slide id does not exist in blueprint.")
+    slide_index = next(
+        (index for index, item in enumerate(slides) if isinstance(item, dict) and int(item.get("id") or 0) == slide_id),
+        None,
+    )
+    if slide_index is None:
+        raise ValueError("slide id does not exist in blueprint.")
+    slide_no = slide_index + 1
     clean_prompt = normalize_submission_prompt(prompt)
-    clean_title = normalize_page_title(slide_id, title, clean_prompt)
-    slide = slides[slide_id - 1]
+    clean_title = normalize_page_title(slide_no, title, clean_prompt)
+    slide = slides[slide_index]
     if not isinstance(slide, dict):
         slide = {}
-        slides[slide_id - 1] = slide
+        slides[slide_index] = slide
     slide_content = slide.get("content")
     current_content: dict[str, Any] = slide_content if isinstance(slide_content, dict) else {}
     next_content = {
@@ -936,7 +1120,15 @@ def update_page_authoring_evidence(
     )
     if visual_item is None:
         visual_slides.append(
-            build_page_visual_plan(slide_id, page_type, clean_title, clean_prompt, content_handling, page_style)
+            build_page_visual_plan(
+                slide_id,
+                page_type,
+                clean_title,
+                clean_prompt,
+                content_handling,
+                page_style,
+                slide_no=slide_no,
+            )
         )
     else:
         next_visual = build_page_visual_plan(
@@ -947,6 +1139,7 @@ def update_page_authoring_evidence(
             content_handling,
             page_style,
             mode="update_page",
+            slide_no=slide_no,
         )
         next_visual.update(
             {
@@ -1000,7 +1193,15 @@ def update_page_authoring_evidence(
         raise ValueError("workbench_status.json slides must be a list.")
     status_item = next((item for item in status_slides if int(item.get("slide_id") or 0) == slide_id), None)
     if status_item is None:
-        status_item = build_page_status(slide_id, page_type, clean_title, clean_prompt, content_handling, page_style)
+        status_item = build_page_status(
+            slide_id,
+            page_type,
+            clean_title,
+            clean_prompt,
+            content_handling,
+            page_style,
+            slide_no=slide_no,
+        )
         status_slides.append(status_item)
     else:
         status_item.update(
@@ -1011,8 +1212,9 @@ def update_page_authoring_evidence(
                 "page_style": page_style,
                 "prompt": clean_prompt,
                 "status": "waiting_codex",
-                "svg_path": f"svg_output/slide_{slide_id:02d}.svg",
-                "has_svg": (target / "svg_output" / f"slide_{slide_id:02d}.svg").exists(),
+                "slide_no": slide_no,
+                "svg_path": f"svg_output/slide_{slide_no:02d}.svg",
+                "has_svg": (target / "svg_output" / f"slide_{slide_no:02d}.svg").exists(),
                 "qa_status": "not_run",
                 "last_error": "",
             }

@@ -13,6 +13,7 @@ function renderPageStream(slides) {
     pageStream.innerHTML = items
       .map((slide) => {
         const slideId = Number(slide.slide_id || 0);
+        const slideNo = Number(slide.slide_no || 0);
         const active = slideId === Number(selectedSlide) ? "active" : "";
         const pageType = pageTypeLabels[slide.page_type] || "内容页";
         const status = pageStatusLabel(slide);
@@ -21,11 +22,11 @@ function renderPageStream(slides) {
         const previewUrl = pageStreamPreviewUrl(slideId, previewVersion);
         const displayable = slideIsDisplayable(slide);
         const preview = displayable
-          ? `<iframe title="第 ${slideId} 页预览" src="${previewUrl}" loading="lazy" scrolling="no"></iframe>`
+          ? `<iframe title="第 ${slideNo} 页预览" src="${previewUrl}" loading="lazy" scrolling="no"></iframe>`
           : `<div class="page-stream-waiting ${generationError ? "failed" : ""}">${escapeHtml(generationError ? `生成失败：${generationError}` : slideGenerationPendingMessageDetailed(slide, slideId) || "等待 PPT 生成...")}</div>`;
         return `<article class="page-stream-card ${active}" data-slide="${slideId}">
-          <button class="page-stream-select" type="button" data-slide="${slideId}" aria-label="选择第 ${slideId} 页">
-            <span>第 ${slideId} 页</span>
+          <button class="page-stream-select" type="button" data-slide="${slideId}" aria-label="选择第 ${slideNo} 页">
+            <span>第 ${slideNo} 页</span>
             <strong>${escapeHtml(pageType)}</strong>
             <em>${escapeHtml(status)}</em>
           </button>
@@ -62,6 +63,7 @@ function updatePageStreamState(slides) {
   if (!pageStream) return;
   (Array.isArray(slides) ? slides : []).forEach((slide) => {
     const slideId = Number(slide.slide_id || 0);
+    const slideNo = Number(slide.slide_no || 0);
     const card = pageStream.querySelector(`.page-stream-card[data-slide="${slideId}"]`);
     if (!card) return;
     card.classList.toggle("active", slideId === Number(selectedSlide));
@@ -76,7 +78,7 @@ function updatePageStreamState(slides) {
       if (existingFrame) {
         if (existingFrame.getAttribute("src") !== previewUrl) existingFrame.setAttribute("src", previewUrl);
       } else {
-        previewBox.innerHTML = `<iframe title="第 ${slideId} 页预览" src="${previewUrl}" loading="lazy" scrolling="no"></iframe>`;
+        previewBox.innerHTML = `<iframe title="第 ${slideNo} 页预览" src="${previewUrl}" loading="lazy" scrolling="no"></iframe>`;
       }
       return;
     }
@@ -127,9 +129,9 @@ async function insertSlideAfterSelected() {
       prompt: "",
     }),
   });
-  appendLog(commandSummary(`在第 ${selectedSlide} 页后插入页面`, response));
+  appendLog(commandSummary(`在第 ${Number(current.slide_no || 0)} 页后插入页面`, response));
   if (!response.ok) throw new Error(response.message || "插入页面失败。");
-  selectedSlide = Number(response.data?.slide_id || selectedSlide + 1);
+  selectedSlide = Number(response.data?.slide_id || selectedSlide);
   await recordTaskEvent("insert_slide", { slide_id: selectedSlide, source: "current_page_after" });
   await loadStatus();
   await refreshCurrentPreview();
@@ -158,6 +160,7 @@ function renderUserBlocker(status) {
   const recommendedMessage = String(recommendedAction.user_message || recommendedAction.detail || "").trim();
   const recommendedSlideRaw = Number(recommendedAction.slide_id || 0);
   const recommendedSlide = Number.isFinite(recommendedSlideRaw) && recommendedSlideRaw > 0 ? recommendedSlideRaw : 0;
+  const recommendedSlideNo = Number(recommendedAction.slide_no || slideNoById(recommendedSlide) || 0);
   const overloaded = readiness?.budget_overloaded_slides || [];
   const missingSlides = Array.isArray(readiness?.missing_slides)
     ? readiness.missing_slides.map(Number).filter((item) => Number.isFinite(item) && item > 0)
@@ -179,43 +182,47 @@ function renderUserBlocker(status) {
     detail = "当前项目目录不存在，无法新增页面或继续生成。请返回任务中心重新创建任务。";
   } else if (reasonCode === "api_key_missing") {
     const targetSlide = recommendedSlide || missingSlides[0] || 0;
-    const targetText = targetSlide > 0 ? `第 ${targetSlide} 页` : "当前页面";
+    const targetNo = recommendedSlideNo || missingSlides[0] || 0;
+    const targetText = targetNo > 0 ? `第 ${targetNo} 页` : "当前页面";
     title = "模型配置需要处理";
     detail = recommendedMessage || `${targetText} 暂时无法生成：服务端 API Key 尚未配置，请在服务器 .env 或 Windows 环境变量中配置并重启。`;
     action = "open_preferences";
     actionText = "打开模型配置";
     actionSlide = targetSlide > 0 ? String(targetSlide) : "";
   } else if (reasonCode === "missing_slide_svg" || reasonCode === "missing_slide_prompt") {
-    const targetSlide = recommendedSlide || missingSlides[0] || 0;
-    title = missingSlidesTitle(missingSlides, targetSlide);
+    const targetNo = recommendedSlideNo || missingSlides[0] || 0;
+    const targetSlide = recommendedSlide || slideIdByNo(targetNo) || 0;
+    title = missingSlidesTitle(missingSlides, targetNo);
     detail =
       reasonCode === "missing_slide_prompt"
         ? recommendedMessage || "请先补充页面内容。"
-        : missingSlidesBlockerDetail(missingSlides, targetSlide);
+        : missingSlidesBlockerDetail(missingSlides, targetNo);
     action = recommendedKey || (reasonCode === "missing_slide_prompt" ? "edit_page_prompt" : "auto_generate");
     actionText =
       recommendedLabel ||
-      (targetSlide > 0
+      (targetNo > 0
         ? reasonCode === "missing_slide_prompt"
-          ? `补充第 ${targetSlide} 页内容`
-          : `生成第 ${targetSlide} 页`
+          ? `补充第 ${targetNo} 页内容`
+          : `生成第 ${targetNo} 页`
         : "继续处理");
     actionSlide = targetSlide > 0 ? String(targetSlide) : "";
   } else if (reasonCode === "qa_failed_slide") {
     const targetSlide = recommendedSlide || failedIds[0] || 0;
-    title = targetSlide > 0 ? `第 ${targetSlide} 页生成失败` : "生成失败";
-    detail = targetSlide > 0 ? `第 ${targetSlide} 页生成失败。` : "生成失败。";
+    const targetNo = recommendedSlideNo || slideNoById(targetSlide) || 0;
+    title = targetNo > 0 ? `第 ${targetNo} 页生成失败` : "生成失败";
+    detail = targetNo > 0 ? `第 ${targetNo} 页生成失败。` : "生成失败。";
     action = recommendedKey || "repair_slide";
-    actionText = recommendedLabel || (targetSlide > 0 ? `处理第 ${targetSlide} 页` : "继续处理");
+    actionText = recommendedLabel || (targetNo > 0 ? `处理第 ${targetNo} 页` : "继续处理");
     actionSlide = targetSlide > 0 ? String(targetSlide) : "";
   } else if (reasonCode === "budget_overload") {
-    const targetSlide = recommendedSlide || overloaded[0] || 0;
+    const targetNo = recommendedSlideNo || overloaded[0] || 0;
+    const targetSlide = recommendedSlide || slideIdByNo(targetNo) || 0;
     title = "页面内容还需精简";
     detail =
       recommendedMessage ||
-      (targetSlide > 0 ? `第 ${targetSlide} 页内容偏多，请先优化后再继续。` : "页面内容偏多，请先优化后再继续。");
+      (targetNo > 0 ? `第 ${targetNo} 页内容偏多，请先优化后再继续。` : "页面内容偏多，请先优化后再继续。");
     action = recommendedKey || "repair_budget";
-    actionText = recommendedLabel || (targetSlide > 0 ? `优化第 ${targetSlide} 页` : "优化当前页");
+    actionText = recommendedLabel || (targetNo > 0 ? `优化第 ${targetNo} 页` : "优化当前页");
     actionSlide = targetSlide > 0 ? String(targetSlide) : "";
   } else if (reasonCode === "export_failed") {
     title = "生成失败";
@@ -233,11 +240,13 @@ function renderUserBlocker(status) {
   } else if (failedIds.length) {
     const first = failedSlides[0];
     const firstId = Number(first?.slide_id || failedIds[0]);
+    const firstNo = Number(first?.slide_no || slideNoById(firstId) || 0);
     const reason = userFacingGenerationError(first?.last_error || "");
-    title = `第 ${firstId} 页生成失败`;
-    detail = reason ? `${slideListText(failedIds)} 生成失败。${reason}` : `${slideListText(failedIds)} 生成失败。`;
+    const failedNos = failedSlides.map((slide) => Number(slide.slide_no || 0)).filter((item) => item > 0);
+    title = `第 ${firstNo} 页生成失败`;
+    detail = reason ? `${slideListText(failedNos)} 生成失败。${reason}` : `${slideListText(failedNos)} 生成失败。`;
     action = "repair_slide";
-    actionText = `处理第 ${firstId} 页`;
+    actionText = `处理第 ${firstNo} 页`;
     actionSlide = String(firstId);
   } else if (overloaded.length) {
     title = "页面内容还需精简";
@@ -279,14 +288,14 @@ function pagewiseProjectProgressCopy(status) {
   if (!slides.length) return projectStateText[status?.project_status] || status?.project_status || "状态未知";
   const generated = slides.filter((slide) => slideIsDisplayable(slide)).length;
   const missing = slides.find((slide) => !slideIsDisplayable(slide));
-  if (missing) return `\u5df2\u751f\u6210 ${generated}/${slides.length}\uff0c\u4e0b\u4e00\u9875\u7b2c ${missing.slide_id} \u9875`;
+  if (missing) return `\u5df2\u751f\u6210 ${generated}/${slides.length}\uff0c\u4e0b\u4e00\u9875\u7b2c ${missing.slide_no} \u9875`;
   return `\u5df2\u751f\u6210 ${generated}/${slides.length}\uff0c\u53ef\u4ee5\u751f\u6210 PPT`;
 }
 
 function currentPageGenerationStateText() {
   const current = selectedSlideState();
   if (!current || !slideIsGeneratingForUi(current)) return "";
-  return `第 ${Number(current.slide_id || selectedSlide)} 页生成中`;
+  return `第 ${Number(current.slide_no || 0)} 页生成中`;
 }
 
 function projectStatusLabel(value) {
@@ -341,9 +350,8 @@ function qaScopeLabel(status = latestStatus) {
   const scope = String(status?.qa_scope || "unknown");
   if (scope === "deck") return "整套 QA";
   if (scope === "slide") {
-    const slideId = Number(status?.checked_slide || 0);
-    return slideId > 0 ? `单页 QA（第 ${slideId} 页）` : "单页 QA";
+    const slideNo = Number(status?.checked_slide || 0);
+    return slideNo > 0 ? `单页 QA（第 ${slideNo} 页）` : "单页 QA";
   }
   return "QA 范围未知";
 }
-

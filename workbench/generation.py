@@ -364,7 +364,8 @@ def _block_remaining_slides_after_pause(project_path: Path, slide_ids: list[int]
         slide_id = int(slide.get("slide_id") or 0)
         if slide_id not in slide_ids:
             continue
-        target = slide_svg_path(project_path, slide_id)
+        slide_no = int(slide.get("slide_no") or slide_id)
+        target = slide_svg_path(project_path, slide_no)
         if slide.get("has_svg") and target.exists():
             continue
         slide["status"] = "blocked"
@@ -1825,7 +1826,7 @@ def run_progressive_slide_generation(
     )
     target.write_text(scaffold_svg, encoding="utf-8")
     slide["has_svg"] = True
-    slide["svg_path"] = f"svg_output/slide_{int(slide.get('slide_id') or 0):02d}.svg"
+    slide["svg_path"] = f"svg_output/slide_{int(slide.get('slide_no') or slide.get('slide_id') or 0):02d}.svg"
     slide["lock_updated_at"] = now_iso()
     status, slide = _persist_current_slide(project_path, status, slide)
     current_svg = scaffold_svg
@@ -1893,6 +1894,7 @@ def build_slide_prompt(
     prior_svg: str = "",
 ) -> str:
     slide_id = int(slide.get("slide_id") or 1)
+    slide_no = int(slide.get("slide_no") or slide_id)
     raw_slide_prompt = str(slide.get("prompt") or "").strip()
     page_type = _normalized_page_type(slide.get("page_type"))
     content_handling = _normalized_content_handling(slide.get("content_handling"))
@@ -1935,8 +1937,8 @@ def build_slide_prompt(
     return f"""You are generating one production SVG page for a PowerPoint deck.
 
 Project: {project_name}
-Slide: {slide_id}
-Title: {slide.get("title") or f"Slide {slide_id}"}
+Slide: {slide_no}
+Title: {slide.get("title") or f"Slide {slide_no}"}
 Page type: {page_type}
 Content handling: {CONTENT_HANDLING_LABELS[content_handling]}
 Content handling guidance: {CONTENT_HANDLING_GUIDANCE[content_handling]}
@@ -2012,7 +2014,7 @@ Hard requirements:
 {visual_plan_context}
 
 ## slide task
-{_read_slide_task_context(project_path / "agent_tasks" / f"slide_{slide_id:02d}.md", 7000)}
+{_read_slide_task_context(project_path / "agent_tasks" / f"slide_{slide_no:02d}.md", 7000)}
 {phase_context}
 """
 
@@ -2073,7 +2075,8 @@ def auto_generate_project(
         )
         if not isinstance(live_slide, dict):
             continue
-        target = output_dir / f"slide_{slide_id:02d}.svg"
+        slide_no = int(live_slide.get("slide_no") or slide_id)
+        target = output_dir / f"slide_{slide_no:02d}.svg"
         if live_slide.get("has_svg") and target.exists():
             continue
         live_slide_status = str(live_slide.get("status") or "")
@@ -2206,10 +2209,11 @@ def auto_generate_slide(
     slide = next((item for item in status.get("slides", []) if int(item.get("slide_id") or 0) == int(slide_id)), None)
     if slide is None:
         raise ValueError(f"Slide {slide_id} not found.")
+    slide_no = int(slide.get("slide_no") or slide_id)
 
     output_dir = project_path / "svg_output"
     output_dir.mkdir(parents=True, exist_ok=True)
-    target = output_dir / f"slide_{slide_id:02d}.svg"
+    target = output_dir / f"slide_{slide_no:02d}.svg"
     if not slide_prompt_text(slide):
         mark_waiting_for_prompt(slide, target)
         status["generation"] = config.public_metadata()
@@ -2227,7 +2231,7 @@ def auto_generate_slide(
         return {"generated_slides": [], "generated_count": 0, "generation": config.public_metadata()}
     had_existing_svg = target.exists()
     if target.exists():
-        backup_slide_revision(project_path, slide_id, "before-auto-generate-page")
+        backup_slide_revision(project_path, slide_no, "before-auto-generate-page")
 
     slide["status"] = "generating"
     slide["qa_status"] = "not_run"
@@ -2308,7 +2312,7 @@ def auto_generate_slide(
         slide["status"] = "qa_failed" if preserved_existing_svg else "failed"
         slide["has_svg"] = preserved_existing_svg
         slide["qa_status"] = "failed" if preserved_existing_svg else "not_run"
-        slide["svg_path"] = f"svg_output/slide_{slide_id:02d}.svg"
+        slide["svg_path"] = f"svg_output/slide_{slide_no:02d}.svg"
         slide["last_error"] = message
         slide["last_error_code"] = reason_code
         if reason_code in {"provider_busy", "svg_parse_error"}:
@@ -2343,7 +2347,7 @@ def auto_generate_slide(
     target.write_text(svg, encoding="utf-8")
     slide["status"] = "svg_ready"
     slide["has_svg"] = True
-    slide["svg_path"] = f"svg_output/slide_{slide_id:02d}.svg"
+    slide["svg_path"] = f"svg_output/slide_{slide_no:02d}.svg"
     slide["qa_status"] = "not_run"
     slide["last_error"] = ""
     slide["last_error_code"] = ""

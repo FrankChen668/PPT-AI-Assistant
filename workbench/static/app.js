@@ -404,7 +404,7 @@ function openPromptEditor() {
   if (!promptEditor || !currentPagePrompt) return;
   promptEditorSnapshot = String(currentPagePrompt.value || "");
   if (promptEditorTitle) {
-    promptEditorTitle.textContent = selectedSlide ? `本页提示词 · 第 ${selectedSlide} 页` : "本页提示词";
+    promptEditorTitle.textContent = selectedSlide ? `本页提示词 · 第 ${slideNoById(selectedSlide)} 页` : "本页提示词";
   }
   if (promptEditorCount) promptEditorCount.textContent = `${promptEditorSnapshot.length} 字`;
   promptEditor.classList.remove("hidden");

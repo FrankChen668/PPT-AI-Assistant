@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import time
@@ -198,7 +199,8 @@ def _handle_slide_generation_failure(
     slides = status.get("slides") if isinstance(status.get("slides"), list) else []
     slide_state = next((item for item in slides if isinstance(item, dict) and int(item.get("slide_id") or 0) == int(slide_id)), None)
     if isinstance(slide_state, dict):
-        svg_exists = (target / "svg_output" / f"slide_{slide_id:02d}.svg").exists() or (target / "svg_final" / f"slide_{slide_id:02d}.svg").exists()
+        slide_no = int(slide_state.get("slide_no") or slide_id)
+        svg_exists = (target / "svg_output" / f"slide_{slide_no:02d}.svg").exists() or (target / "svg_final" / f"slide_{slide_no:02d}.svg").exists()
         slide_state["status"] = "qa_failed" if svg_exists else "failed"
         slide_state["has_svg"] = bool(svg_exists)
         slide_state["qa_status"] = "failed" if svg_exists else "not_run"
@@ -383,31 +385,33 @@ def handle_slide_qa(handler: Any, name: str, slide_id: int) -> bool:
     from workbench import server as srv
 
     target = srv.project_dir(name)
-    status = srv.load_status(target) or srv.build_initial_status_from_blueprint(name, target)
-    ensure_formal_planning(target, status)
-    slide_state = None
-    for item in status.get("slides", []):
-        if int(item.get("slide_id", 0)) == slide_id:
-            slide_state = item
-            break
-    if slide_state is not None:
-        slide_state["status"] = "qa_running"
-        slide_state["qa_status"] = "running"
-        slide_state["qa_started_at"] = srv.iso_now()
-        slide_state["lock_updated_at"] = slide_state["qa_started_at"]
-        srv.save_status(target, status)
-    qa_started_at = srv.iso_now()
+    with srv.project_structure_lock(name):
+        slide_no = srv.slide_no_for_identity(target, slide_id)
+        status = srv.load_status(target) or srv.build_initial_status_from_blueprint(name, target)
+        ensure_formal_planning(target, status)
+        slide_state = None
+        for item in status.get("slides", []):
+            if int(item.get("slide_id", 0)) == slide_id:
+                slide_state = item
+                break
+        qa_started_at = srv.iso_now()
+        if slide_state is not None:
+            slide_state["status"] = "qa_running"
+            slide_state["qa_status"] = "running"
+            slide_state["qa_started_at"] = qa_started_at
+            slide_state["lock_updated_at"] = qa_started_at
+            srv.save_status(target, status)
+        srv.record_page_event_for_project(
+            name,
+            slide_id,
+            "slide_qa_started",
+            phase="qa",
+            status="running",
+            started_at=qa_started_at,
+        )
     qa_started_perf = time.perf_counter()
-    srv.record_page_event_for_project(
-        name,
-        slide_id,
-        "slide_qa_started",
-        phase="qa",
-        status="running",
-        started_at=qa_started_at,
-    )
     try:
-        qa = srv.run_slide_qa(srv.SlideQaRequest(project=name, slide_id=slide_id, snapshots=True))
+        qa = srv.run_slide_qa(srv.SlideQaRequest(project=name, slide_id=slide_no, snapshots=True))
     except Exception as exc:
         safe_error = _safe_error_text(srv, exc)
         srv.record_page_event_for_project(
@@ -432,7 +436,7 @@ def handle_slide_qa(handler: Any, name: str, slide_id: int) -> bool:
     quality = srv.evaluate_user_quality(target, {"qa_scope": "slide"})
     quality_blocked = str(quality.get("user_quality_status") or "") == "blocked"
     quality_blockers = [str(code) for code in quality.get("hard_blocker_codes") or [] if str(code).strip()]
-    layout_regeneration_findings = _slide_layout_regeneration_findings(target, slide_id)
+    layout_regeneration_findings = _slide_layout_regeneration_findings(target, slide_no)
     qa_effective_ok = bool(qa.ok)
     if qa_effective_ok and quality_blocked:
         qa_effective_ok = False
@@ -508,7 +512,7 @@ def handle_slide_qa(handler: Any, name: str, slide_id: int) -> bool:
             build_slide_qa_issue_record(
                 target,
                 project_name=name,
-                slide_id=slide_id,
+                slide_id=slide_no,
                 qa_ok=qa_effective_ok,
                 reason_code=qa_reason_code,
                 quality=quality,
@@ -531,19 +535,7 @@ def handle_slide_auto_generate(handler: Any, name: str, slide_id: int, payload: 
     from workbench import server as srv
 
     target = srv.project_dir(name)
-    if any(key in payload for key in {"page_type", "title", "prompt", "iteration_note", "content_handling", "page_style"}):
-        status, _ = srv.update_page_authoring_evidence(
-            target,
-            slide_id,
-            page_type=str(payload.get("page_type") or "content"),
-            title=str(payload.get("title") or ""),
-            prompt=_merge_iteration_note(payload.get("prompt"), payload.get("iteration_note")),
-            content_handling=str(payload.get("content_handling") or ""),
-            page_style=str(payload.get("page_style") or ""),
-        )
-        srv.save_status(target, status)
     status = srv.load_status(target) or srv.build_initial_status_from_blueprint(name, target)
-    status["generation_mode"] = "api_auto"
     active_slide = _find_slide_state(status, slide_id)
     if _slide_generation_already_active(active_slide):
         srv.record_page_event_for_project(
@@ -620,22 +612,46 @@ def handle_slide_auto_generate(handler: Any, name: str, slide_id: int, payload: 
             },
         )
         return True
-    generation_started_at = srv.iso_now()
+    with srv.project_structure_lock(name):
+        slide_no = srv.slide_no_for_identity(target, slide_id)
+        if any(key in payload for key in {"page_type", "title", "prompt", "iteration_note", "content_handling", "page_style"}):
+            status, _ = srv.update_page_authoring_evidence(
+                target,
+                slide_id,
+                page_type=str(payload.get("page_type") or "content"),
+                title=str(payload.get("title") or ""),
+                prompt=_merge_iteration_note(payload.get("prompt"), payload.get("iteration_note")),
+                content_handling=str(payload.get("content_handling") or ""),
+                page_style=str(payload.get("page_style") or ""),
+            )
+            srv.save_status(target, status)
+        status = srv.load_status(target) or srv.build_initial_status_from_blueprint(name, target)
+        status["generation_mode"] = "api_auto"
+        active_slide = _find_slide_state(status, slide_id)
+        if not isinstance(active_slide, dict):
+            semaphore.release()
+            raise ValueError(f"Slide identity {slide_id} does not exist.")
+        previous_generation_phase = active_slide.get("generation_phase")
+        previous_lock_updated_at = active_slide.get("lock_updated_at")
+        generation_started_at = srv.iso_now()
+        active_slide["generation_phase"] = "admitted"
+        active_slide["lock_updated_at"] = generation_started_at
+        srv.save_status(target, status)
+        srv.record_page_event_for_project(
+            name,
+            slide_id,
+            "slide_generate_started",
+            phase="generation",
+            status="running",
+            started_at=generation_started_at,
+            payload={"waited_sec": round(waited_sec, 3)},
+        )
     generation_started_perf = time.perf_counter()
-    srv.record_page_event_for_project(
-        name,
-        slide_id,
-        "slide_generate_started",
-        phase="generation",
-        status="running",
-        started_at=generation_started_at,
-        payload={"waited_sec": round(waited_sec, 3)},
-    )
     result = None
     # 页面已有 SVG 时属于“页面重新生成”角色，否则属于“SVG 页面生成”角色。
     generation_role = (
         "page_regeneration"
-        if (target / "svg_output" / f"slide_{slide_id:02d}.svg").exists()
+        if (target / "svg_output" / f"slide_{slide_no:02d}.svg").exists()
         else "svg_generation"
     )
     try:
@@ -744,6 +760,23 @@ def handle_slide_auto_generate(handler: Any, name: str, slide_id: int, payload: 
         )
     finally:
         semaphore.release()
+        with srv.project_structure_lock(name):
+            current_status = srv.load_status(target)
+            current_slide = _find_slide_state(current_status or {}, slide_id)
+            if (
+                isinstance(current_slide, dict)
+                and str(current_slide.get("generation_phase") or "") == "admitted"
+                and str(current_slide.get("lock_updated_at") or "") == generation_started_at
+            ):
+                if previous_generation_phase is None:
+                    current_slide.pop("generation_phase", None)
+                else:
+                    current_slide["generation_phase"] = previous_generation_phase
+                if previous_lock_updated_at is None:
+                    current_slide.pop("lock_updated_at", None)
+                else:
+                    current_slide["lock_updated_at"] = previous_lock_updated_at
+                srv.save_status(target, current_status)
     srv.json_response(handler, srv.ok("slide auto generation completed", project=name, data=result))
     return True
 
@@ -752,21 +785,23 @@ def handle_slide_export_pptx(handler: Any, name: str, slide_id: int) -> bool:
     from workbench import server as srv
 
     target = srv.project_dir(name)
-    status = srv.load_status(target) or srv.build_initial_status_from_blueprint(name, target)
+    with srv.project_structure_lock(name):
+        slide_no = srv.slide_no_for_identity(target, slide_id)
+        status = srv.load_status(target) or srv.build_initial_status_from_blueprint(name, target)
+        export_started_at = srv.iso_now()
+        srv.record_page_event_for_project(
+            name,
+            slide_id,
+            "slide_export_started",
+            phase="export",
+            status="running",
+            started_at=export_started_at,
+        )
     guard = srv.collect_real_generation_risks(target, status)
-    export_started_at = srv.iso_now()
     export_started_perf = time.perf_counter()
-    srv.record_page_event_for_project(
-        name,
-        slide_id,
-        "slide_export_started",
-        phase="export",
-        status="running",
-        started_at=export_started_at,
-    )
     placeholder_slides = [int(item) for item in guard.get("placeholder_slides") or []]
     mojibake_risks = guard.get("mojibake_risks") or []
-    if slide_id in placeholder_slides:
+    if slide_no in placeholder_slides:
         srv.record_page_event_for_project(
             name,
             slide_id,
@@ -811,7 +846,12 @@ def handle_slide_export_pptx(handler: Any, name: str, slide_id: int) -> bool:
         )
         return True
 
-    result = srv.export_single_slide_pptx(target, slide_id)
+    result = srv.export_single_slide_pptx(target, slide_id, slide_no=slide_no)
+    artifact_pptx_sha256 = str(result.get("artifact_pptx_sha256") or "")
+    if not artifact_pptx_sha256:
+        export_path = Path(str(result.get("export_path") or ""))
+        if export_path.is_file():
+            artifact_pptx_sha256 = hashlib.sha256(export_path.read_bytes()).hexdigest()
     returncode = int(result.get("returncode") or 0)
     work_dir = Path(str(result.get("work_dir") or "")).resolve()
     has_export = bool(result.get("export_path"))
@@ -917,6 +957,9 @@ def handle_slide_export_pptx(handler: Any, name: str, slide_id: int) -> bool:
                 "reason_code": "qa_failed" if gate_failure else "export_failed",
                 "returncode": returncode,
                 "review_required": True,
+                "source_svg_sha256": str(result.get("source_svg_sha256") or ""),
+                "artifact_pptx_sha256": artifact_pptx_sha256,
+                "export_mode": str(result.get("export_mode") or "strict"),
             },
         )
         srv.json_response(
@@ -977,6 +1020,9 @@ def handle_slide_export_pptx(handler: Any, name: str, slide_id: int) -> bool:
             "reason_code": "" if not quality_gate_blocked else "qa_failed",
             "returncode": returncode,
             "review_required": bool(quality_gate_blocked),
+            "source_svg_sha256": str(result.get("source_svg_sha256") or ""),
+            "artifact_pptx_sha256": artifact_pptx_sha256,
+            "export_mode": str(result.get("export_mode") or "strict"),
         },
     )
     srv.json_response(
@@ -1000,19 +1046,22 @@ def handle_project_finalize(handler: Any, name: str, payload: dict[str, Any]) ->
     target = srv.project_dir(name)
     requested_mode = str(payload.get("mode") or "").strip().lower()
     fresh_requested = bool(payload.get("fresh", False))
-    finalize_started_at = srv.iso_now()
-    finalize_started_perf = time.perf_counter()
-    srv.record_page_event_for_project(
-        name,
-        0,
-        "deck_export_started",
-        phase="export",
-        status="running",
-        started_at=finalize_started_at,
-    )
-    status = srv.load_status(target)
-    if not status:
-        status = srv.build_initial_status_from_blueprint(name, target)
+    with srv.project_structure_lock(name):
+        finalize_started_at = srv.iso_now()
+        finalize_started_perf = time.perf_counter()
+        status = srv.load_status(target)
+        if not status:
+            status = srv.build_initial_status_from_blueprint(name, target)
+        previous_export = dict(status.get("export") or {}) if isinstance(status.get("export"), dict) else {}
+        srv.update_export_status(target, status, {"status": "running"})
+        srv.record_page_event_for_project(
+            name,
+            0,
+            "deck_export_started",
+            phase="export",
+            status="running",
+            started_at=finalize_started_at,
+        )
     ensure_formal_planning(target, status)
     srv.save_status(target, status)
     readiness = srv.compute_export_readiness_full(name, target, status)
@@ -1037,6 +1086,8 @@ def handle_project_finalize(handler: Any, name: str, payload: dict[str, Any]) ->
             duration_ms=srv.elapsed_ms(finalize_started_perf),
             payload={"reason_code": "export_failed", "error": _safe_error_text(srv, message)},
         )
+        status["export"] = previous_export
+        srv.save_status(target, status)
         handler._json_error(
             409,
             code=code,
@@ -1049,7 +1100,6 @@ def handle_project_finalize(handler: Any, name: str, payload: dict[str, Any]) ->
         target,
         status,
         {
-            "status": "running",
             "ready": True,
             "pptx_path": "",
             "last_returncode": None,

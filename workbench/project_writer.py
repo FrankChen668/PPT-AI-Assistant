@@ -619,6 +619,7 @@ def _build_blueprint_slide(index: int, slide: dict[str, Any]) -> dict[str, objec
         content_fields = {**content_fields, **_strategy_map_contract_content(content_fields)}
     result: dict[str, object] = {
         "id": index,
+        "slide_no": index,
         "title": slide["title"],
         "layout_tag": layout_tag,
         "narrative_intent": str(
@@ -704,6 +705,7 @@ def _build_visual_plan_slide(
     visual_contract.update(director["visual_contract_patch"])
     return {
         "slide_id": index,
+        "slide_no": index,
         "layout_tag": str(profile.get("layout_tag") or "Statement-Bold"),
         "narrative_intent": str(
             profile.get("narrative_intent")
@@ -1057,6 +1059,7 @@ def write_project_files(name: str, payload: dict) -> dict:
             "slides": [
                 {
                     "slide_id": index,
+                    "slide_no": index,
                     "title": slide["title"],
                     "page_type": "content",
                     "prompt": slide.get("prompt") or slide["body"],

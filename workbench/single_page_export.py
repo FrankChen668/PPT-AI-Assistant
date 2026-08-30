@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import shutil
 import subprocess
 import sys
@@ -43,6 +44,7 @@ def optional_selected_item(items: list, slide_id: int, id_keys: tuple[str, ...])
 def renumber_slide(item: dict, slide_id_key: str = "id") -> dict:
     next_item = dict(item)
     next_item[slide_id_key] = 1
+    next_item["slide_no"] = 1
     if "slide_id" in next_item:
         next_item["slide_id"] = 1
     if "id" in next_item:
@@ -150,16 +152,22 @@ def run_finalize(
     )
 
 
-def prepare_single_slide_project(project_dir: Path, slide_id: int) -> Path:
+def single_slide_source_svg(project_dir: Path, slide_no: int) -> Path:
+    source_svg = project_dir / "svg_output" / f"slide_{slide_no:02d}.svg"
+    if not source_svg.exists():
+        source_svg = project_dir / "svg_final" / f"slide_{slide_no:02d}.svg"
+    if not source_svg.exists():
+        raise ValueError(f"Slide {slide_no} SVG is missing.")
+    return source_svg
+
+
+def prepare_single_slide_project(project_dir: Path, slide_id: int, *, slide_no: int | None = None) -> Path:
     project_dir = project_dir.resolve()
-    source_svg = project_dir / "svg_output" / f"slide_{slide_id:02d}.svg"
-    if not source_svg.exists():
-        source_svg = project_dir / "svg_final" / f"slide_{slide_id:02d}.svg"
-    if not source_svg.exists():
-        raise ValueError(f"Slide {slide_id} SVG is missing.")
+    page_number = int(slide_no or slide_id)
+    source_svg = single_slide_source_svg(project_dir, page_number)
 
     work_root = project_dir / "exports" / "single-pages" / "_work"
-    work_dir = work_root / f"slide_{slide_id:02d}"
+    work_dir = work_root / f"slide_{page_number:02d}"
     resolved_work = work_dir.resolve()
     resolved_root = work_root.resolve()
     if resolved_root not in resolved_work.parents and resolved_work != resolved_root:
@@ -243,11 +251,15 @@ def promote_single_slide_work_output(project_dir: Path, slide_id: int) -> Path |
 def export_single_slide_pptx(
     project_dir: Path,
     slide_id: int,
+    *,
+    slide_no: int | None = None,
     runner: Callable[..., subprocess.CompletedProcess] = subprocess.run,
 ) -> dict:
     project_dir = project_dir.resolve()
+    page_number = int(slide_no or slide_id)
     skill_dir = project_dir.parents[1]
-    work_dir = prepare_single_slide_project(project_dir, slide_id)
+    work_dir = prepare_single_slide_project(project_dir, slide_id, slide_no=page_number)
+    source_svg_sha256 = hashlib.sha256((work_dir / "svg_output" / "slide_01.svg").read_bytes()).hexdigest()
     strict_command = build_finalize_command(work_dir, strict=True)
     strict_completed = run_finalize(runner, strict_command, cwd=skill_dir)
     completed = strict_completed
@@ -271,12 +283,12 @@ def export_single_slide_pptx(
 
     final_dir = project_dir / "exports" / "single-pages"
     final_dir.mkdir(parents=True, exist_ok=True)
-    final_pptx = final_dir / f"slide_{slide_id:02d}.pptx"
+    final_pptx = final_dir / f"slide_{page_number:02d}.pptx"
     stable_target_locked = False
     if source_pptx.exists():
-        final_pptx, stable_target_locked = copy_single_slide_output(source_pptx, final_dir, slide_id)
+        final_pptx, stable_target_locked = copy_single_slide_output(source_pptx, final_dir, page_number)
     if not final_pptx.exists():
-        promoted = promote_single_slide_work_output(project_dir, slide_id)
+        promoted = promote_single_slide_work_output(project_dir, page_number)
         if promoted is not None:
             final_pptx = promoted
     if completed.returncode == 0:
@@ -296,6 +308,7 @@ def export_single_slide_pptx(
             download_path = str(final_pptx)
     else:
         download_path = ""
+    artifact_pptx_sha256 = hashlib.sha256(final_pptx.read_bytes()).hexdigest() if final_pptx.exists() else ""
     return {
         "returncode": int(completed.returncode),
         "stdout": str(completed.stdout or "")[-8000:],
@@ -305,6 +318,9 @@ def export_single_slide_pptx(
         "strict_returncode": int(strict_completed.returncode),
         "fallback_used": fallback_used,
         "quality_gate_blocked": quality_gate_blocked,
+        "export_mode": "relaxed" if fallback_used else "strict",
+        "source_svg_sha256": source_svg_sha256,
+        "artifact_pptx_sha256": artifact_pptx_sha256,
         "stable_target_locked": stable_target_locked,
         "work_dir": str(work_dir),
         "export_path": str(final_pptx) if final_pptx.exists() else "",

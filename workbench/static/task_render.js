@@ -234,7 +234,8 @@
       .reverse()
       .map((event) => {
         const payload = event.payload || {};
-        const detail = payload.slide_id ? `第 ${payload.slide_id} 页` : payload.project || "";
+        const eventSlideNo = Number(event.slide_no_at_event || payload.slide_no || 0);
+        const detail = eventSlideNo > 0 ? `第 ${eventSlideNo} 页` : payload.project || "";
         return `
         <div class="task-event-item">
           <strong>${escapeHtml(eventTypeLabel(event.event_type))}${event._count && event._count > 1 ? ` x${event._count}` : ""}</strong>

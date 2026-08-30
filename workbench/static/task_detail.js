@@ -134,9 +134,10 @@ function renderSlideReviewPanel() {
   setReviewTags(review.issue_tags);
   if (reviewNotes) reviewNotes.value = review.notes || "";
   if (slideReviewHint) {
+    const slideNo = Number(current.slide_no || 0);
     slideReviewHint.textContent = hasAnyReview
-      ? `Slide ${selectedSlide} has manual review; update when needed.`
-      : `Slide ${selectedSlide} has no manual review yet.`;
+      ? `Slide ${slideNo} has manual review; update when needed.`
+      : `Slide ${slideNo} has no manual review yet.`;
   }
   if (slideReviewMeta) {
     slideReviewMeta.textContent = review.updated_at ? `Last submitted: ${review.updated_at}` : "No manual review submitted yet.";
@@ -158,7 +159,7 @@ async function submitSlideReview() {
     method: "POST",
     body: JSON.stringify(payload),
   });
-  appendLog(commandSummary(`Slide ${selectedSlide} manual review`, response));
+  appendLog(commandSummary(`Slide ${Number(current.slide_no || 0)} manual review`, response));
   if (!response.ok) {
     throw new Error(response.message || "Failed to save manual review.");
   }
@@ -183,11 +184,12 @@ function renderSlideList(slides) {
   slideList.innerHTML = slides
     .map((slide) => {
       const active = Number(slide.slide_id) === Number(selectedSlide) ? "active" : "";
+      const slideNo = Number(slide.slide_no || 0);
       const pageState = userFacingSlideState(slide);
       const klass = pageState.key;
       return `<div class="slide-row ${active}" data-slide-row="${slide.slide_id}">
-        <button class="slide-main ${active}" data-slide="${slide.slide_id}" title="第 ${slide.slide_id} 页 · ${pageState.label}">
-          <span class="slide-no" data-page="${slide.slide_id}">第 ${slide.slide_id} 页</span>
+        <button class="slide-main ${active}" data-slide="${slide.slide_id}" title="第 ${slideNo} 页 · ${pageState.label}">
+          <span class="slide-no" data-page="${slideNo}">第 ${slideNo} 页</span>
           <span class="slide-dot ${klass}" aria-hidden="true"></span><span class="sr-only">${pageState.label}</span>
         </button>
       </div>`;
@@ -244,6 +246,7 @@ function renderSlideListWithReview(slides) {
   slideList.innerHTML = rows
     .map((slide) => {
       const active = Number(slide.slide_id) === Number(selectedSlide) ? "active" : "";
+      const slideNo = Number(slide.slide_no || 0);
       const pageState = userFacingSlideState(slide);
       const klass = pageState.key;
       const reviewScore = Number(slide.review_score || 0);
@@ -252,8 +255,8 @@ function renderSlideListWithReview(slides) {
         ? `<span class="slide-review-badge score-${reviewScore}" title="Manual review ${reviewScore}/5">R${reviewScore}</span>`
         : "";
       return `<div class="slide-row ${active}" data-slide-row="${slide.slide_id}">
-        <button class="slide-main ${active}" data-slide="${slide.slide_id}" title="第 ${slide.slide_id} 页 · ${pageState.label}">
-          <span class="slide-no" data-page="${slide.slide_id}">第 ${slide.slide_id} 页</span>${reviewBadge}
+        <button class="slide-main ${active}" data-slide="${slide.slide_id}" title="第 ${slideNo} 页 · ${pageState.label}">
+          <span class="slide-no" data-page="${slideNo}">第 ${slideNo} 页</span>${reviewBadge}
           <span class="slide-dot ${klass}" aria-hidden="true"></span><span class="sr-only">${pageState.label}</span>
         </button>
       </div>`;
@@ -277,6 +280,17 @@ function renderSlideListWithReview(slides) {
 function slideStateById(slideId) {
   if (!latestStatus || !Array.isArray(latestStatus.slides)) return null;
   return latestStatus.slides.find((slide) => Number(slide.slide_id) === Number(slideId)) || null;
+}
+
+function slideNoById(slideId) {
+  const slide = slideStateById(slideId);
+  return Number(slide?.slide_no || 0);
+}
+
+function slideIdByNo(slideNo) {
+  if (!latestStatus || !Array.isArray(latestStatus.slides)) return 0;
+  const slide = latestStatus.slides.find((item) => Number(item.slide_no || 0) === Number(slideNo));
+  return Number(slide?.slide_id || 0);
 }
 
 function selectedSlideState() {
@@ -473,19 +487,20 @@ function slideGenerationPendingMessageDetailed(slide, slideId) {
 }
 
 function missingSlidePreviewMessage(slide, slideId) {
+  const slideNo = Number(slide?.slide_no || 0);
   const promptText = slidePromptForUi(slide, slideId).trim();
   const waitingForPrompt = (slide?.status === "waiting_prompt" && !promptText) || (slide && ("prompt" in slide) && !promptText);
   const pendingMessage = slideGenerationPendingMessageDetailed(slide, slideId);
   const generationError = slideGenerationError(slide);
   if (slideIsGeneratingForUi(slide)) return pendingMessage || "生成中";
-  if (waitingForPrompt) return `第 ${slideId} 页还没有提示词。请先填写本页提示词，再生成页面。`;
+  if (waitingForPrompt) return `第 ${slideNo} 页还没有提示词。请先填写本页提示词，再生成页面。`;
   if (pendingMessage) return pendingMessage;
   if (generationError) {
     const cleanGenerationError = compactSentenceEnd(generationError);
-    return `第 ${slideId} 页自动生成失败：${cleanGenerationError}。请点“生成本页”重试。`;
+    return `第 ${slideNo} 页自动生成失败：${cleanGenerationError}。请点“生成本页”重试。`;
   }
-  if (autoGenerationRunning || isApiAutoMode()) return `第 ${slideId} 页还没有生成。请点“生成本页”开始自动生成。`;
-  return `第 ${slideId} 页还没有生成。请把交接内容发给助手，完成后回到这里刷新。`;
+  if (autoGenerationRunning || isApiAutoMode()) return `第 ${slideNo} 页还没有生成。请点“生成本页”开始自动生成。`;
+  return `第 ${slideNo} 页还没有生成。请把交接内容发给助手，完成后回到这里刷新。`;
 }
 
 function currentPageActionMessage(current) {
@@ -514,7 +529,7 @@ function syncCurrentPagePrompt() {
   if (!pagePromptPanel || !pagePromptTitle || !currentPageType || !currentPagePrompt) return;
   const current = selectedSlideState();
   const hasCurrent = Boolean(current);
-  pagePromptTitle.textContent = hasCurrent ? `第 ${selectedSlide} 页` : "还没有页面";
+  pagePromptTitle.textContent = hasCurrent ? `第 ${slideNoById(selectedSlide)} 页` : "还没有页面";
   currentPageType.disabled = !activeProject;
   if (currentContentHandling) currentContentHandling.disabled = !activeProject;
   if (currentPageStyle) currentPageStyle.disabled = !activeProject;
@@ -567,4 +582,3 @@ function isPagewiseWorkflowStatus(status = latestStatus) {
   const mode = String(status?.workflow_mode || currentWorkflowMode() || "").trim();
   return mode === "prompt_deck" || mode === "single_page" || mode === "document_deck";
 }
-

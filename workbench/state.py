@@ -158,9 +158,10 @@ def normalize_slide_status(project_path: Path, status: dict) -> dict:
     slides = status.get("slides", [])
     for slide in slides:
         slide_id = int(slide["slide_id"])
-        svg_path = slide_svg_path(project_path, slide_id)
-        final_svg_path = project_path / "svg_final" / f"slide_{slide_id:02d}.svg"
-        slide["svg_path"] = slide_svg_relpath(slide_id)
+        slide_no = int(slide.get("slide_no") or slide_id)
+        svg_path = slide_svg_path(project_path, slide_no)
+        final_svg_path = project_path / "svg_final" / f"slide_{slide_no:02d}.svg"
+        slide["svg_path"] = slide_svg_relpath(slide_no)
         physical_svg_exists = any(
             path.exists() and not _is_export_placeholder_svg(path)
             for path in (svg_path, final_svg_path)
@@ -179,7 +180,7 @@ def normalize_slide_status(project_path: Path, status: dict) -> dict:
             and not svg_written_after_failure
         )
         slide["has_svg"] = physical_svg_exists and not generation_failed
-        revision_dir = project_path / REVISIONS_DIR / f"slide_{slide_id:02d}"
+        revision_dir = project_path / REVISIONS_DIR / f"slide_{slide_no:02d}"
         slide["revision_count"] = len(sorted(revision_dir.glob("*.svg"))) if revision_dir.exists() else 0
         current = slide.get("status")
         if slide["has_svg"] and current in {"waiting_codex", "regenerate_requested"}:

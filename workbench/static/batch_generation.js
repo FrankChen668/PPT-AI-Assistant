@@ -141,6 +141,7 @@ async function autoGenerateMissingPagesBatch() {
       batchGenerationActiveSlides.add(slideId);
       renderSlideListWithReview(latestStatus?.slides || []);
       const slide = slideStateById(slideId) || {};
+      const slideNo = Number(slide.slide_no || 0);
       startSlowGenerationHints(slideId);
       let response;
       try {
@@ -159,7 +160,7 @@ async function autoGenerateMissingPagesBatch() {
         clearSlowGenerationHints(slideId);
         renderSlideListWithReview(latestStatus?.slides || []);
       }
-      appendLog(commandSummary(`第 ${slideId} 页批量生成`, response));
+      appendLog(commandSummary(`第 ${slideNo} 页批量生成`, response));
       await loadStatus();
       if (Number(selectedSlide) === slideId) await refreshCurrentPreview();
       if (!response.ok) {
@@ -265,7 +266,7 @@ async function executeRecommendedAction() {
   if (action === "edit_page_prompt") {
     const slide = Number(latestStatus?.recommended_next_action?.slide_id || selectedSlide || 1);
     await focusSlideContext(slide, { focusPrompt: true });
-    appendLog(`请先填写第 ${selectedSlide} 页提示词，再生成本页。`);
+    appendLog(`请先填写第 ${slideNoById(selectedSlide)} 页提示词，再生成本页。`);
     updateButtons(Boolean(activeProject));
     return;
   }

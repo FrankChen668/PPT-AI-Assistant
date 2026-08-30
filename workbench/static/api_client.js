@@ -16,15 +16,19 @@ async function api(path, options = {}) {
 async function recordTaskEvent(eventType, payload = {}) {
   if (!activeTaskId) return;
   try {
+    const eventPayload = {
+      project: activeProject || "",
+      slide_id: selectedSlide || 0,
+      ...payload,
+    };
+    if (!eventPayload.slide_no && eventPayload.slide_id) {
+      eventPayload.slide_no = slideNoById(eventPayload.slide_id);
+    }
     const response = await api(`/api/workbench/tasks/${encodeURIComponent(activeTaskId)}/events`, {
       method: "POST",
       body: JSON.stringify({
         event_type: eventType,
-        payload: {
-          project: activeProject || "",
-          slide_id: selectedSlide || 0,
-          ...payload,
-        },
+        payload: eventPayload,
       }),
     });
   } catch (error) {
@@ -67,7 +71,8 @@ async function downloadCurrentDeck() {
 
 
 function singleSlideDownloadFilename(slideId = selectedSlide) {
-  return `${activeProject || "ppt"}-slide-${String(slideId).padStart(2, "0")}.pptx`;
+  const slideNo = slideNoById(slideId);
+  return `${activeProject || "ppt"}-slide-${String(slideNo).padStart(2, "0")}.pptx`;
 }
 
 function triggerAttachmentDownload(url, filename = "") {

@@ -8,7 +8,8 @@ def handle_slide_budget_repair(handler: Any, name: str, slide_id: int) -> bool:
     from workbench import server as srv
 
     target = srv.project_dir(name)
-    result = srv.repair_budget_overload(target, [slide_id])
+    slide_no = srv.slide_no_for_identity(target, slide_id)
+    result = srv.repair_budget_overload(target, [slide_no])
     try:
         report = srv.evaluate_budget_policy(target, profile="proposal_consulting")
         result["budget_profile"] = report.profile
@@ -27,9 +28,10 @@ def handle_slide_executor_packet(handler: Any, name: str, slide_id: int, payload
     from workbench import server as srv
 
     target = srv.project_dir(name)
+    slide_no = srv.slide_no_for_identity(target, slide_id)
     markdown_raw = payload.get("markdown", True)
     write_markdown = bool(markdown_raw) if isinstance(markdown_raw, (bool, int)) else str(markdown_raw).strip().lower() != "false"
-    packet_path = srv.generate_executor_packet(target, slide_id=slide_id, write_markdown=write_markdown)
+    packet_path = srv.generate_executor_packet(target, slide_id=slide_no, write_markdown=write_markdown)
     packet_data = json.loads(packet_path.read_text(encoding="utf-8"))
     packet_md = packet_path.with_suffix(".md")
     status = srv.load_status(target) or srv.build_initial_status_from_blueprint(name, target)
@@ -57,8 +59,9 @@ def handle_slide_restore_revision(handler: Any, name: str, slide_id: int, payloa
     from workbench import server as srv
 
     target = srv.project_dir(name)
+    slide_no = srv.slide_no_for_identity(target, slide_id)
     revision_name = srv.require_non_empty(payload.get("revision_name"), "revision_name")
-    restored_path = srv.restore_slide_revision(target, slide_id, revision_name)
+    restored_path = srv.restore_slide_revision(target, slide_no, revision_name)
     status = srv.load_status(target) or srv.build_initial_status_from_blueprint(name, target)
     for slide in status.get("slides", []):
         if int(slide.get("slide_id", 0)) == slide_id:
@@ -75,8 +78,9 @@ def handle_slide_restore_revision(handler: Any, name: str, slide_id: int, payloa
 def handle_slide_placeholder_svg(handler: Any, name: str, slide_id: int) -> bool:
     from workbench import server as srv
 
-    output = srv.write_placeholder_svg(name, slide_id=slide_id)
     target = srv.project_dir(name)
+    slide_no = srv.slide_no_for_identity(target, slide_id)
+    output = srv.write_placeholder_svg(name, slide_id=slide_no)
     status = srv.load_status(target) or srv.build_initial_status_from_blueprint(name, target)
     slides = status.get("slides") if isinstance(status.get("slides"), list) else []
     for slide in slides:
@@ -85,7 +89,7 @@ def handle_slide_placeholder_svg(handler: Any, name: str, slide_id: int) -> bool
         slide["status"] = "placeholder_svg"
         slide["qa_status"] = "not_run"
         slide["has_svg"] = True
-        slide["svg_path"] = f"svg_output/slide_{slide_id:02d}.svg"
+        slide["svg_path"] = f"svg_output/slide_{slide_no:02d}.svg"
         slide["last_error"] = "placeholder is dry-run only"
         break
     status["placeholder_generation_used"] = True

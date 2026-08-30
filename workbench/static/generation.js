@@ -1,6 +1,7 @@
 // generation.js — C13-0 拆分：单页生成 / QA / 修复 / 导出 / 修订（由 app.js 原样迁移）
 
 async function generatePacketForSlide(slideId) {
+  const slideNo = slideNoById(slideId);
   const response = await api(
     `/api/projects/${encodeURIComponent(activeProject)}/slides/${slideId}/executor-packet`,
     {
@@ -8,7 +9,7 @@ async function generatePacketForSlide(slideId) {
       body: JSON.stringify({ markdown: true }),
     },
   );
-  appendLog(commandSummary(`第 ${slideId} 页 Generate packet`, response));
+  appendLog(commandSummary(`第 ${slideNo} 页 Generate packet`, response));
   if (response.ok) {
     const jsonPath = response.data?.packet_json_path || "";
     const mdPath = response.data?.packet_markdown_path || "";
@@ -25,11 +26,12 @@ async function regenerateCurrentSlide() {
 
 async function qaCurrentSlide(slideId = selectedSlide) {
   const targetSlide = Number(slideId);
-  appendLog(`开始单页检查：第 ${targetSlide} 页`);
-  if (Number(selectedSlide) === targetSlide) setPreviewBusy(`正在完成第 ${targetSlide} 页...`);
+  const targetSlideNo = slideNoById(targetSlide);
+  appendLog(`开始单页检查：第 ${targetSlideNo} 页`);
+  if (Number(selectedSlide) === targetSlide) setPreviewBusy(`正在完成第 ${targetSlideNo} 页...`);
   setState("正在完成本页", "running");
   const response = await api(`/api/projects/${encodeURIComponent(activeProject)}/slides/${targetSlide}/qa`, { method: "POST" });
-  appendLog(commandSummary(`第 ${targetSlide} 页 QA`, response));
+  appendLog(commandSummary(`第 ${targetSlideNo} 页 QA`, response));
   await recordTaskEvent("qa_slide", { slide_id: targetSlide, result: response.ok ? "ok" : "failed" });
   await loadStatus();
   if (Number(selectedSlide) === targetSlide) await refreshCurrentPreview();
@@ -52,7 +54,7 @@ async function autoGenerateCurrentSlide(options = {}) {
   const targetSlide = Number(options?.slide_id || selectedSlide);
   const existingTask = autoGenerationSlideTasks.get(targetSlide);
   if (existingTask) {
-    appendLog(`第 ${targetSlide} 页正在生成，已加入队列。`);
+    appendLog(`第 ${slideNoById(targetSlide)} 页正在生成，已加入队列。`);
     if (waitForCompletion) await existingTask;
     return;
   }
@@ -90,6 +92,7 @@ async function autoGenerateCurrentSlide(options = {}) {
     syncCurrentPagePrompt();
     updateButtons(Boolean(activeProject));
   }
+  const targetSlideNo = Number(targetInitialState?.slide_no || slideNoById(targetSlide) || 1);
   const maxAttempts = AUTO_OPTIMIZE_MAX_ATTEMPTS;
   humanInterventionSlides.delete(targetSlide);
   // Legacy contract markers for frontend state tests:
@@ -105,7 +108,7 @@ async function autoGenerateCurrentSlide(options = {}) {
     await Promise.resolve();
     manualGenerationTurnAcquired = await acquireManualGenerationTurn(targetSlide);
     if (!manualGenerationTurnAcquired) return;
-    if (Number(selectedSlide) === targetSlide) setPreviewBusy(`正在生成第 ${targetSlide} 页...`);
+    if (Number(selectedSlide) === targetSlide) setPreviewBusy(`正在生成第 ${targetSlideNo} 页...`);
     setState("正在生成本页", "running");
     startSlowGenerationHints(targetSlide);
     startAutoGenerationPolling();
@@ -115,8 +118,8 @@ async function autoGenerateCurrentSlide(options = {}) {
         const current = slideStateById(targetSlide) || targetInitialState;
         const retrying = attempt > 1;
         if (retrying) {
-          if (Number(selectedSlide) === targetSlide) setPreviewBusy(`第 ${targetSlide} 页正在自动优化（${attempt}/${maxAttempts}）...`);
-          appendLog(`第 ${targetSlide} 页自动优化第 ${attempt - 1} 次。`);
+          if (Number(selectedSlide) === targetSlide) setPreviewBusy(`第 ${targetSlideNo} 页正在自动优化（${attempt}/${maxAttempts}）...`);
+          appendLog(`第 ${targetSlideNo} 页自动优化第 ${attempt - 1} 次。`);
           await recordTaskEvent("auto_optimize_retry", { slide_id: targetSlide, attempt: attempt - 1 });
         }
         const response = await api(`/api/projects/${encodeURIComponent(activeProject)}/slides/${targetSlide}/auto-generate`, {
@@ -130,7 +133,7 @@ async function autoGenerateCurrentSlide(options = {}) {
             iteration_note: iterationNote,
           }),
         });
-        appendLog(commandSummary(`第 ${targetSlide} 页${retrying ? "自动优化" : "自动生成"}`, response));
+        appendLog(commandSummary(`第 ${targetSlideNo} 页${retrying ? "自动优化" : "自动生成"}`, response));
         if (!response.ok) {
           setState("本页生成失败", "error");
           if (response.error?.code === "slide_generation_queue_timeout") {
@@ -142,7 +145,7 @@ async function autoGenerateCurrentSlide(options = {}) {
         }
         await recordTaskEvent(retrying ? "auto_optimize_slide" : "auto_generate_slide", { slide_id: targetSlide, attempt });
         await loadStatus();
-        if (Number(selectedSlide) === targetSlide) setPreviewBusy(`第 ${targetSlide} 页已生成，正在完成...`);
+        if (Number(selectedSlide) === targetSlide) setPreviewBusy(`第 ${targetSlideNo} 页已生成，正在完成...`);
         await qaCurrentSlide(targetSlide);
         if (Number(selectedSlide) === targetSlide) await refreshCurrentPreview();
         if (!currentSlideNeedsIntervention(targetSlide)) {
@@ -376,7 +379,7 @@ async function loadQaReport() {
   const content = response.data.content || "QA 报告为空。";
   const current = selectedSlideState();
   const qaText = current?.qa_status || "not_run";
-  const header = `当前页状态：第 ${selectedSlide} 页 | qa_status=${qaText} | ${qaScopeLabel()}`;
+  const header = `当前页状态：第 ${Number(current?.slide_no || 0)} 页 | qa_status=${qaText} | ${qaScopeLabel()}`;
   qaReport.textContent = `${header}\n\n${content}`;
 }
 
@@ -408,4 +411,3 @@ async function restorePreviousSlideRevision() {
   await restoreRevision(revisions[0].name);
   setState("已恢复上一版", "ready");
 }
-

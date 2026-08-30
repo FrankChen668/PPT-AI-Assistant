@@ -89,7 +89,7 @@ function softDeckLevelRepairItems(status) {
 function firstUnreadySlide(status) {
   if (!status || !Array.isArray(status.slides)) return 1;
   const overloaded = budgetOverloadedSlides(status);
-  if (overloaded.length) return overloaded[0];
+  if (overloaded.length) return slideIdByNo(overloaded[0]) || 1;
   const missing = status.slides.find((slide) => !slideIsDisplayable(slide));
   const failed = status.slides.find((slide) => ["failed", "qa_failed"].includes(String(slide.qa_status || "")));
   const unchecked = status.slides.find((slide) => String(slide.qa_status || "not_run") !== "passed");
@@ -340,7 +340,7 @@ function renderCurrentSlideQaSummary() {
   const current = selectedSlideState();
   if (!qaReport || !current) return;
   const qaText = current.qa_status || "not_run";
-  const header = `当前页状态：第 ${selectedSlide} 页 | qa_status=${qaText} | ${qaScopeLabel()}`;
+  const header = `当前页状态：第 ${Number(current.slide_no || 0)} 页 | qa_status=${qaText} | ${qaScopeLabel()}`;
   const error = userFacingGenerationError(current.last_error || "");
   if (error) {
     qaReport.textContent = `${header}\n\n失败摘录：\n${error}`;

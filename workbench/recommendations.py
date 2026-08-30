@@ -71,6 +71,7 @@ def build_action(
     detail: str,
     *,
     slide_id: int | None = None,
+    slide_no: int | None = None,
     disabled: bool = False,
     severity: str = "primary",
     reason_code: str = "",
@@ -85,6 +86,8 @@ def build_action(
     }
     if slide_id is not None:
         payload["slide_id"] = int(slide_id)
+    if slide_no is not None:
+        payload["slide_no"] = int(slide_no)
     if disabled:
         payload["disabled"] = True
     if reason_code:
@@ -94,6 +97,21 @@ def build_action(
     if technical_message:
         payload["technical_message"] = technical_message
     return payload
+
+
+def _slide_no(slide: dict, fallback: int = 0) -> int:
+    return int(slide.get("slide_no") or slide.get("slide_id") or fallback or 0)
+
+
+def _slide_by_no(slides: list, slide_no: int) -> dict | None:
+    return next(
+        (
+            slide
+            for index, slide in enumerate(slides, start=1)
+            if isinstance(slide, dict) and _slide_no(slide, index) == int(slide_no)
+        ),
+        None,
+    )
 
 
 def _format_slide_ids(slide_ids: object) -> str:
@@ -128,7 +146,7 @@ def _missing_slides_user_message(slide_ids: object) -> str:
     return f"还有 {len(ids)} 页未生成，暂时无法生成 PPT。请先补齐缺失页面。"
 
 
-def preflight_blocked_action(readiness: dict) -> dict | None:
+def preflight_blocked_action(readiness: dict, slides: list | None = None) -> dict | None:
     if readiness.get("ready"):
         return None
     findings = readiness.get("preflight_blocking_findings")
@@ -145,11 +163,14 @@ def preflight_blocked_action(readiness: dict) -> dict | None:
         detail = f"{slide_label}导出前检查未通过：页面中出现英文短语 {phrase}。请重新生成或调整该页后再生成 PPT。"
     else:
         detail = f"{slide_label}导出前检查未通过。请重新生成或调整该页后再生成 PPT。"
+    slide = _slide_by_no(slides or [], slide_id)
+    stable_id = int(slide.get("slide_id") or 0) if isinstance(slide, dict) else slide_id
     return build_action(
         "repair_slide",
         f"处理{slide_label}",
         detail,
-        slide_id=slide_id if slide_id > 0 else None,
+        slide_id=stable_id if stable_id > 0 else None,
+        slide_no=slide_id if slide_id > 0 else None,
         severity="danger",
         reason_code="preflight_blocked",
         user_message=detail,
@@ -343,10 +364,7 @@ def compute_recommended_next_action(status: dict, readiness: dict, evidence: dic
             checked_slide = int(evidence.get("checked_slide") or 0)
         except (TypeError, ValueError):
             checked_slide = 0
-        checked_state = next(
-            (slide for slide in slides if int(slide.get("slide_id") or 0) == checked_slide),
-            None,
-        )
+        checked_state = _slide_by_no(slides, checked_slide)
         if isinstance(checked_state, dict) and (
             str(checked_state.get("qa_status") or "") in {"failed", "qa_failed"}
             or str(checked_state.get("status") or "") in {"qa_failed", "needs_regeneration"}
@@ -356,7 +374,8 @@ def compute_recommended_next_action(status: dict, readiness: dict, evidence: dic
                 "repair_slide",
                 f"处理第 {checked_slide} 页",
                 detail,
-                slide_id=checked_slide,
+                slide_id=int(checked_state.get("slide_id") or checked_slide),
+                slide_no=checked_slide,
                 severity="warning",
                 reason_code="qa_failed_slide",
                 user_message=detail,
@@ -387,13 +406,16 @@ def compute_recommended_next_action(status: dict, readiness: dict, evidence: dic
         )
     ]
     if regeneration_needed and not has_current_export:
-        first = int(regeneration_needed[0].get("slide_id") or 1)
-        detail = f"第 {first} 页需要重新生成。"
+        first_slide = regeneration_needed[0]
+        first = int(first_slide.get("slide_id") or 1)
+        first_no = _slide_no(first_slide, 1)
+        detail = f"第 {first_no} 页需要重新生成。"
         return build_action(
             "auto_generate",
-            f"重新生成第 {first} 页",
+            f"重新生成第 {first_no} 页",
             detail,
             slide_id=first,
+            slide_no=first_no,
             severity="warning",
             reason_code="layout_regeneration_needed",
             user_message=detail,
@@ -403,16 +425,18 @@ def compute_recommended_next_action(status: dict, readiness: dict, evidence: dic
     failed = [slide for slide in slides if str(slide.get("qa_status") or "") in {"failed", "qa_failed"}]
     if failed and not export_ready and should_auto_repair is not False and not has_current_export:
         first = int(failed[0].get("slide_id") or 1)
+        first_no = _slide_no(failed[0], 1)
         raw_error = str(failed[0].get("last_error") or "")
         translated = user_facing_error_text(raw_error)
-        detail = f"第 {first} 页检查未通过，请先处理这一页。"
+        detail = f"第 {first_no} 页检查未通过，请先处理这一页。"
         if translated:
-            detail = f"第 {first} 页检查未通过：{translated}"
+            detail = f"第 {first_no} 页检查未通过：{translated}"
         return build_action(
             "repair_slide",
-            f"处理第 {first} 页",
+            f"处理第 {first_no} 页",
             detail,
             slide_id=first,
+            slide_no=first_no,
             severity="danger",
             reason_code="qa_failed_slide",
             user_message=detail,
@@ -424,7 +448,7 @@ def compute_recommended_next_action(status: dict, readiness: dict, evidence: dic
     retryable_generation_failures = [
         slide
         for slide in slides
-        if int(slide.get("slide_id") or 0) in missing_ids
+        if _slide_no(slide) in missing_ids
         and str(slide.get("status") or "") == "failed"
         and str(slide.get("recommended_action") or "") == "auto_generate"
         and str(slide.get("last_error_code") or "") in {"provider_busy", "svg_parse_error"}
@@ -432,13 +456,15 @@ def compute_recommended_next_action(status: dict, readiness: dict, evidence: dic
     if retryable_generation_failures and not export_ready:
         first_slide = retryable_generation_failures[0]
         first = int(first_slide.get("slide_id") or 1)
+        first_no = _slide_no(first_slide, 1)
         reason_code = str(first_slide.get("last_error_code") or "generation_failed")
-        detail = str(first_slide.get("last_error") or "").strip() or f"第 {first} 页生成失败，请重试本页。"
+        detail = str(first_slide.get("last_error") or "").strip() or f"第 {first_no} 页生成失败，请重试本页。"
         return build_action(
             "auto_generate",
-            f"重试第 {first} 页",
+            f"重试第 {first_no} 页",
             detail,
             slide_id=first,
+            slide_no=first_no,
             severity="warning",
             reason_code=reason_code,
             user_message=detail,
@@ -449,33 +475,39 @@ def compute_recommended_next_action(status: dict, readiness: dict, evidence: dic
         promptless_missing = [
             slide
             for slide in slides
-            if int(slide.get("slide_id") or 0) in missing_ids
+            if _slide_no(slide) in missing_ids
             and ((("prompt" in slide) and not str(slide.get("prompt") or "").strip()) or str(slide.get("status") or "") == "waiting_prompt")
         ]
         if promptless_missing:
-            first = int(promptless_missing[0].get("slide_id") or missing_svg[0])
+            first_slide = promptless_missing[0]
+            first = int(first_slide.get("slide_id") or missing_svg[0])
+            first_no = _slide_no(first_slide, int(missing_svg[0]))
             return build_action(
                 "edit_page_prompt",
-                f"补充第 {first} 页内容",
-                f"第 {first} 页还没有提示词，请先补充内容。",
+                f"补充第 {first_no} 页内容",
+                f"第 {first_no} 页还没有提示词，请先补充内容。",
                 slide_id=first,
+                slide_no=first_no,
                 severity="warning",
                 reason_code="missing_slide_prompt",
-                user_message=f"第 {first} 页还没有提示词，请先补充内容。",
+                user_message=f"第 {first_no} 页还没有提示词，请先补充内容。",
             )
 
         raw_generation = status.get("generation")
         generation: dict[str, Any] = raw_generation if isinstance(raw_generation, dict) else {}
-        first = int(missing_svg[0])
+        first_no = int(missing_svg[0])
+        first_slide = _slide_by_no(slides, first_no)
+        first = int(first_slide.get("slide_id") or first_no) if isinstance(first_slide, dict) else first_no
         missing_label = _format_slide_ids(missing_svg)
         missing_message = _missing_slides_user_message(missing_svg)
         if generation.get("api_key_configured") is False:
             detail = f"{missing_label}还没有生成：模型 API Key 尚未配置，PPTX 暂时不能生成。请先在模型配置中更新后再生成。"
             return build_action(
                 "auto_generate",
-                f"生成第 {first} 页",
+                f"生成第 {first_no} 页",
                 detail,
                 slide_id=first,
+                slide_no=first_no,
                 disabled=True,
                 severity="danger",
                 reason_code="api_key_missing",
@@ -483,28 +515,32 @@ def compute_recommended_next_action(status: dict, readiness: dict, evidence: dic
             )
         return build_action(
             "auto_generate",
-            f"生成第 {first} 页",
+            f"生成第 {first_no} 页",
             missing_message,
             slide_id=first,
+            slide_no=first_no,
             reason_code="missing_slide_svg",
             user_message=missing_message,
-            technical_message=f"missing svg_output/slide_{first:02d}.svg",
+            technical_message=f"missing svg_output/slide_{first_no:02d}.svg",
         )
 
     budget_overloaded = readiness.get("budget_overloaded_slides") or []
     if budget_overloaded:
-        first = int(budget_overloaded[0])
+        first_no = int(budget_overloaded[0])
+        first_slide = _slide_by_no(slides, first_no)
+        first = int(first_slide.get("slide_id") or first_no) if isinstance(first_slide, dict) else first_no
         return build_action(
             "repair_budget",
-            f"优化第 {first} 页",
-            f"第 {first} 页页面还需要优化，请先精简后再继续。",
+            f"优化第 {first_no} 页",
+            f"第 {first_no} 页页面还需要优化，请先精简后再继续。",
             slide_id=first,
+            slide_no=first_no,
             severity="warning",
             reason_code="budget_overload",
-            user_message=f"第 {first} 页页面还需要优化，请先精简后再继续。",
+            user_message=f"第 {first_no} 页页面还需要优化，请先精简后再继续。",
         )
 
-    preflight_action = preflight_blocked_action(readiness)
+    preflight_action = preflight_blocked_action(readiness, slides)
     if preflight_action:
         return preflight_action
 
@@ -551,22 +587,25 @@ def compute_recommended_next_action(status: dict, readiness: dict, evidence: dic
     unqa = [slide for slide in slides if str(slide.get("qa_status") or "not_run") not in {"passed"}]
     if unqa and not export_ready:
         first = int(unqa[0].get("slide_id") or 1)
+        first_no = _slide_no(unqa[0], 1)
         if str(status.get("generation_mode") or "api_auto") == "api_auto":
             return build_action(
                 "auto_check",
                 "待检查",
-                f"第 {first} 页已生成，待自动检查。",
+                f"第 {first_no} 页已生成，待自动检查。",
                 slide_id=first,
+                slide_no=first_no,
                 reason_code="slide_pending_qa",
-                user_message=f"第 {first} 页已生成，待自动检查。",
+                user_message=f"第 {first_no} 页已生成，待自动检查。",
             )
         return build_action(
             "qa_slide",
             "待检查",
-            f"第 {first} 页已生成，待检查。",
+            f"第 {first_no} 页已生成，待检查。",
             slide_id=first,
+            slide_no=first_no,
             reason_code="slide_pending_qa",
-            user_message=f"第 {first} 页已生成，待检查。",
+            user_message=f"第 {first_no} 页已生成，待检查。",
         )
 
     if readiness.get("ready") and evidence.get("last_finalize_fresh_qa") is not True:

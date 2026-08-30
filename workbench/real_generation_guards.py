@@ -47,9 +47,9 @@ def collect_real_generation_risks(target: Path, status: dict[str, Any] | None = 
     for slide in slide_entries:
         if not isinstance(slide, dict):
             continue
-        slide_id = int(slide.get("slide_id") or 0)
-        if slide_id > 0:
-            slide_ids.append(slide_id)
+        slide_no = int(slide.get("slide_no") or slide.get("slide_id") or 0)
+        if slide_no > 0:
+            slide_ids.append(slide_no)
     if not slide_ids:
         slide_ids = sorted(
             int(path.stem.split("_")[-1])

@@ -47,7 +47,7 @@ async function activateTask(taskId) {
   const task = response.data?.task || {};
   activeTaskId = String(task.id || taskId);
   activeProject = String(task.project_name || "");
-  selectedSlide = 1;
+  selectedSlide = 0;
   setWorkbenchView("task_detail");
   if (activeProject && typeof syncBrowserProjectUrl === "function") syncBrowserProjectUrl(activeProject);
   if (setupCollapsedSummary) setSetupCollapsed(false);

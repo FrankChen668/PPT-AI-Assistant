@@ -44,7 +44,12 @@ def collect_workbench_projects(projects_root: Path) -> dict:
         has_svg_count = sum(
             1
             for slide in slides
-            if slide.get("has_svg") or (path / "svg_output" / f"slide_{int(slide.get('slide_id') or 0):02d}.svg").exists()
+            if slide.get("has_svg")
+            or (
+                path
+                / "svg_output"
+                / f"slide_{int(slide.get('slide_no') or slide.get('slide_id') or 0):02d}.svg"
+            ).exists()
         )
         qa_passed_count = sum(1 for slide in slides if str(slide.get("qa_status") or "") == "passed")
         is_finished = project_status_value == "exported" or export_status == "exported" or has_pptx

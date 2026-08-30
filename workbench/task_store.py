@@ -215,9 +215,9 @@ class TaskStore:
                 INSERT INTO workbench_tasks(
                   id, project_name, workflow_mode, title, user_prompt, status,
                   project_status, recommended_action, export_status, slide_count,
-                  created_at, updated_at, completed_at, archived_at, last_error
+                  next_slide_id, created_at, updated_at, completed_at, archived_at, last_error
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     identifier,
@@ -230,6 +230,7 @@ class TaskStore:
                     recommended_action,
                     export_status,
                     int(slide_count or 0),
+                    int(slide_count or 0) + 1,
                     created,
                     updated,
                     created if status == "completed" else "",
@@ -408,6 +409,7 @@ class TaskStore:
         *,
         project_name: str,
         slide_id: int,
+        slide_no_at_event: int | None = None,
         event_type: str,
         phase: str = "",
         status: str = "",
@@ -427,15 +429,16 @@ class TaskStore:
             cursor = conn.execute(
                 """
                 INSERT INTO workbench_page_events(
-                  task_id, project_name, slide_id, event_type, phase, status,
+                  task_id, project_name, slide_id, slide_no_at_event, event_type, phase, status,
                   started_at, ended_at, duration_ms, payload_json, created_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     task_id,
                     str(project_name or ""),
                     int(slide_id),
+                    int(slide_no_at_event) if slide_no_at_event is not None else None,
                     clean_event_type,
                     str(phase or ""),
                     str(status or ""),
@@ -455,6 +458,44 @@ class TaskStore:
             decoded = {}
         item["payload"] = decoded if isinstance(decoded, dict) else {}
         return item
+
+    def allocate_slide_id(self, task_id: str, *, observed_slide_ids: list[int]) -> int:
+        clean_ids = [int(value) for value in observed_slide_ids if int(value) > 0]
+        with self.connect() as conn:
+            conn.execute("BEGIN IMMEDIATE")
+            row = conn.execute(
+                "SELECT next_slide_id FROM workbench_tasks WHERE id = ?",
+                (str(task_id or "").strip(),),
+            ).fetchone()
+            if row is None:
+                raise ValueError("task does not exist.")
+            historical_max = conn.execute(
+                """
+                SELECT MAX(slide_id) AS max_slide_id
+                FROM (
+                  SELECT slide_id FROM workbench_page_events WHERE task_id = ?
+                  UNION ALL
+                  SELECT slide_id FROM workbench_slide_reviews WHERE task_id = ?
+                )
+                """,
+                (task_id, task_id),
+            ).fetchone()
+            minimum = max(clean_ids + [int(historical_max["max_slide_id"] or 0)]) + 1
+            allocated = max(int(row["next_slide_id"] or 0), minimum)
+            conn.execute(
+                "UPDATE workbench_tasks SET next_slide_id = ? WHERE id = ?",
+                (allocated + 1, task_id),
+            )
+            conn.commit()
+        return allocated
+
+    def delete_slide_review(self, task_id: str, slide_id: int) -> None:
+        with self.connect() as conn:
+            conn.execute(
+                "DELETE FROM workbench_slide_reviews WHERE task_id = ? AND slide_id = ?",
+                (str(task_id or "").strip(), int(slide_id)),
+            )
+            conn.commit()
 
     def upsert_slide_review(
         self,
@@ -576,6 +617,30 @@ class TaskStore:
             item["payload"] = payload if isinstance(payload, dict) else {}
             events.append(item)
         return events
+
+    def latest_successful_slide_export(self, task_id: str, slide_id: int) -> dict:
+        with self.connect() as conn:
+            row = conn.execute(
+                """
+                SELECT *
+                FROM workbench_page_events
+                WHERE task_id = ? AND slide_id = ?
+                  AND event_type = 'slide_export_completed'
+                  AND status IN ('ok', 'review_required')
+                ORDER BY id DESC
+                LIMIT 1
+                """,
+                (str(task_id or "").strip(), int(slide_id)),
+            ).fetchone()
+        item = row_to_dict(row)
+        if not item:
+            return {}
+        try:
+            payload = json.loads(str(item.get("payload_json") or "{}"))
+        except json.JSONDecodeError:
+            payload = {}
+        item["payload"] = payload if isinstance(payload, dict) else {}
+        return item
 
     def migrate_projects(self, projects_root: Path) -> dict[str, int]:
         created = 0

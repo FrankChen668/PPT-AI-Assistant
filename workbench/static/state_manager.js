@@ -194,7 +194,7 @@ const PAGE_STREAM_CACHE_BUST_SENTINEL = "slidePreviewVersion";
 let activeProject = "";
 let activeTaskId = "";
 let activeProjectTitle = "";
-let selectedSlide = 1;
+let selectedSlide = 0;
 let latestStatus = null;
 let humanInterventionSlides = new Set();
 const localPageDrafts = new Map();
@@ -489,4 +489,3 @@ function setInspectorTab(tabName) {
   inspectorVersionsPanel?.classList.toggle("active", showVersions);
   if (showVersions) loadRevisions();
 }
-

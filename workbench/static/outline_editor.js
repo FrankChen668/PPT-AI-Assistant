@@ -371,7 +371,7 @@ async function activateCreatedTask(data) {
   setWorkbenchView("task_detail");
   saveActiveProject();
   syncBrowserProjectUrl(activeProject);
-  selectedSlide = 1;
+  selectedSlide = 0;
   projectName.textContent = userFacingTaskTitle(data.task_title || activeProject);
   updateButtons(true);
   updateCollapsedSummary();

@@ -4,7 +4,7 @@ import sqlite3
 from pathlib import Path
 
 
-SCHEMA_VERSION = 4
+SCHEMA_VERSION = 5
 
 
 def open_connection(db_path: Path) -> sqlite3.Connection:
@@ -29,6 +29,7 @@ def initialize_schema(conn: sqlite3.Connection) -> None:
           recommended_action TEXT NOT NULL DEFAULT '',
           export_status TEXT NOT NULL DEFAULT '',
           slide_count INTEGER NOT NULL DEFAULT 0,
+          next_slide_id INTEGER,
           created_at TEXT NOT NULL,
           updated_at TEXT NOT NULL,
           completed_at TEXT NOT NULL DEFAULT '',
@@ -55,6 +56,7 @@ def initialize_schema(conn: sqlite3.Connection) -> None:
           task_id TEXT NOT NULL,
           project_name TEXT NOT NULL,
           slide_id INTEGER NOT NULL,
+          slide_no_at_event INTEGER,
           event_type TEXT NOT NULL,
           phase TEXT NOT NULL DEFAULT '',
           status TEXT NOT NULL DEFAULT '',
@@ -101,6 +103,17 @@ def initialize_schema(conn: sqlite3.Connection) -> None:
           ON workbench_slide_reviews(project_name, slide_id, updated_at);
         """
     )
+    task_columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(workbench_tasks)")}
+    if "next_slide_id" not in task_columns:
+        conn.execute("ALTER TABLE workbench_tasks ADD COLUMN next_slide_id INTEGER")
+    event_columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(workbench_page_events)")}
+    if "slide_no_at_event" not in event_columns:
+        conn.execute("ALTER TABLE workbench_page_events ADD COLUMN slide_no_at_event INTEGER")
+        # Legacy v4 used slide_id as both identity and page number. This is only a
+        # best-effort compatibility snapshot; it cannot reconstruct old reorders.
+        conn.execute(
+            "UPDATE workbench_page_events SET slide_no_at_event = slide_id WHERE slide_no_at_event IS NULL"
+        )
     conn.execute(
         "INSERT OR IGNORE INTO workbench_session(key, value) VALUES('current_view', 'mode_select')"
     )
